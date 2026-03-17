@@ -25,7 +25,11 @@ function App() {
         onViewChange={setCurrentView}
       />
 
-      {currentView === 'chat' && <ChatInterface />}
+      {currentView === 'chat' && (
+        <div style={{ marginTop: '60px', height: 'calc(100vh - 60px)' }}>
+          <ChatInterface />
+        </div>
+      )}
 
       {currentView === 'portfolio' && (
         <motion.div

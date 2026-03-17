@@ -1,8 +1,7 @@
 .chat-interface {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 60px);
-  margin-top: 60px;
+  height: 100%;
   background: var(--bg-primary);
 }
 
