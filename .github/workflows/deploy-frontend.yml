@@ -10,6 +10,9 @@ on:
       - 'index.html'
       - 'vite.config.js'
       - 'package.json'
+      - 'api/**'
+      - 'requirements.txt'
+      - 'vercel.json'
 
 jobs:
   deploy:
