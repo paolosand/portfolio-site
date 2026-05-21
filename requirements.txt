@@ -1,0 +1,7 @@
+fastapi
+mangum
+langchain
+langchain-google-genai
+google-generativeai
+pydantic
+httpx
