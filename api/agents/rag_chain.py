@@ -1,7 +1,6 @@
-# api/agents/rag_chain.py
 import logging
 from typing import List, Dict
-from services.llm import get_llm
+from services.llm import get_client, MODEL, GENERATION_CONFIG
 from services.knowledge_loader import load_all_knowledge
 from agents.personality import SYSTEM_PROMPT
 
@@ -10,7 +9,7 @@ MAX_QUERY_LENGTH = 1000
 
 class RAGChain:
     def __init__(self):
-        self.llm = get_llm()
+        self.client = get_client()
 
     async def retrieve(self, query: str) -> List[Dict]:
         return load_all_knowledge()
@@ -34,8 +33,12 @@ CONVERSATION HISTORY:
 USER QUESTION: {query}
 
 RESPONSE:"""
-            response = await self.llm.ainvoke(prompt)
-            return response.content
+            response = await self.client.aio.models.generate_content(
+                model=MODEL,
+                contents=prompt,
+                config=GENERATION_CONFIG,
+            )
+            return response.text
         except Exception as e:
             logging.error(f"LLM generation error: {e}")
             return "I'm having trouble generating a response right now. Could you try rephrasing your question?"

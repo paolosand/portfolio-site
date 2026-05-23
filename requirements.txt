@@ -1,7 +1,5 @@
 fastapi
 mangum
-langchain
-langchain-google-genai
-google-generativeai
+google-genai
 pydantic
 httpx
