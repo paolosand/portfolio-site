@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  
+  <g transform="rotate(-1.5 32 32)">
+    
+    <rect x="11" y="13" width="44" height="42" fill="#1A130A"></rect>
+    
+    <rect x="8" y="10" width="44" height="42" fill="#E8B91A" stroke="#1A130A" stroke-width="2.5"></rect>
+    
+    <text x="30" y="43" text-anchor="middle" font-family="&#39;JetBrains Mono&#39;,&#39;IBM Plex Mono&#39;,ui-monospace,Menlo,monospace" font-weight="800" font-size="30" letter-spacing="-2" fill="#1A130A">P/</text>
+  </g>
+</svg>

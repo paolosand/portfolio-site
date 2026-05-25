@@ -1,5 +1,4 @@
 fastapi
-mangum
 google-genai
 pydantic
 httpx

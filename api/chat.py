@@ -4,7 +4,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from fastapi import FastAPI
-from mangum import Mangum
 from pydantic import BaseModel, Field
 from typing import List
 
@@ -57,4 +56,3 @@ async def chat(request: ChatRequest):
     return ChatResponse(response=filtered)
 
 
-handler = Mangum(app)
