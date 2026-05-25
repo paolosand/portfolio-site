@@ -24,6 +24,7 @@ const SENSITIVE_INFO_PATTERNS = [
   { pattern: /\b\d{3}[-.\s]?\d{2}[-.\s]?\d{4}\b/g, label: 'SSN' },
   { pattern: /\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b/g, label: 'phone' },
 ];
+// Note: /g flag is required for String.replace() to replace all occurrences
 
 function randomRejection() {
   return WITTY_REJECTIONS[Math.floor(Math.random() * WITTY_REJECTIONS.length)];
