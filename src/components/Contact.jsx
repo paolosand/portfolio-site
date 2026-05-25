@@ -1,75 +1,52 @@
-import { motion } from 'framer-motion';
 import portfolioData from '../data/portfolio.json';
+import { POSTCARD_ASCII } from './shared/ascii.js';
 import './Contact.css';
 
-const Contact = () => {
+export default function Contact() {
   const { personal } = portfolioData;
 
   return (
-    <section className="contact" id="contact">
-      <div className="container">
-        <div className="contact-content">
-          <motion.div
-            className="contact-info"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="contact-title">Let's Build Something</h2>
-            <p className="contact-subtitle">
-              Interested in collaborating or discussing opportunities? Reach out.
-            </p>
-
-            <div className="contact-links">
-              <a
-                href={`mailto:${personal.email}`}
-                className="contact-link email-link"
-              >
-                <span className="contact-icon">✉</span>
-                <span>{personal.email}</span>
-              </a>
-
-              <a
-                href={personal.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="contact-link"
-              >
-                <span className="contact-icon">→</span>
-                <span>GitHub</span>
-              </a>
-
-              <a
-                href={personal.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="contact-link"
-              >
-                <span className="contact-icon">→</span>
-                <span>LinkedIn</span>
-              </a>
-
-              <a
-                href="/Paolo_Sandejas_Resume.pdf"
-                download
-                className="contact-link"
-              >
-                <span className="contact-icon">↓</span>
-                <span>Download Resume</span>
-              </a>
-            </div>
-          </motion.div>
-
-
+    <section id="contact">
+      <div className="section-head">
+        <span className="num">∎ end</span>
+        <h2 className="title">say <span className="accent">hello</span></h2>
+        <span className="meta">i answer fast</span>
+      </div>
+      <div className="postcard reg-marks">
+        <div className="left">
+          <pre className="ascii ascii-bg">{POSTCARD_ASCII}</pre>
+          <div className="pc-msg">
+            hey — i'm <b>paolo</b>. i build ml systems that pay attention to sound and shape,
+            and i like making weird, useful things with both. tell me what you're building.
+          </div>
+          <div className="signoff">— talk soon ♥</div>
         </div>
-
-        <div className="contact-footer">
-          <p>© 2026 {personal.name}. Built with React + Framer Motion</p>
+        <div className="right">
+          <div className="stamps">
+            <span className="stamp blue">par avion</span>
+            <span className="stamp">priority</span>
+          </div>
+          <div>
+            <div className="addr">
+              <span className="lbl">addressed to</span>
+              <strong>anyone hiring an ml engineer<br />who also writes synths</strong>
+            </div>
+            <div className="addr">
+              <span className="lbl">e-mail</span>
+              <a href={`mailto:${personal.email}`}>{personal.email}</a>
+            </div>
+            <div className="addr">
+              <span className="lbl">on the web</span>
+              <a href={personal.github} target="_blank" rel="noopener noreferrer">github.com/paolosandejas</a><br />
+              <a href={personal.linkedin} target="_blank" rel="noopener noreferrer">linkedin.com/in/paolosandejas</a>
+            </div>
+            <div className="addr last">
+              <span className="lbl">return address</span>
+              glendale, california · 34.146°n
+            </div>
+          </div>
         </div>
       </div>
     </section>
   );
-};
-
-export default Contact;
+}

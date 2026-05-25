@@ -1,95 +1,99 @@
-import { motion } from 'framer-motion';
 import portfolioData from '../data/portfolio.json';
+import { PROP_ART } from './shared/ascii.js';
 import './Hero.css';
 
-const Hero = ({ onChatClick }) => {
-  const { personal, summary, valueProps } = portfolioData;
+const TAGLINE = "Trained as a computer scientist. Wired by music. Building the kind of machines that listen back.";
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: [0.6, 0.05, 0.01, 0.9],
-      },
-    },
-  };
+export default function Hero({ onChatClick }) {
+  const { personal, valueProps } = portfolioData;
 
   return (
-    <section className="hero" id="hero">
-      <div className="hero-background">
-        <div className="grid-pattern"></div>
-        <div className="hero-gradient"></div>
+    <section className="hero reg-marks">
+      <div className="hero-tape"></div>
+      <div className="hero-grid">
+        <div className="hero-left">
+          <div className="eyebrow">
+            <span className="pulse"></span>
+            now · open to ml + creative tech roles · glendale, ca
+          </div>
+          <h1 className="hero-title">
+            paolo<span className="acc-pink">.</span><br />
+            sande<span className="acc-blue">jas</span><span className="slash">/</span>
+          </h1>
+          <p className="hero-tagline">{TAGLINE}</p>
+          <dl className="hero-meta">
+            <dt>role</dt><dd>AI / ML engineer</dd>
+            <dt>focus</dt><dd>audio · vision · generative</dd>
+            <dt>stack</dt><dd>PyTorch · Gemini · Max/MSP · ChucK</dd>
+            <dt>shipping</dt><dd>models for 12,000+ users</dd>
+          </dl>
+          <div className="hero-cta">
+            <button className="cta primary" onClick={onChatClick}>
+              <span>▶</span> talk to pao-gpt
+            </button>
+            <a className="cta pink" href="#projects">
+              <span>◆</span> see projects
+            </a>
+            <a className="cta" href={`mailto:${personal.email}`}>
+              <span>✉</span> say hello
+            </a>
+          </div>
+        </div>
+
+        <div className="hero-right">
+          <div className="portrait-card">
+            <div className="pc-head">
+              <span>~/paolo · live</span>
+              <div className="dots"><span></span><span></span><span></span></div>
+            </div>
+            <pre className="ascii pc-art">
+{`╔═══════════════════════════════╗
+║  `}<span style={{color:'var(--c-blue)'}}>{`░░▒▒▓▓██  PAOLO  ██▓▓▒▒░░`}</span>{`  ║
+║                               ║
+║       `}<span style={{color:'var(--c-pink)'}}>{`╔═══════════════╗`}</span>{`       ║
+║       `}<span style={{color:'var(--c-pink)'}}>{`║   ┌─┐   ┌─┐   ║`}</span>{`       ║
+║       `}<span style={{color:'var(--c-pink)'}}>{`║   │o│   │o│   ║`}</span>{`       ║
+║       `}<span style={{color:'var(--c-pink)'}}>{`║   └─┘   └─┘   ║`}</span>{`       ║
+║       `}<span style={{color:'var(--c-pink)'}}>{`║       ︶       ║`}</span>{`       ║
+║       `}<span style={{color:'var(--c-pink)'}}>{`╚═══════════════╝`}</span>{`       ║
+║                               ║
+║   `}<span style={{color:'var(--c-mint)'}}>{`> ml engineer · audio + cv`}</span>{`  ║
+║   `}<span style={{color:'var(--c-mint)'}}>{`> creative tech researcher`}</span>{`  ║
+║   `}<span style={{color:'var(--c-mint)'}}>{`> built w/ patience + ░░░`}</span>{`   ║
+╚═══════════════════════════════╝`}
+            </pre>
+            <div className="pc-foot">
+              <span>caltech of the arts · MFA '26</span>
+              <span className="badge">v0.4.1</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="container">
-        <motion.div
-          className="hero-content"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.h1 className="hero-title" variants={itemVariants}>
-            {personal.name}
-          </motion.h1>
+      <div className="ticker">
+        <div className="ticker-inner">
+          {[0, 1].map((k) => (
+            <span key={k} style={{display:'contents'}}>
+              <span>● now playing : transformer experiments <em className="sep">/</em></span>
+              <span>● shipping : multi-modal video pipelines <em className="sep">/</em></span>
+              <span>● reading : "the art of doing science and engineering" <em className="sep">/</em></span>
+              <span>● listening : alva noto · oneohtrix · sade <em className="sep">/</em></span>
+              <span>● building : real-time drum machine in pytorch <em className="sep">/</em></span>
+            </span>
+          ))}
+        </div>
+      </div>
 
-          <motion.div className="hero-label" variants={itemVariants}>
-            <span className="hero-bracket">{'['}</span>
-            <span className="hero-label-text">AI/ML Engineer</span>
-            <span className="hero-bracket">{']'}</span>
-          </motion.div>
-
-          <motion.p className="hero-description" variants={itemVariants}>
-            {summary}
-          </motion.p>
-
-          <motion.div className="hero-actions" variants={itemVariants}>
-            <a
-              href="/Paolo_Sandejas_Resume.pdf"
-              download
-              className="btn btn-primary"
-            >
-              Download Resume
-              <span className="btn-icon">↓</span>
-            </a>
-            <a href="#projects" className="btn btn-secondary">
-              View Projects
-              <span className="btn-icon">→</span>
-            </a>
-            <button onClick={onChatClick} className="btn btn-secondary">
-              Chat with pao-gpt
-              <span className="btn-icon">💬</span>
-            </button>
-          </motion.div>
-
-          <motion.div className="value-props" variants={itemVariants}>
-            {valueProps.map((prop, index) => (
-              <div key={index} className="value-prop">
-                <div className="value-prop-number">{String(index + 1).padStart(2, '0')}</div>
-                <div className="value-prop-content">
-                  <h3 className="value-prop-title">{prop.title}</h3>
-                  <p className="value-prop-description">{prop.description}</p>
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        </motion.div>
+      <div className="props">
+        {valueProps.map((p, i) => (
+          <div className="prop" key={p.title}>
+            <span className="num">0{i + 1} / 03</span>
+            <pre className="ascii ascii-icon">{PROP_ART[i]}</pre>
+            <h3>{p.title}</h3>
+            <p>{p.description}</p>
+          </div>
+        ))}
       </div>
     </section>
   );
-};
-
-export default Hero;
+}

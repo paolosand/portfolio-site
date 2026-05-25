@@ -1,54 +1,58 @@
-import { motion } from 'framer-motion';
 import portfolioData from '../data/portfolio.json';
 import './Experience.css';
 
-const Experience = () => {
-  const { experience } = portfolioData;
+export default function Experience() {
+  const { experience, education } = portfolioData;
 
   return (
-    <section className="experience" id="experience">
-      <div className="container">
-        <div className="section-number">04</div>
-        <h2 className="section-title">Experience</h2>
-
-        <div className="experience-timeline">
-          {experience.map((exp, index) => (
-            <motion.div
-              key={index}
-              className="experience-item"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-            >
-              <div className="experience-marker">
-                <div className="marker-dot"></div>
-                <div className="marker-line"></div>
+    <>
+      <section id="experience">
+        <div className="section-head">
+          <span className="num">§ 03 / 04</span>
+          <h2 className="title">work <span className="accent">history</span></h2>
+          <span className="meta">2+ yrs in production</span>
+        </div>
+        <div className="timeline">
+          {experience.map((e) => (
+            <div className="tl-item" key={e.company}>
+              <div className="tl-head">
+                <h3>
+                  {e.role} <span style={{color:'var(--ink-mute)'}}>@</span>{' '}
+                  <span className="where">{e.company}</span>
+                </h3>
+                <span className="when">{e.dates}</span>
               </div>
-
-              <div className="experience-content">
-                <div className="experience-header">
-                  <div>
-                    <h3 className="experience-company">{exp.company}</h3>
-                    <h4 className="experience-role">{exp.role}</h4>
-                  </div>
-                  <div className="experience-dates">{exp.dates}</div>
-                </div>
-
-                <ul className="experience-bullets">
-                  {exp.bullets.map((bullet, i) => (
-                    <li key={i} className="experience-bullet">
-                      {bullet}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </motion.div>
+              <ul className="tl-bullets">
+                {e.bullets.map((b, i) => <li key={i}>{b}</li>)}
+              </ul>
+            </div>
           ))}
         </div>
-      </div>
-    </section>
-  );
-};
+      </section>
 
-export default Experience;
+      <section id="education" style={{marginTop: 0}}>
+        <div className="section-head" style={{margin: '48px 0 24px'}}>
+          <span className="num">§ 04 / 04</span>
+          <h2 className="title">education<span className="accent">.</span></h2>
+          <span className="meta">caltech of the arts · u.p.</span>
+        </div>
+        <div className="timeline">
+          {education.map((e) => (
+            <div className="tl-item edu" key={e.school}>
+              <div className="tl-head">
+                <h3>
+                  {e.degree} <span style={{color:'var(--ink-mute)'}}>@</span>{' '}
+                  <span className="where">{e.school}</span>
+                </h3>
+                <span className="when">{e.dates}{e.gpa ? ` · ${e.gpa}` : ''}</span>
+              </div>
+              <ul className="tl-bullets">
+                {e.bullets.map((b, i) => <li key={i}>{b}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+    </>
+  );
+}

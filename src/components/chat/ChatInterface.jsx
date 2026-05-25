@@ -8,19 +8,13 @@ export default function ChatInterface() {
   const { messages, isLoading, error, send } = useChat();
 
   return (
-    <div className="chat-interface">
-      {messages.length === 0 ? (
-        <WelcomeScreen />
-      ) : (
-        <MessageList messages={messages} isLoading={isLoading} />
-      )}
-
-      {error && (
-        <div className="chat-error">
-          Error: {error}
-        </div>
-      )}
-
+    <div className="chat-shell">
+      <div className="chat-paper">
+        {messages.length === 0
+          ? <WelcomeScreen onPick={send} />
+          : <MessageList messages={messages} isLoading={isLoading} />}
+        {error && <div className="chat-error">⚠ {error}</div>}
+      </div>
       <ChatInput onSend={send} disabled={isLoading} />
     </div>
   );

@@ -1,53 +1,40 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import TopBar from './components/layout/TopBar';
 import ChatInterface from './components/chat/ChatInterface';
 import Hero from './components/Hero';
 import Projects from './components/Projects';
 import Skills from './components/Skills';
 import Experience from './components/Experience';
-import Education from './components/Education';
 import Contact from './components/Contact';
-import './styles/chatgpt-theme.css';
 import './App.css';
 
 function App() {
-  const [currentView, setCurrentView] = useState('chat');
+  const [view, setView] = useState('portfolio');
 
   useEffect(() => {
-    document.body.style.overflow = currentView === 'chat' ? 'hidden' : 'auto';
-  }, [currentView]);
+    document.body.style.overflow = view === 'chat' ? 'hidden' : 'auto';
+    return () => { document.body.style.overflow = 'auto'; };
+  }, [view]);
 
   return (
-    <div className="app">
-      <TopBar
-        currentView={currentView}
-        onViewChange={setCurrentView}
-      />
+    <div className={`app ${view === 'chat' ? 'is-chat' : ''}`}>
+      <TopBar view={view} setView={setView} />
 
-      {currentView === 'chat' && (
-        <div style={{ marginTop: '60px', height: 'calc(100vh - 60px)' }}>
-          <ChatInterface />
-        </div>
+      {view === 'portfolio' && (
+        <>
+          <Hero onChatClick={() => setView('chat')} />
+          <Projects />
+          <Skills />
+          <Experience />
+          <Contact />
+          <footer className="app-footer">
+            <span>© paolo sandejas · made by hand & by machine</span>
+            <span>printed in glendale, ca · 2026<span className="blink"></span></span>
+          </footer>
+        </>
       )}
 
-      {currentView === 'portfolio' && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          style={{ marginTop: '60px' }}
-        >
-          <main>
-            <Hero onChatClick={() => setCurrentView('chat')} />
-            <Projects />
-            <Skills />
-            <Experience />
-            <Education />
-            <Contact />
-          </main>
-        </motion.div>
-      )}
+      {view === 'chat' && <ChatInterface />}
     </div>
   );
 }

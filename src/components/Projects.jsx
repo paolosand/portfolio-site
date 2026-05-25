@@ -1,178 +1,60 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import portfolioData from '../data/portfolio.json';
+import { PROJECT_ART, tagClass } from './shared/ascii.js';
 import './Projects.css';
 
-const Projects = () => {
-  const { projects } = portfolioData;
-  const [filter, setFilter] = useState('all');
-  const [selectedProject, setSelectedProject] = useState(null);
-
-  const filteredProjects = projects.filter(
-    (project) => filter === 'all' || project.category === filter
-  );
-
-  const categories = [
-    { id: 'all', label: 'All Projects' },
-    { id: 'ml', label: 'AI/ML' },
-    { id: 'creative', label: 'Creative Tech' },
-  ];
-
+function ProjectCard({ p, idx }) {
+  const isWide = idx === 0;
   return (
-    <section className="projects" id="projects">
-      <div className="container">
-        <div className="section-number">02</div>
-        <h2 className="section-title">Featured Work</h2>
-
-        <div className="project-filters">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              className={`filter-btn ${filter === cat.id ? 'active' : ''}`}
-              onClick={() => setFilter(cat.id)}
-            >
-              {cat.label}
-            </button>
+    <article className={`project-card ${p.featured ? 'featured' : ''} ${isWide ? 'wide' : ''}`}>
+      {p.featured && (
+        <div className="pc-stamp">
+          <span className={`stamp ${p.category === 'creative' ? '' : 'blue'}`}>★ featured</span>
+        </div>
+      )}
+      <div className="pc-header">
+        <span className="id-tag">#{String(idx + 1).padStart(2, '0')} · {p.id}</span>
+        <span className={`cat ${p.category === 'creative' ? 'creative' : ''}`}>
+          {p.category === 'creative' ? 'creative' : 'ml / ai'}
+        </span>
+      </div>
+      <pre className="ascii pc-ascii-frame">{PROJECT_ART[p.id]}</pre>
+      <div className="pc-body">
+        <h3 className="pc-title">{p.title}</h3>
+        {p.subtitle && <div className="pc-subtitle">{p.subtitle}</div>}
+        <p className="pc-desc">{p.description}</p>
+        <div className="pc-tags">
+          {p.tags.map((t, i) => (
+            <span key={t} className={`tag ${tagClass(i)}`}>{t}</span>
           ))}
         </div>
-
-        <motion.div layout className="projects-grid">
-          <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project, index) => (
-              <motion.div
-                key={project.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.4 }}
-                className={`project-card ${project.featured ? 'featured' : ''}`}
-                onClick={() => setSelectedProject(project)}
-              >
-                <div className="project-header">
-                  <div className="project-number">
-                    {String(index + 1).padStart(2, '0')}
-                  </div>
-                  {project.featured && <div className="featured-badge">Featured</div>}
-                </div>
-
-                <h3 className="project-title">{project.title}</h3>
-                <p className="project-description">{project.description}</p>
-
-                <div className="project-tags">
-                  {project.tags.slice(0, 4).map((tag, i) => (
-                    <span key={i} className="project-tag">
-                      {tag}
-                    </span>
-                  ))}
-                  {project.tags.length > 4 && (
-                    <span className="project-tag more">+{project.tags.length - 4}</span>
-                  )}
-                </div>
-
-                <div className="project-links">
-                  {project.links.github && (
-                    <a
-                      href={project.links.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="project-link"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      GitHub ↗
-                    </a>
-                  )}
-                  {project.links.demo && (
-                    <a
-                      href={project.links.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="project-link"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      Demo ↗
-                    </a>
-                  )}
-                </div>
-
-                <div className="project-hover-indicator">
-                  <span>View Details →</span>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
+        <div className="pc-links">
+          {p.links.github
+            ? <a href={p.links.github} target="_blank" rel="noopener noreferrer">↗ github</a>
+            : <span className="disabled">— private —</span>}
+          {p.links.demo
+            ? <a href={p.links.demo} target="_blank" rel="noopener noreferrer">↗ live demo</a>
+            : <span className="disabled">— no demo —</span>}
+        </div>
       </div>
+    </article>
+  );
+}
 
-      {/* Project Modal */}
-      <AnimatePresence>
-        {selectedProject && (
-          <motion.div
-            className="project-modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedProject(null)}
-          >
-            <motion.div
-              className="project-modal"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                className="modal-close"
-                onClick={() => setSelectedProject(null)}
-              >
-                ✕
-              </button>
+export default function Projects() {
+  const { projects } = portfolioData;
 
-              <div className="modal-header">
-                <h2 className="modal-title">{selectedProject.title}</h2>
-                <div className="modal-category">
-                  {selectedProject.category === 'ml' ? 'AI/ML' : 'Creative Tech'}
-                </div>
-              </div>
-
-              <p className="modal-description">{selectedProject.description}</p>
-
-              <div className="modal-tags">
-                {selectedProject.tags.map((tag, i) => (
-                  <span key={i} className="modal-tag">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              <div className="modal-links">
-                {selectedProject.links.github && (
-                  <a
-                    href={selectedProject.links.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="modal-link"
-                  >
-                    View on GitHub ↗
-                  </a>
-                )}
-                {selectedProject.links.demo && (
-                  <a
-                    href={selectedProject.links.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="modal-link"
-                  >
-                    Live Demo ↗
-                  </a>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+  return (
+    <section id="projects">
+      <div className="section-head">
+        <span className="num">§ 01 / 04</span>
+        <h2 className="title">selected <span className="accent">works</span></h2>
+        <span className="meta">{projects.length} projects · 2023→</span>
+      </div>
+      <div className="projects-grid">
+        {projects.map((p, i) => (
+          <ProjectCard key={p.id} p={p} idx={i} />
+        ))}
+      </div>
     </section>
   );
-};
-
-export default Projects;
+}

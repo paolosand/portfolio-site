@@ -1,129 +1,111 @@
 {
   "personal": {
     "name": "Paolo Sandejas",
-    "title": "AI/ML Engineer | Multi-Modal AI & Creative Applications",
+    "title": "AI/ML Engineer · Creative Technologist",
     "location": "Glendale, CA",
     "email": "pjsandejas@gmail.com",
     "github": "https://github.com/paolosandejas",
     "linkedin": "https://www.linkedin.com/in/paolosandejas"
   },
-  "summary": "Production ML engineer who ships creative, multi-modal AI systems that scale. 2+ years building ML in production serving 12,000+ users. Specializing in audio AI, computer vision, and generative models with full-stack deployment capabilities.",
+  "summary": "Production ML engineer building creative, multi-modal AI systems. 2+ years shipping models that serve 12,000+ users. Specializing in audio AI, computer vision, generative models — with the wiring to deploy them.",
   "valueProps": [
     {
       "title": "Ships Production ML",
-      "description": "2+ years deploying models serving 12,000+ users"
+      "description": "2+ years deploying models serving 12,000+ users."
     },
     {
       "title": "Multi-Modal AI",
-      "description": "Video, audio, text generation pipelines with Gemini, OpenAI, Claude APIs"
+      "description": "Video · audio · text pipelines on Gemini, OpenAI, Claude."
     },
     {
       "title": "Creative Applications",
-      "description": "Real-time audio ML, wearable interfaces, generative systems"
+      "description": "Real-time audio ML, wearable interfaces, generative systems."
     }
   ],
   "projects": [
     {
       "id": "chuloopa",
-      "title": "CHULOOPA - Transformer-Based Drum Generation",
-      "description": "Low-latency transformer model for real-time rhythmic generation in live performance. Researching efficient inference pipelines for generative audio systems.",
-      "tags": ["PyTorch", "Audio ML", "Real-time Inference", "ChucK", "Python", "Transformers"],
+      "title": "CHULOOPA",
+      "subtitle": "Transformer-based drum generation",
+      "description": "Low-latency transformer for real-time rhythmic generation in live performance. Researching efficient inference pipelines for generative audio.",
+      "tags": ["PyTorch", "Audio ML", "Real-time", "ChucK", "Transformers"],
       "category": "ml",
       "featured": true,
       "links": {
         "github": "https://github.com/paolosand/CHULOOPA",
         "demo": null
-      },
-      "media": {
-        "thumbnail": null,
-        "video": null
       }
     },
     {
       "id": "video-analysis",
-      "title": "Multi-Modal Video Analysis System",
-      "description": "Real-time video analysis pipeline with optimized concurrent processing for low-latency response. Built for production deployment serving thousands of users.",
-      "tags": ["Gemini API", "Concurrent Processing", "Python", "Production", "Multi-Modal AI"],
+      "title": "Multi-Modal Video Analysis",
+      "subtitle": "Concurrent Gemini pipeline · production",
+      "description": "Real-time video analysis pipeline with concurrent processing for low-latency response. Deployed in production for thousands of users.",
+      "tags": ["Gemini API", "Concurrent", "Python", "Production", "Multi-Modal"],
       "category": "ml",
       "featured": true,
       "links": {
         "github": null,
         "demo": null
-      },
-      "media": {
-        "thumbnail": null,
-        "video": null
       }
     },
     {
       "id": "geospatial-ml",
       "title": "Geospatial ML Pipeline",
-      "description": "Custom CNN architecture for geospatial analysis with data preprocessing and evaluation framework. Achieved >90% accuracy through model optimization.",
-      "tags": ["PyTorch", "Computer Vision", "Model Optimization", ">90% Accuracy", "CNN"],
+      "subtitle": "Custom CNN · >90% accuracy",
+      "description": "Custom CNN architecture with data preprocessing and evaluation framework. Achieved >90% accuracy through model optimization.",
+      "tags": ["PyTorch", "Computer Vision", "CNN", "Optimization"],
       "category": "ml",
       "featured": true,
       "links": {
         "github": null,
         "demo": null
-      },
-      "media": {
-        "thumbnail": null,
-        "video": null
       }
     },
     {
       "id": "hai",
-      "title": "HAI - Head as Interface",
+      "title": "HAI · Head as Interface",
+      "subtitle": "Wearable gestural instrument",
       "description": "Wearable gestural interface for musical performance using IMU sensors. Real-time Max/MSP audio processing controlled by head movements via Arduino.",
-      "tags": ["Arduino", "Max/MSP", "Wearable Computing", "HCI", "Real-time Audio"],
+      "tags": ["Arduino", "Max/MSP", "Wearable", "HCI", "Real-time"],
       "category": "creative",
       "featured": true,
       "links": {
         "github": null,
         "demo": null
-      },
-      "media": {
-        "thumbnail": null,
-        "video": null
       }
     },
     {
       "id": "ascii-drone",
       "title": "ASCII Drone Synth",
-      "description": "Gesture-controlled drone synthesizer for live performance using computer vision. MediaPipe hand tracking drives web audio synthesis with Tone.js.",
-      "tags": ["MediaPipe", "Tone.js", "Computer Vision", "Web Audio", "Creative Coding"],
+      "subtitle": "Gesture-controlled web synth",
+      "description": "Gesture-controlled drone synthesizer. MediaPipe hand tracking drives web audio synthesis with Tone.js.",
+      "tags": ["MediaPipe", "Tone.js", "Web Audio", "Creative Coding"],
       "category": "creative",
       "featured": false,
       "links": {
         "github": null,
         "demo": "https://paolosand.github.io/ascii_drone/"
-      },
-      "media": {
-        "thumbnail": null,
-        "video": null
       }
     },
     {
       "id": "parallel-paths",
-      "title": "Parallel Paths - Responsible AI in Music",
+      "title": "Parallel Paths",
+      "subtitle": "Responsible AI in music",
       "description": "Exploration of responsible AI integration in songwriting practice using Gemini and Suno APIs. Research on ethical creative AI workflows.",
-      "tags": ["Gemini API", "Suno", "Ethics", "Creative AI", "Music Tech"],
+      "tags": ["Gemini", "Suno", "Ethics", "Creative AI"],
       "category": "ml",
       "featured": false,
       "links": {
         "github": null,
         "demo": null
-      },
-      "media": {
-        "thumbnail": null,
-        "video": null
       }
     }
   ],
   "skills": {
     "Languages & Core": ["Python", "C++", "SQL", "JavaScript", "TypeScript"],
     "ML & AI": ["PyTorch", "TensorFlow", "Scikit-learn", "Computer Vision", "Audio ML", "LLMs", "RAG", "Multi-Modal AI"],
-    "ML Infrastructure": ["Model Deployment", "Model Evaluation", "Optimization", "Data Processing", "CI/CD", "Docker"],
+    "ML Infrastructure": ["Model Deployment", "Evaluation", "Optimization", "Data Processing", "CI/CD", "Docker"],
     "APIs & Tools": ["Gemini API", "OpenAI API", "Claude API", "AWS", "GCP", "Hugging Face"],
     "Creative Tech": ["Max/MSP", "ChucK", "p5.js", "Tone.js", "MediaPipe", "GSAP"]
   },
@@ -131,43 +113,42 @@
     {
       "company": "Nuts and Bolts AI",
       "role": "Software Engineer Consultant",
-      "dates": "June 2025 to Present",
+      "dates": "Jun 2025 — Present",
       "bullets": [
-        "Built real-time multi-modal video analysis system using Google Gemini API with concurrent processing pipelines optimized for low-latency response.",
-        "Architected GenAI solutions integrating multiple LLM APIs (Gemini, OpenAI, Claude) into production systems serving 12,000+ users.",
-        "Designed AI recommendation engine with evaluation framework and data processing pipelines for high-volume workflows.",
-        "Collaborated with cross-functional teams to define system requirements, contribute to design reviews, and maintain documentation."
+        "Built real-time multi-modal video analysis using Google Gemini with concurrent pipelines optimized for low latency.",
+        "Architected GenAI solutions integrating Gemini · OpenAI · Claude into production systems serving 12,000+ users.",
+        "Designed AI recommendation engine with evaluation framework and data pipelines for high-volume workflows.",
+        "Cross-functional collaboration on system requirements, design reviews, and documentation."
       ]
     },
     {
       "company": "Stratpoint Technologies",
-      "role": "AI Engineer - Rapid Prototyping Unit",
-      "dates": "July 2023 to July 2024",
+      "role": "AI Engineer · Rapid Prototyping Unit",
+      "dates": "Jul 2023 — Jul 2024",
       "bullets": [
-        "Developed production LLM assistant with ReAct agents and RAG; implemented retrieval pipelines, embeddings, and prompt engineering for text generation.",
-        "Built geospatial ML pipelines using PyTorch with custom architectures; achieved >90% accuracy through model optimization and data preprocessing.",
-        "Designed model evaluation frameworks and debugging workflows to validate ML concept feasibility for production deployment.",
-        "Triaged system issues, analyzed impact on service quality, and implemented solutions across ML infrastructure.",
-        "Established best practices through code reviews and technical documentation for team scaling from 4 to 13 engineers."
+        "Developed production LLM assistant with ReAct agents and RAG; retrieval pipelines, embeddings, prompt engineering.",
+        "Built geospatial ML pipelines in PyTorch; >90% accuracy via model optimization and data preprocessing.",
+        "Designed evaluation frameworks and debugging workflows to validate ML feasibility for production.",
+        "Established best practices through code reviews and docs while team scaled from 4 → 13 engineers."
       ]
     }
   ],
   "education": [
     {
-      "degree": "Master of Fine Arts in Music Technology",
+      "degree": "MFA, Music Technology",
       "school": "California Institute of the Arts",
-      "dates": "2024 to 2026 (Expected)",
-      "gpa": "4.0",
+      "dates": "2024 — 2026",
+      "gpa": "4.0 GPA",
       "bullets": [
         "Developing real-time generative audio systems with PyTorch; researching low-latency ML inference and custom audio generation models."
       ]
     },
     {
-      "degree": "Bachelor of Science in Computer Science",
+      "degree": "BS, Computer Science",
       "school": "University of the Philippines",
-      "dates": "2018 to 2023",
+      "dates": "2018 — 2023",
       "bullets": [
-        "Built computer vision pipelines using Python, OpenCV, and scikit-learn. Coursework in algorithms, data structures, and ML."
+        "Built computer vision pipelines using Python, OpenCV, scikit-learn. Coursework in algorithms, data structures, and ML."
       ]
     }
   ]

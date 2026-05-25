@@ -1,28 +1,29 @@
 import './TopBar.css';
 
-export default function TopBar({ currentView, onViewChange }) {
+export default function TopBar({ view, setView }) {
   return (
-    <div className="top-bar">
-      <div className="top-bar-left">
-        <div className="brand">pao-gpt</div>
+    <header className="topbar">
+      <div className="tb-mark">
+        <span className="glyph">P/</span>
+        <div>
+          <div className="name">paolo sandejas</div>
+          <div className="sub">ai · ml · creative tech</div>
+        </div>
       </div>
-
-      <div className="top-bar-center">
-        <button
-          className={`view-toggle ${currentView === 'chat' ? 'active' : ''}`}
-          onClick={() => onViewChange('chat')}
-        >
-          💬 Chat
+      <nav className="tb-nav">
+        <button className={view === 'chat' ? 'is-active' : ''} onClick={() => setView('chat')}>
+          <span className="dot"></span>
+          chat / pao-gpt
         </button>
-        <button
-          className={`view-toggle ${currentView === 'portfolio' ? 'active' : ''}`}
-          onClick={() => onViewChange('portfolio')}
-        >
-          📋 Portfolio
+        <button className={view === 'portfolio' ? 'is-active' : ''} onClick={() => setView('portfolio')}>
+          <span className="dot"></span>
+          portfolio
         </button>
+      </nav>
+      <div className="tb-meta">
+        <div><b>v0.4.1</b> · march 2026</div>
+        <div>printed in glendale, ca</div>
       </div>
-
-      <div className="top-bar-right"></div>
-    </div>
+    </header>
   );
 }

@@ -1,16 +1,1 @@
-.chat-interface {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background: var(--bg-primary);
-}
-
-.chat-error {
-  padding: var(--space-4);
-  margin: var(--space-4) var(--space-6);
-  background: rgba(222, 60, 75, 0.1);
-  border: 1px solid rgba(222, 60, 75, 0.3);
-  border-radius: 8px;
-  color: var(--accent-hover);
-  text-align: center;
-}
+/* styles in src/index.css */

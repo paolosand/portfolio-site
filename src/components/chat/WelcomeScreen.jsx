@@ -1,43 +1,70 @@
 import portfolioData from '../../data/portfolio.json';
+import { CHAT_PROMPTS } from '../shared/ascii.js';
 import './WelcomeScreen.css';
 
-export default function WelcomeScreen() {
+export default function WelcomeScreen({ onPick }) {
   const { personal } = portfolioData;
 
   return (
-    <div className="welcome-screen">
-      <h1 className="welcome-title">Hi, I'm pao-gpt 👋</h1>
+    <div className="welcome">
+      <pre className="ascii welcome-banner">
+{`  `}<span className="b">{`____`}</span>{`              `}<span className="b">{`___`}</span>{`       `}<span className="p">{`____  ____  _____`}</span>{`
+ `}<span className="b">{`|  _ \\`}</span>{`    /\\      `}<span className="b">{`/ _ \\`}</span>{`     `}<span className="p">{`/ ___||  _ \\|_   _|`}</span>{`
+ `}<span className="b">{`| |_) |`}</span>{`  /  \\    `}<span className="b">{`| | | |`}</span>{`   `}<span className="p">{`| |  _ | |_) | | |`}</span>{`
+ `}<span className="b">{`|  __/`}</span>{`  / /\\ \\   `}<span className="b">{`| |_| |`}</span>{`   `}<span className="p">{`| |_| ||  __/  | |`}</span>{`
+ `}<span className="b">{`|_|`}</span>{`    /_/  \\_\\   `}<span className="b">{`\\___/`}</span>{`    `}<span className="p">{`\\____||_|     |_|`}</span>{`
+ ─────────────────────────────────────────────
+   `}<span className="m">{`an ai clone of paolo · trained on the human`}</span></pre>
 
-      <p className="welcome-subtitle">
-        An AI clone of Paolo Sandejas<br />
-        AI/ML Engineer | Creative Technologist
+      <h1>hi, i'm pao-gpt <span className="wave">👋</span></h1>
+      <p className="lead">
+        the friendly little machine that knows what paolo's been building.
+        ask me about ml in production, audio/cv work, or the wearable instruments —
+        i'll answer in his voice.
       </p>
 
-      <div className="welcome-links">
-        <a href={`mailto:${personal.email}`} className="welcome-link">
-          📧 {personal.email}
-        </a>
-        <a href={personal.github} target="_blank" rel="noopener noreferrer" className="welcome-link">
-          🔗 GitHub
-        </a>
-        <a href={personal.linkedin} target="_blank" rel="noopener noreferrer" className="welcome-link">
-          💼 LinkedIn
-        </a>
+      <div className="card">
+        <div className="head">
+          <span>contact · always-on</span>
+          <span>★ ★ ★</span>
+        </div>
+        <div className="links">
+          <a href={`mailto:${personal.email}`}>
+            <span className="glyph">✉</span>
+            <span>{personal.email}</span>
+          </a>
+          <a href={personal.github} target="_blank" rel="noopener noreferrer">
+            <span className="glyph">◆</span>
+            <span>github / paolosandejas</span>
+          </a>
+          <a href={personal.linkedin} target="_blank" rel="noopener noreferrer">
+            <span className="glyph">■</span>
+            <span>linkedin / paolosandejas</span>
+          </a>
+        </div>
       </div>
 
-      <div className="welcome-topics">
-        <h3>Ask me about:</h3>
-        <ul>
-          <li>• My ML production experience</li>
-          <li>• Creative tech projects</li>
-          <li>• Music + audio AI work</li>
-          <li>• Anything else!</li>
-        </ul>
+      <div className="card">
+        <div className="head">
+          <span>try a thread →</span>
+          <span>tap to ask</span>
+        </div>
+        <div className="prompts">
+          {CHAT_PROMPTS.map((p) => (
+            <button className="prompt" key={p.title} onClick={() => onPick(p.q)}>
+              <pre className="icon">{p.icon}</pre>
+              <div>
+                <strong>{p.title}</strong>
+                <span>{p.q}</span>
+              </div>
+            </button>
+          ))}
+        </div>
       </div>
 
-      <p className="welcome-privacy">
-        Conversations stored anonymously for analytics
-      </p>
+      <div className="privacy-note">
+        ▌ conversations stored anonymously · for analytics only ▐
+      </div>
     </div>
   );
 }
