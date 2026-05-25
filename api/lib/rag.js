@@ -1,0 +1,57 @@
+import { readFileSync, readdirSync } from 'node:fs';
+import { join, dirname, basename } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { GoogleGenAI } from '@google/genai';
+import { SYSTEM_PROMPT } from './personality.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const KNOWLEDGE_DIR = join(__dirname, '..', 'knowledge');
+
+const MODEL = 'gemini-2.5-flash';
+const GENERATION_CONFIG = { temperature: 0.7, maxOutputTokens: 1024 };
+
+let _client = null;
+function getClient() {
+  if (!_client) {
+    _client = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
+  }
+  return _client;
+}
+
+export function loadKnowledge() {
+  const files = readdirSync(KNOWLEDGE_DIR).filter(f => f.endsWith('.md'));
+  return files.map(file => ({
+    content: readFileSync(join(KNOWLEDGE_DIR, file), 'utf8'),
+    metadata: { source: basename(file, '.md') },
+  }));
+}
+
+export async function generate(query, context, history) {
+  const client = getClient();
+  const contextBlock = context
+    .map(doc => `[${doc.metadata.source}]\n${doc.content}`)
+    .join('\n\n---\n\n');
+
+  const recentHistory = history.slice(-5);
+  const historyBlock = recentHistory
+    .map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`)
+    .join('\n');
+
+  const today = new Date().toISOString().split('T')[0];
+  const prompt = [
+    SYSTEM_PROMPT,
+    `\nToday's date: ${today}`,
+    '\n\n--- CONTEXT ---\n',
+    contextBlock,
+    historyBlock ? `\n\n--- CONVERSATION HISTORY ---\n${historyBlock}` : '',
+    `\n\n--- QUESTION ---\n${query}`,
+  ].join('');
+
+  const response = await client.models.generateContent({
+    model: MODEL,
+    contents: prompt,
+    config: GENERATION_CONFIG,
+  });
+
+  return response.text;
+}
