@@ -4,7 +4,7 @@ import ProjectEmbed from './embeds/ProjectEmbed';
 import WorkEmbed from './embeds/WorkEmbed';
 import './MessageList.css';
 
-function AssistantBlocks({ blocks }) {
+function AssistantBlocks({ blocks = [] }) {
   return blocks.map((block, i) => {
     if (block.type === 'text') {
       return <ReactMarkdown key={i}>{block.content}</ReactMarkdown>;
