@@ -33,15 +33,22 @@ export default async function handler(req, res) {
   try {
     const guardResult = check(query);
     if (guardResult.isMalicious) {
-      res.status(200).json({ response: guardResult.response, blocked: true });
+      res.status(200).json({
+        blocks: [{ type: 'text', content: guardResult.response }],
+        blocked: true,
+      });
       return;
     }
 
     const context = getKnowledge();
-    const responseText = await generate(query, context, history);
-    const filtered = filterResponse(responseText);
+    const blocks = await generate(query, context, history);
+    const filteredBlocks = blocks.map(block =>
+      block.type === 'text'
+        ? { ...block, content: filterResponse(block.content) }
+        : block
+    );
 
-    res.status(200).json({ response: filtered, blocked: false });
+    res.status(200).json({ blocks: filteredBlocks, blocked: false });
   } catch (err) {
     console.error('Chat handler error:', err);
     res.status(500).json({ error: 'Internal server error' });
