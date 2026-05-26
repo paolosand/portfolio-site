@@ -1,6 +1,13 @@
 import { useState, useCallback, useRef } from 'react';
 import { sendMessage } from '../services/api';
 
+function blocksToContent(blocks) {
+  return blocks
+    .filter(b => b.type === 'text')
+    .map(b => b.content)
+    .join('\n\n');
+}
+
 export function useChat() {
   const [messages, setMessages] = useState([]);
   const messagesRef = useRef([]);
@@ -14,7 +21,12 @@ export function useChat() {
       timestamp: new Date().toISOString(),
     };
 
-    const history = messagesRef.current.slice(-4).concat(userMsg);
+    // Build history before updating ref — matches original slice(-4).concat(userMsg) semantics
+    const apiHistory = messagesRef.current.slice(-4).concat(userMsg).map(m => ({
+      role: m.role,
+      content: m.role === 'assistant' ? blocksToContent(m.blocks) : m.content,
+    }));
+
     messagesRef.current = [...messagesRef.current, userMsg];
     setMessages(prev => [...prev, userMsg]);
 
@@ -22,11 +34,11 @@ export function useChat() {
     setError(null);
 
     try {
-      const response = await sendMessage(userMessage, history);
+      const response = await sendMessage(userMessage, apiHistory);
 
       const assistantMsg = {
         role: 'assistant',
-        content: response.response,
+        blocks: response.blocks,
         timestamp: new Date().toISOString(),
       };
       messagesRef.current = [...messagesRef.current, assistantMsg];
