@@ -1,14 +1,33 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, Type } from '@google/genai';
 import { SYSTEM_PROMPT } from './personality.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const KNOWLEDGE_DIR = join(__dirname, '..', 'knowledge');
 
 const MODEL = 'gemini-2.5-flash';
-const GENERATION_CONFIG = { temperature: 0.7, maxOutputTokens: 1024 };
+
+const RESPONSE_SCHEMA = {
+  type: Type.ARRAY,
+  items: {
+    type: Type.OBJECT,
+    properties: {
+      type:    { type: Type.STRING },
+      content: { type: Type.STRING },
+      id:      { type: Type.STRING },
+    },
+    required: ['type'],
+  },
+};
+
+const GENERATION_CONFIG = {
+  temperature: 0.7,
+  maxOutputTokens: 1024,
+  responseMimeType: 'application/json',
+  responseSchema: RESPONSE_SCHEMA,
+};
 
 let _client = null;
 function getClient() {
@@ -53,5 +72,11 @@ export async function generate(query, context, history) {
     config: GENERATION_CONFIG,
   });
 
-  return response.text;
+  try {
+    const blocks = JSON.parse(response.text);
+    if (Array.isArray(blocks)) return blocks;
+    return [{ type: 'text', content: response.text }];
+  } catch {
+    return [{ type: 'text', content: response.text }];
+  }
 }
