@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from 'react';
 import { sendMessage } from '../services/api';
 
 function blocksToContent(blocks) {
+  if (!blocks) return '';
   return blocks
     .filter(b => b.type === 'text')
     .map(b => b.content)
