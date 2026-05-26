@@ -37,8 +37,8 @@ export default function Contact() {
             </div>
             <div className="addr">
               <span className="lbl">on the web</span>
-              <a href={personal.github} target="_blank" rel="noopener noreferrer">github.com/paolosandejas</a><br />
-              <a href={personal.linkedin} target="_blank" rel="noopener noreferrer">linkedin.com/in/paolosandejas</a>
+              <a href={personal.github} target="_blank" rel="noopener noreferrer">github.com/paolosand</a><br />
+              <a href={personal.linkedin} target="_blank" rel="noopener noreferrer">linkedin.com/in/paolosand</a>
             </div>
             <div className="addr last">
               <span className="lbl">return address</span>

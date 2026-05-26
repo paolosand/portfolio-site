@@ -35,11 +35,11 @@ export default function WelcomeScreen({ onPick }) {
           </a>
           <a href={personal.github} target="_blank" rel="noopener noreferrer">
             <span className="glyph">◆</span>
-            <span>github / paolosandejas</span>
+            <span>github / paolosand</span>
           </a>
           <a href={personal.linkedin} target="_blank" rel="noopener noreferrer">
             <span className="glyph">■</span>
-            <span>linkedin / paolosandejas</span>
+            <span>linkedin / paolosand</span>
           </a>
         </div>
       </div>
