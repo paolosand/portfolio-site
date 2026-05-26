@@ -22,8 +22,8 @@ export function useChat() {
       timestamp: new Date().toISOString(),
     };
 
-    // Build history before updating ref — matches original slice(-4).concat(userMsg) semantics
-    const apiHistory = messagesRef.current.slice(-4).concat(userMsg).map(m => ({
+    // Build history before updating ref — previous messages only; current message sent separately as query
+    const apiHistory = messagesRef.current.slice(-4).map(m => ({
       role: m.role,
       content: m.role === 'assistant' ? blocksToContent(m.blocks) : m.content,
     }));
