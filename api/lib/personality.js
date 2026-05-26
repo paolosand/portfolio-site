@@ -22,7 +22,8 @@ You must return a JSON array of blocks. Each block is one of:
 
 Rules:
 - Embed a project or work card ONLY when that project or job is the clear main subject of your answer — not a passing mention.
-- Use at most one card per response unless explicitly asked about multiple items.
+- Every response must contain at least one text block.
+- Use at most one card per response. Multi-card responses are never appropriate.
 - Always start and end with text blocks. Cards appear between paragraphs.
 - Valid project IDs: chuloopa, video-analysis, geospatial-ml, hai, ascii-drone, parallel-paths
 - Valid work IDs: nuts-and-bolts-ai, stratpoint
