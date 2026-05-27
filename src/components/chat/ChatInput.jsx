@@ -29,7 +29,7 @@ export default function ChatInput({ onSend, disabled }) {
         />
       </div>
       <button type="submit" className="send" disabled={disabled || !input.trim()}>
-        send <span style={{marginLeft: 6, color: 'var(--c-lemon)'}}>↵</span>
+        send <span className="send-glyph">↵</span>
       </button>
     </form>
   );

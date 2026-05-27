@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-25T00:00:00Z",
+  "title": "Design System: Paolo Sandejas Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "paper":           { "role": "neutral",   "displayName": "Warm Cream",        "canonical": "#F2EBDA", "tonalRamp": ["#2A2412", "#443A23", "#6A5E40", "#8E8268", "#B5AC96", "#CEC6AC", "#E2DAC7", "#F2EBDA"] },
+      "paper-2":         { "role": "neutral",   "displayName": "Second Sheet",       "canonical": "#E9E0C8", "tonalRamp": ["#2A2412", "#443A23", "#6A5E40", "#8E8268", "#B5AC96", "#CEC6AC", "#DDD5BE", "#E9E0C8"] },
+      "paper-3":         { "role": "neutral",   "displayName": "Draft Marks",        "canonical": "#DDD2B5", "tonalRamp": ["#2A2412", "#443A23", "#6A5E40", "#8E8268", "#B0A98E", "#C5BEA3", "#D4CBB0", "#DDD2B5"] },
+      "ink":             { "role": "neutral",   "displayName": "Charcoal Ink",       "canonical": "#1A130A", "tonalRamp": ["#1A130A", "#2E2415", "#48392A", "#6A5A48", "#8E7E6C", "#B5A898", "#D0CAC0", "#DDD8D0"] },
+      "ink-2":           { "role": "neutral",   "displayName": "Pressed Ink",        "canonical": "#3E3424", "tonalRamp": ["#1A130A", "#3E3424", "#5A4C36", "#7A6C53", "#9E9076", "#B5A896", "#CCC3B0", "#E0D8C5"] },
+      "ink-mute":        { "role": "neutral",   "displayName": "Faded Ink",          "canonical": "#7A6C53", "tonalRamp": ["#1A130A", "#2E2415", "#48392A", "#7A6C53", "#9E9076", "#B5A898", "#CCC3B0", "#E0D8C5"] },
+      "ink-faint":       { "role": "neutral",   "displayName": "Ghosted Ink",        "canonical": "#B6A988", "tonalRamp": ["#2A2412", "#443A23", "#6A5E40", "#8E8268", "#B6A988", "#CCC3AE", "#DDD5BE", "#EEEADF"] },
+      "riso-blue":       { "role": "primary",   "displayName": "Riso Blue",          "canonical": "#2841E8", "tonalRamp": ["#050B2E", "#0D1E64", "#142CB8", "#2841E8", "#5568F0", "#8090F5", "#AABAF8", "#D3DCF9"] },
+      "fluorescent-pink":{ "role": "secondary", "displayName": "Fluorescent Pink",   "canonical": "#F0457B", "tonalRamp": ["#2A0312", "#4A0B23", "#721B3E", "#B02A5C", "#F0457B", "#F579A0", "#F9A8C0", "#FDD5E3"] },
+      "screenprint-mint":{ "role": "tertiary",  "displayName": "Screenprint Mint",   "canonical": "#00A076", "tonalRamp": ["#00201A", "#00382E", "#005040", "#006A54", "#00A076", "#2DC49A", "#74D9BF", "#BFEEDF"] },
+      "press-lemon":     { "role": "tertiary",  "displayName": "Press Lemon",        "canonical": "#E8B91A", "tonalRamp": ["#1E1700", "#3D3000", "#6B5200", "#9C7E00", "#D0A800", "#E8B91A", "#F0D060", "#F5E5A0"] }
+    },
+    "typographyMeta": {
+      "display":   { "displayName": "Display",   "purpose": "Hero title only. The largest expression of the brand." },
+      "headline":  { "displayName": "Headline",  "purpose": "Section titles. Always paired with a section number label and a right-aligned meta." },
+      "title":     { "displayName": "Title",     "purpose": "Card titles. High-weight, tight-tracked." },
+      "body":      { "displayName": "Body",      "purpose": "General prose, card descriptions, chat messages." },
+      "label":     { "displayName": "Label",     "purpose": "All UI metadata — section numbers, category badges, topbar meta, eyebrow labels." },
+      "editorial": { "displayName": "Editorial", "purpose": "Hero tagline and postcard message voice. Newsreader Italic only." }
+    },
+    "shadows": [
+      { "name": "card",          "value": "5px 5px 0 #1A130A",  "purpose": "Project cards and portrait cards at rest." },
+      { "name": "card-hover",    "value": "7px 7px 0 #1A130A",  "purpose": "Project cards on hover (paired with translate(-2px,-2px))." },
+      { "name": "button",        "value": "3px 3px 0 #1A130A",  "purpose": "CTA buttons at rest." },
+      { "name": "button-hover",  "value": "4px 4px 0 #1A130A",  "purpose": "CTA buttons on hover (paired with translate(-1px,-1px))." },
+      { "name": "button-active", "value": "1px 1px 0 #1A130A",  "purpose": "CTA buttons on press (paired with translate(2px,2px))." },
+      { "name": "portrait",      "value": "8px 8px 0 #1A130A",  "purpose": "Hero portrait card only. Largest shadow in the system." },
+      { "name": "mark",          "value": "3px 3px 0 #1A130A",  "purpose": "Brand glyph badge." }
+    ],
+    "motion": [
+      { "name": "snappy",        "value": "0.08s ease",           "purpose": "Button press/hover. Immediate tactile feel." },
+      { "name": "card-lift",     "value": "0.1s ease",            "purpose": "Card hover. Slightly longer for spatial read." },
+      { "name": "ticker",        "value": "60s linear infinite",  "purpose": "Horizontal ticker scroll. Continuous, never pauses." },
+      { "name": "pulse",         "value": "1.8s ease-in-out infinite", "purpose": "Status indicator dot (available/live)." },
+      { "name": "enter-stagger", "value": "framer-motion",        "purpose": "Section entrance animations via Framer Motion with staggered children." }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "880px", "purpose": "Single breakpoint. Below this, all grids collapse to single-column." }
+    ]
+  },
+  "components": [
+    {
+      "name": "CTA Button — Primary (Ink)",
+      "kind": "button",
+      "refersTo": "button-ink",
+      "description": "Full ink background button. The highest-weight action on any surface.",
+      "html": "<button class=\"ds-cta ds-cta-ink\">VIEW WORK</button>",
+      "css": ".ds-cta { display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border: 1.5px solid #1A130A; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; box-shadow: 3px 3px 0 #1A130A; transition: transform 0.08s ease, box-shadow 0.08s ease; cursor: pointer; border-radius: 0; text-decoration: none; } .ds-cta-ink { background: #1A130A; color: #F2EBDA; } .ds-cta:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 #1A130A; } .ds-cta:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #1A130A; }"
+    },
+    {
+      "name": "CTA Button — Default",
+      "kind": "button",
+      "refersTo": "button-default",
+      "description": "Paper background CTA. Secondary action, same physical press behavior.",
+      "html": "<button class=\"ds-cta ds-cta-default\">DOWNLOAD CV</button>",
+      "css": ".ds-cta { display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border: 1.5px solid #1A130A; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; box-shadow: 3px 3px 0 #1A130A; transition: transform 0.08s ease, box-shadow 0.08s ease; cursor: pointer; border-radius: 0; } .ds-cta-default { background: #F2EBDA; color: #1A130A; } .ds-cta-default:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 #1A130A; background: #F2EBDA; } .ds-cta-default:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #1A130A; }"
+    },
+    {
+      "name": "CTA Button — Pink Accent",
+      "kind": "button",
+      "refersTo": "button-pink",
+      "description": "Fluorescent Pink background. Used for the primary single CTA per section.",
+      "html": "<button class=\"ds-cta ds-cta-pink\">GET IN TOUCH ↗</button>",
+      "css": ".ds-cta { display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border: 1.5px solid #1A130A; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; box-shadow: 3px 3px 0 #1A130A; transition: transform 0.08s ease, box-shadow 0.08s ease; cursor: pointer; border-radius: 0; } .ds-cta-pink { background: #F0457B; color: #F2EBDA; border-color: #1A130A; } .ds-cta-pink:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 #1A130A; } .ds-cta-pink:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #1A130A; }"
+    },
+    {
+      "name": "Tag — Default",
+      "kind": "chip",
+      "refersTo": "tag-default",
+      "description": "Neutral inline tag for categorization. Minimal variant.",
+      "html": "<span class=\"ds-tag\">Python</span>",
+      "css": ".ds-tag { display: inline-block; padding: 3px 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.04em; border: 1.2px solid #1A130A; background: #F2EBDA; color: #1A130A; border-radius: 2px; white-space: nowrap; }"
+    },
+    {
+      "name": "Tag — Riso Blue",
+      "kind": "chip",
+      "refersTo": "tag-blue",
+      "description": "Blue-filled tag for primary category classification.",
+      "html": "<span class=\"ds-tag ds-tag-blue\">ML</span>",
+      "css": ".ds-tag { display: inline-block; padding: 3px 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.04em; border-radius: 2px; white-space: nowrap; } .ds-tag-blue { background: #2841E8; color: #F2EBDA; border: 1.2px solid #2841E8; }"
+    },
+    {
+      "name": "Tag — Press Lemon",
+      "kind": "chip",
+      "refersTo": "tag-lemon",
+      "description": "Lemon-filled tag. Ink text on yellow — used for featured/highlight classification.",
+      "html": "<span class=\"ds-tag ds-tag-lemon\">FEATURED</span>",
+      "css": ".ds-tag { display: inline-block; padding: 3px 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.04em; border-radius: 2px; white-space: nowrap; } .ds-tag-lemon { background: #E8B91A; color: #1A130A; border: 1.2px solid #1A130A; }"
+    },
+    {
+      "name": "Project Card",
+      "kind": "card",
+      "refersTo": "button-default",
+      "description": "Primary content unit. Dark header bar, ASCII texture zone, body with title/tags/links.",
+      "html": "<div class=\"ds-project-card\"><div class=\"ds-pc-header\"><span class=\"ds-pc-id\">PROJ-001</span><span class=\"ds-pc-cat ds-pc-cat-ml\">ML</span></div><div class=\"ds-pc-body\"><h3 class=\"ds-pc-title\">RAG Knowledge Base</h3><p class=\"ds-pc-subtitle\">LANGCHAIN · CHROMA · GEMINI</p><p class=\"ds-pc-desc\">Retrieval-augmented QA system with streaming responses and semantic vector search.</p><div class=\"ds-pc-tags\"><span class=\"ds-tag ds-tag-blue\">Python</span><span class=\"ds-tag ds-tag-mint\">LangChain</span></div></div></div>",
+      "css": ".ds-project-card { position: relative; border: 1.5px solid #1A130A; background: #F2EBDA; display: flex; flex-direction: column; box-shadow: 5px 5px 0 #1A130A; transition: transform 0.1s ease, box-shadow 0.1s ease; } .ds-project-card:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 #1A130A; } .ds-pc-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #1A130A; color: #F2EBDA; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; } .ds-pc-id { color: #E8B91A; } .ds-pc-cat { display: inline-block; padding: 2px 8px; font-weight: 700; color: #1A130A; } .ds-pc-cat-ml { background: #00A076; } .ds-pc-cat-creative { background: #F0457B; color: #F2EBDA; } .ds-pc-body { padding: 18px 18px 22px; flex: 1; } .ds-pc-title { font-family: 'JetBrains Mono', monospace; font-size: 21px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 4px; line-height: 1.15; color: #1A130A; } .ds-pc-subtitle { color: #7A6C53; font-family: 'JetBrains Mono', monospace; font-size: 12px; margin: 0 0 10px; letter-spacing: 0.06em; text-transform: uppercase; } .ds-pc-desc { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #3E3424; line-height: 1.55; margin: 0 0 16px; } .ds-pc-tags { display: flex; flex-wrap: wrap; gap: 6px; } .ds-tag { display: inline-block; padding: 3px 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.04em; border-radius: 2px; white-space: nowrap; } .ds-tag-blue { background: #2841E8; color: #F2EBDA; border: 1.2px solid #2841E8; } .ds-tag-mint { background: #00A076; color: #F2EBDA; border: 1.2px solid #00A076; }"
+    },
+    {
+      "name": "Nav Tabs",
+      "kind": "nav",
+      "refersTo": "button-default",
+      "description": "Segmented navigation control. Ink border, no outer radius, Press Lemon hover fill, ink active state.",
+      "html": "<nav class=\"ds-nav\"><button class=\"ds-nav-btn ds-nav-active\"><span class=\"ds-nav-dot\"></span>PORTFOLIO</button><button class=\"ds-nav-btn\"><span class=\"ds-nav-dot\"></span>PAO-GPT</button></nav>",
+      "css": ".ds-nav { display: flex; border: 1.5px solid #1A130A; background: #F2EBDA; } .ds-nav-btn { display: flex; align-items: center; gap: 10px; padding: 10px 18px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; border-right: 1.5px solid #1A130A; color: #1A130A; background: transparent; border-top: none; border-bottom: none; border-left: none; cursor: pointer; white-space: nowrap; transition: background 0.08s ease; } .ds-nav-btn:last-child { border-right: none; } .ds-nav-btn:not(.ds-nav-active):hover { background: #E8B91A; } .ds-nav-active { background: #1A130A; color: #F2EBDA; } .ds-nav-dot { width: 8px; height: 8px; background: #E9E0C8; border: 1px solid #1A130A; border-radius: 50%; } .ds-nav-active .ds-nav-dot { background: #00A076; border-color: #F2EBDA; }"
+    },
+    {
+      "name": "Stamp",
+      "kind": "custom",
+      "refersTo": "tag-pink",
+      "description": "Rotated certification mark. Always tilted. Used for project status, featured badges, availability.",
+      "html": "<span class=\"ds-stamp\">AVAILABLE</span>",
+      "css": ".ds-stamp { display: inline-block; border: 2px solid currentColor; padding: 4px 10px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; transform: rotate(-3deg); color: #F0457B; background: #F2EBDA; } .ds-stamp.ds-stamp-mint { color: #00A076; transform: rotate(2deg); } .ds-stamp.ds-stamp-blue { color: #2841E8; transform: rotate(-1.5deg); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Engineer's Sketchbook",
+    "overview": "Technical precision meets handcrafted marks. The visual system is built on an analog printing metaphor — grain overlays, chunky offset shadows that mimic letterpress depth, postcard formats, stamp imagery, dashed and dotted rules, diagonal stripe patterns — but filtered through monospace engineering precision. The result is a surface that feels physically printed rather than digitally rendered: something that could exist on paper, in a zine, pinned to a studio wall.\n\nThis is not a portfolio that describes Paolo's creative-technical combination. It embodies it. The JetBrains Mono typeface signals engineering rigor. The four riso-print accent inks signal creative energy. The collision of the two, maintained with discipline across every component, is the argument the portfolio makes without writing a single word about it.\n\nThe system rejects the polished emptiness of SaaS landing-page design, the cheap signaling of hacker dark mode aesthetics, blank-canvas minimalism, and AI-generated slop (glassmorphism, gradient text, identical card grids). If it could be a template, it has failed.",
+    "keyCharacteristics": [
+      "Warm cream paper base (#F2EBDA) with deep charcoal ink (#1A130A) — high contrast without pure black or white",
+      "Four vivid printing inks as accents: Riso Blue, Fluorescent Pink, Screenprint Mint, Press Lemon",
+      "Zero border radius on all structural elements; 2px allowed only on inline tags",
+      "Chunky offset shadows (e.g., 5px 5px 0 #1A130A) — no blur, no ambient glow",
+      "Grain texture via CSS dot-pattern overlay (opacity 0.18) applied globally",
+      "Monospace-first typography; Newsreader Italic as a single accent voice"
+    ],
+    "rules": [
+      { "name": "The Four Inks Rule", "body": "Riso Blue, Fluorescent Pink, Screenprint Mint, and Press Lemon are a rotation, not a hierarchy. Each has a predictable functional role; none should migrate outside its role for purely decorative purposes.", "section": "colors" },
+      { "name": "The Hover Lemon Rule", "body": "Press Lemon (#E8B91A) is the universal hover fill for all interactive surfaces: link backgrounds, nav button hover fills, CTA hover accents. New interactive elements must follow this rule.", "section": "colors" },
+      { "name": "The Mono-First Rule", "body": "JetBrains Mono is non-negotiable as the primary typeface. New elements default to it. Newsreader appears only in editorial/tagline roles. No third typeface.", "section": "typography" },
+      { "name": "The Negative Tracking Rule", "body": "All display and headline-scale text uses negative letter-spacing (-0.04em to -0.05em). Body and label text uses positive tracking (0.04em to 0.22em).", "section": "typography" },
+      { "name": "The Offset Shadow Rule", "body": "All box-shadows follow the pattern Xpx Xpx 0 #1A130A. Never add a blur radius. Blurred shadows look digital and cancel the print metaphor.", "section": "elevation" },
+      { "name": "The State-Compression Rule", "body": "Hover states increase the shadow offset and translate the element up-left. Active/pressed states compress the offset to 1px and translate down-right. This simulates physical press depth.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use Xpx Xpx 0 #1A130A shadows with no blur radius.",
+      "Do keep all structural corners sharp (border-radius: 0). Tags are the only exception (2px).",
+      "Do use Press Lemon (#E8B91A) as the universal hover fill for interactive surfaces.",
+      "Do use uppercase JetBrains Mono with 0.1em–0.22em letter-spacing for all UI labels.",
+      "Do apply the grain overlay globally via CSS pseudo-elements.",
+      "Do rotate decorative elements (stamps at ±3deg, brand glyph at -1.5deg, tape strips at +4deg).",
+      "Do keep Newsreader confined to tagline/editorial roles."
+    ],
+    "donts": [
+      "Don't use SaaS landing-page patterns: gradient CTA buttons, hero-metric layouts, Inter as primary typeface, testimonial carousels.",
+      "Don't use dark mode. The warm cream + charcoal ink palette is non-negotiable.",
+      "Don't add blur to any box-shadow. box-shadow with blur radius breaks the letterpress illusion.",
+      "Don't use gradient text (background-clip: text). Banned project-wide.",
+      "Don't use glassmorphism (backdrop-filter: blur) decoratively.",
+      "Don't use border-left or border-right greater than 1px as a colored accent stripe on cards.",
+      "Don't introduce a third typeface.",
+      "Don't use pure #000000 or #ffffff. Ink (#1A130A) and Paper (#F2EBDA) are the system extremes."
+    ]
+  }
+}

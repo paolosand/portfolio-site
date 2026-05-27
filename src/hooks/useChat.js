@@ -14,6 +14,8 @@ export function useChat() {
   const messagesRef = useRef([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const lastUserTextRef = useRef(null);
+  const lastApiHistoryRef = useRef([]);
 
   const send = useCallback(async (userMessage) => {
     const userMsg = {
@@ -27,6 +29,9 @@ export function useChat() {
       role: m.role,
       content: m.role === 'assistant' ? blocksToContent(m.blocks) : m.content,
     }));
+
+    lastUserTextRef.current = userMessage;
+    lastApiHistoryRef.current = apiHistory;
 
     messagesRef.current = [...messagesRef.current, userMsg];
     setMessages(prev => [...prev, userMsg]);
@@ -51,11 +56,37 @@ export function useChat() {
     }
   }, []);
 
+  // Retry the last failed API call without re-adding the user message
+  const retry = useCallback(async () => {
+    const text = lastUserTextRef.current;
+    if (!text) return;
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await sendMessage(text, lastApiHistoryRef.current);
+      const assistantMsg = {
+        role: 'assistant',
+        blocks: response.blocks,
+        timestamp: new Date().toISOString(),
+      };
+      messagesRef.current = [...messagesRef.current, assistantMsg];
+      setMessages(prev => [...prev, assistantMsg]);
+    } catch (err) {
+      setError(err.message || 'Chat is unavailable — try again in a moment');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const clearError = useCallback(() => setError(null), []);
+
   const reset = useCallback(() => {
     messagesRef.current = [];
     setMessages([]);
     setError(null);
+    lastUserTextRef.current = null;
+    lastApiHistoryRef.current = [];
   }, []);
 
-  return { messages, isLoading, error, send, reset };
+  return { messages, isLoading, error, send, retry, clearError, reset };
 }

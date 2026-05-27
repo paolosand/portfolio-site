@@ -848,8 +848,8 @@ button {
    =================================================================== */
 .chat-shell {
   position: relative;
-  display: grid;
-  grid-template-rows: 1fr auto;
+  display: flex;
+  flex-direction: column;
   height: calc(100vh - 86px);
   border: 1.5px solid var(--ink);
   background: var(--paper);
@@ -858,7 +858,44 @@ button {
   overflow: hidden;
 }
 
+.chat-hdr {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 14px;
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom: 1.5px solid var(--ink);
+}
+.chat-hdr-mark {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-lemon);
+}
+.chat-hdr-restart {
+  font-family: inherit;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--paper);
+  background: none;
+  border: 1px solid rgba(242,235,218,0.35);
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.08s ease, color 0.08s ease, border-color 0.08s ease;
+}
+.chat-hdr-restart:hover {
+  background: var(--c-lemon);
+  color: var(--ink);
+  border-color: var(--c-lemon);
+}
+
 .chat-paper {
+  flex: 1 1 auto;
   overflow-y: auto;
   padding: 28px 36px 28px;
   background:
@@ -881,8 +918,9 @@ button {
   font-size: 12px;
   line-height: 1.05;
   white-space: pre;
-  margin-bottom: 22px;
-  color: var(--ink);
+  margin-top: 28px;
+  margin-bottom: 28px;
+  color: var(--ink-mute);
 }
 .welcome-banner .b { color: var(--c-blue); }
 .welcome-banner .p { color: var(--c-pink); }
@@ -892,7 +930,7 @@ button {
   font-size: 32px;
   font-weight: 800;
   letter-spacing: -0.03em;
-  margin: 14px 0 8px;
+  margin: 0 0 8px;
 }
 .welcome .wave {
   display: inline-block;
@@ -933,30 +971,6 @@ button {
   align-items: center;
 }
 
-.welcome .links {
-  padding: 14px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-.welcome .links a {
-  border: 1.5px solid var(--ink);
-  padding: 10px 12px;
-  text-align: left;
-  background: var(--paper);
-  color: var(--ink);
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: transform 0.08s ease, box-shadow 0.08s ease;
-  box-shadow: 2px 2px 0 var(--ink);
-  border-bottom: 1.5px solid var(--ink);
-}
-.welcome .links a:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); background: var(--c-lemon); }
-.welcome .links a .glyph { color: var(--c-pink); font-size: 14px; }
-.welcome .links a:nth-child(2) .glyph { color: var(--c-blue); }
-.welcome .links a:nth-child(3) .glyph { color: var(--c-mint); }
 
 .prompts {
   padding: 14px;
@@ -977,7 +991,7 @@ button {
   cursor: pointer;
   transition: transform 0.08s ease, box-shadow 0.08s ease;
 }
-.prompt:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+.prompt:hover { background: var(--c-lemon); color: var(--ink); transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
 .prompt .icon {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
@@ -1045,14 +1059,48 @@ button {
 .msg .bubble p:last-child { margin: 0; }
 
 .chat-error {
-  max-width: 760px;
-  margin: 0 auto 16px;
-  padding: 10px 14px;
-  border: 1.5px solid var(--c-pink);
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 8px 18px;
+  border-top: 1.5px solid var(--c-pink);
   background: var(--paper);
   font-size: 12px;
   color: var(--c-pink);
   letter-spacing: 0.04em;
+}
+.chat-error-msg {
+  flex: 1;
+}
+.chat-error-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.chat-error-retry,
+.chat-error-dismiss {
+  font-family: inherit;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--c-pink);
+  background: none;
+  border: 1px solid var(--c-pink);
+  padding: 3px 9px;
+  cursor: pointer;
+  transition: background 0.08s ease, color 0.08s ease;
+}
+.chat-error-retry:hover,
+.chat-error-dismiss:hover {
+  background: var(--c-pink);
+  color: var(--paper);
+}
+.chat-error-retry:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .typing {
@@ -1122,6 +1170,7 @@ button {
 .chat-input .send:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--c-pink); }
 .chat-input .send:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--c-pink); }
 .chat-input .send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: 3px 3px 0 var(--c-pink); }
+.chat-input .send-glyph { margin-left: 6px; color: var(--c-lemon); }
 
 /* ===================================================================
    RESPONSIVE
@@ -1137,6 +1186,5 @@ button {
   .project-card, .project-card.featured, .project-card.wide { grid-column: span 6; }
   .postcard { grid-template-columns: 1fr; }
   .postcard .left { border-right: none; border-bottom: 1.5px dashed var(--ink); }
-  .welcome .links { grid-template-columns: 1fr; }
   .prompts { grid-template-columns: 1fr; }
 }
