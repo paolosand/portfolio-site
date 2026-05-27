@@ -104,10 +104,10 @@
   ],
   "skills": {
     "Languages & Core": ["Python", "C++", "SQL", "JavaScript", "TypeScript"],
-    "ML & AI": ["PyTorch", "TensorFlow", "Scikit-learn", "Computer Vision", "Audio ML", "LLMs", "RAG", "Multi-Modal AI"],
+    "ML & AI": ["PyTorch", "TensorFlow", "Scikit-learn", "Computer Vision", "Audio ML", "LLMs", "RAG", "Multi-Modal AI", "MediaPipe"],
     "ML Infrastructure": ["Model Deployment", "Evaluation", "Optimization", "Data Processing", "CI/CD", "Docker"],
-    "APIs & Tools": ["Gemini API", "OpenAI API", "Claude API", "AWS", "GCP", "Hugging Face"],
-    "Creative Tech": ["Max/MSP", "ChucK", "p5.js", "Tone.js", "MediaPipe", "GSAP"]
+    "APIs & Tools": ["Gemini API", "OpenAI API", "Claude API", "Claude Code", "Hugging Face", "AWS", "GCP"],
+    "Creative Tech": ["Max/MSP", "ChucK", "p5.js", "Tone.js", "GSAP"]
   },
   "experience": [
     {

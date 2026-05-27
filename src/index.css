@@ -94,7 +94,13 @@ button {
   padding: 0 32px 80px;
 }
 
-.app.is-chat { padding-bottom: 0; }
+.app.is-chat {
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+}
 
 /* TOP BAR ============================================================ */
 .topbar {
@@ -850,7 +856,8 @@ button {
   position: relative;
   display: flex;
   flex-direction: column;
-  height: calc(100dvh - 86px);
+  flex: 1 1 0;
+  min-height: 0;
   border: 1.5px solid var(--ink);
   background: var(--paper);
   box-shadow: 6px 6px 0 var(--ink);
@@ -1185,7 +1192,7 @@ button {
   .tb-mark .name { display: none; }
   .tb-mark .sub { display: none; }
   .tb-nav button { padding: 10px 12px; }
-  .chat-shell { margin-top: 0; height: calc(100dvh - 90px); }
+  .chat-shell { margin-top: 0; }
   .chat-paper { padding: 16px 12px; }
   .msg { grid-template-columns: 52px 1fr; gap: 8px; }
   .welcome-banner { overflow-x: auto; }

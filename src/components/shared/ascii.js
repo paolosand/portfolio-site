@@ -73,11 +73,15 @@ export const CHAT_PROMPTS = [
   { icon: '▒▓▒', title: 'How you work',         q: 'What kinds of problems do you most like to solve?' },
 ];
 
-// Blue = ML/AI domain. Pink = creative/music. Mint = production/infra. Default = foundational.
+// Lemon = core languages. Blue = ML/AI domain. Pink = creative/music. Mint = production/infra.
+const LANG_TAGS = new Set([
+  'python', 'c++', 'c', 'java', 'javascript', 'typescript', 'sql', 'r',
+  'html', 'css', 'rust', 'go', 'swift', 'kotlin',
+]);
 const ML_TAGS = new Set([
   'pytorch', 'tensorflow', 'scikit-learn', 'computer vision', 'audio ml',
   'llms', 'rag', 'multi-modal ai', 'multi-modal', 'cnn', 'transformers',
-  'nlp', 'mediapipe', 'gemini api', 'gemini', 'openai api', 'claude api', 'hugging face',
+  'nlp', 'mediapipe', 'gemini api', 'gemini', 'openai api', 'claude api', 'claude code', 'hugging face',
 ]);
 const INFRA_TAGS = new Set([
   'production', 'concurrent', 'real-time', 'low-latency', 'model deployment',
@@ -90,6 +94,7 @@ const CREATIVE_TAGS = new Set([
 
 export function tagClassByName(tag) {
   const lower = tag.toLowerCase();
+  if (LANG_TAGS.has(lower)) return 'l';
   if (ML_TAGS.has(lower)) return 'b';
   if (INFRA_TAGS.has(lower)) return 'm';
   if (CREATIVE_TAGS.has(lower)) return 'p';
