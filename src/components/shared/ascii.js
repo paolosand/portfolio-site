@@ -96,10 +96,3 @@ export function tagClassByName(tag) {
   return '';
 }
 
-export const SKILL_CATEGORY_COLOR = {
-  'Languages & Core': '',
-  'ML & AI': 'b',
-  'ML Infrastructure': 'm',
-  'APIs & Tools': '',
-  'Creative Tech': 'p',
-};
