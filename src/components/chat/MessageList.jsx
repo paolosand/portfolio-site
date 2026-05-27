@@ -23,10 +23,7 @@ export default function MessageList({ messages, isLoading }) {
   const endRef = useRef(null);
 
   useEffect(() => {
-    endRef.current?.parentElement?.scrollTo({
-      top: endRef.current.parentElement.scrollHeight,
-      behavior: 'smooth',
-    });
+    endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, [messages.length, isLoading]);
 
   return (

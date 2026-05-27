@@ -850,7 +850,7 @@ button {
   position: relative;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 86px);
+  height: calc(100dvh - 86px);
   border: 1.5px solid var(--ink);
   background: var(--paper);
   box-shadow: 6px 6px 0 var(--ink);
@@ -1179,6 +1179,9 @@ button {
   .app { padding: 0 18px 60px; }
   .topbar { grid-template-columns: 1fr auto; }
   .tb-meta { display: none; }
+  .tb-mark .sub { display: none; }
+  .tb-nav button { padding: 10px 12px; }
+  .chat-shell { margin-top: 0; height: calc(100dvh - 102px); }
   .hero-grid { grid-template-columns: 1fr; gap: 28px; }
   .props { grid-template-columns: 1fr; }
   .prop { border-right: none; border-bottom: 1.5px solid var(--ink); }
