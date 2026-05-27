@@ -1182,9 +1182,10 @@ button {
   .app { padding: 0 18px 60px; }
   .topbar { grid-template-columns: 1fr auto; }
   .tb-meta { display: none; }
+  .tb-mark .name { display: none; }
   .tb-mark .sub { display: none; }
   .tb-nav button { padding: 10px 12px; }
-  .chat-shell { margin-top: 0; height: calc(100dvh - 102px); }
+  .chat-shell { margin-top: 0; height: calc(100dvh - 90px); }
   .chat-paper { padding: 16px 12px; }
   .msg { grid-template-columns: 52px 1fr; gap: 8px; }
   .welcome-banner { overflow-x: auto; }
