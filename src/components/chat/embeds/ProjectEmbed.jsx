@@ -1,4 +1,5 @@
 import portfolioData from '../../../data/portfolio.json';
+import { tagClassByName } from '../../shared/ascii.js';
 import './Embed.css';
 
 export default function ProjectEmbed({ id }) {
@@ -27,7 +28,7 @@ export default function ProjectEmbed({ id }) {
         <p className="embed-desc">{project.description}</p>
         <div className="embed-tags">
           {project.tags.map(t => (
-            <span key={t} className={`tag ${isMl ? 'b' : 'p'}`}>{t}</span>
+            <span key={t} className={`tag ${tagClassByName(t)}`}>{t}</span>
           ))}
         </div>
         <div className="embed-links">

@@ -1,5 +1,5 @@
 import portfolioData from '../data/portfolio.json';
-import { tagClass } from './shared/ascii.js';
+import { SKILL_CATEGORY_COLOR } from './shared/ascii.js';
 import './Skills.css';
 
 export default function Skills() {
@@ -17,8 +17,8 @@ export default function Skills() {
           <div className="skills-row" key={cat}>
             <div className="cat">{cat}</div>
             <div className="pills">
-              {list.map((s, i) => (
-                <span key={s} className={`tag ${tagClass(i)}`}>{s}</span>
+              {list.map((s) => (
+                <span key={s} className={`tag ${SKILL_CATEGORY_COLOR[cat] || ''}`}>{s}</span>
               ))}
             </div>
           </div>

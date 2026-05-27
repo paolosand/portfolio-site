@@ -73,11 +73,33 @@ export const CHAT_PROMPTS = [
   { icon: '▒▓▒', title: 'How you work',         q: 'What kinds of problems do you most like to solve?' },
 ];
 
-export function tagClass(i) {
-  const r = i % 5;
-  if (r === 0) return '';
-  if (r === 1) return 'b';
-  if (r === 2) return 'l';
-  if (r === 3) return 'm';
-  return 'p';
+// Blue = ML/AI domain. Pink = creative/music. Mint = production/infra. Default = foundational.
+const ML_TAGS = new Set([
+  'pytorch', 'tensorflow', 'scikit-learn', 'computer vision', 'audio ml',
+  'llms', 'rag', 'multi-modal ai', 'multi-modal', 'cnn', 'transformers',
+  'nlp', 'mediapipe', 'gemini api', 'gemini', 'openai api', 'claude api', 'hugging face',
+]);
+const INFRA_TAGS = new Set([
+  'production', 'concurrent', 'real-time', 'low-latency', 'model deployment',
+  'evaluation', 'optimization', 'data processing', 'ci/cd', 'docker', 'aws', 'gcp',
+]);
+const CREATIVE_TAGS = new Set([
+  'max/msp', 'chuck', 'p5.js', 'tone.js', 'gsap', 'web audio', 'suno',
+  'creative coding', 'creative ai', 'hci', 'wearable', 'arduino', 'ethics',
+]);
+
+export function tagClassByName(tag) {
+  const lower = tag.toLowerCase();
+  if (ML_TAGS.has(lower)) return 'b';
+  if (INFRA_TAGS.has(lower)) return 'm';
+  if (CREATIVE_TAGS.has(lower)) return 'p';
+  return '';
 }
+
+export const SKILL_CATEGORY_COLOR = {
+  'Languages & Core': '',
+  'ML & AI': 'b',
+  'ML Infrastructure': 'm',
+  'APIs & Tools': '',
+  'Creative Tech': 'p',
+};

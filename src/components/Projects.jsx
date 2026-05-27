@@ -1,5 +1,5 @@
 import portfolioData from '../data/portfolio.json';
-import { PROJECT_ART, tagClass } from './shared/ascii.js';
+import { PROJECT_ART, tagClassByName } from './shared/ascii.js';
 import './Projects.css';
 
 function ProjectCard({ p, idx }) {
@@ -23,8 +23,8 @@ function ProjectCard({ p, idx }) {
         {p.subtitle && <div className="pc-subtitle">{p.subtitle}</div>}
         <p className="pc-desc">{p.description}</p>
         <div className="pc-tags">
-          {p.tags.map((t, i) => (
-            <span key={t} className={`tag ${tagClass(i)}`}>{t}</span>
+          {p.tags.map((t) => (
+            <span key={t} className={`tag ${tagClassByName(t)}`}>{t}</span>
           ))}
         </div>
         <div className="pc-links">
