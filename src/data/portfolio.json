@@ -7,28 +7,85 @@
     "github": "https://github.com/paolosand",
     "linkedin": "https://www.linkedin.com/in/paolosand"
   },
-  "summary": "Production ML engineer building creative, multi-modal AI systems. 2+ years shipping models that serve 12,000+ users. Specializing in audio AI, computer vision, generative models — with the wiring to deploy them.",
+  "summary": "AI/ML engineer and recording artist building tools at the intersection of code and creativity. 2+ years shipping production systems. Specializing in generative AI, computer vision, full-stack development — with a musician's instinct for what makes a tool worth using.",
   "valueProps": [
     {
-      "title": "Ships Production ML",
-      "description": "2+ years deploying models serving 12,000+ users."
+      "title": "Ships Production AI",
+      "description": "2+ years deploying AI systems serving real users across multiple clients."
     },
     {
-      "title": "Multi-Modal AI",
-      "description": "Video · audio · text pipelines on Gemini, OpenAI, Claude."
+      "title": "Full-Stack AI",
+      "description": "From model to UI — Next.js, FastAPI, Gemini, OpenAI, Claude."
     },
     {
       "title": "Creative Applications",
-      "description": "Real-time audio ML, wearable interfaces, generative systems."
+      "description": "Real-time audio ML, gestural instruments, generative systems."
+    }
+  ],
+  "experience": [
+    {
+      "company": "Nuts and Bolts AI",
+      "role": "Software Engineer Consultant",
+      "dates": "Jun 2025 — Present",
+      "bullets": [
+        "Sole engineer on an executive coaching platform for a Fortune 500 outplacement firm — product design through deployment. Next.js, Node.js, Supabase, Cal.com. 200+ users, live Q4 2026.",
+        "Built a full-stack affiliate merchandise storefront for a major restaurant chain. Instagram API integration populates storefronts; images filtered for explicit content. Next.js, Node.js, Supabase.",
+        "Delivered a major frontend redesign for a B2C video platform — Figma MCP + Claude Code compressed a 6-month scope to 2 months. Next.js.",
+        "Built an AI blog publishing tool with automated fact-verification and image generation for a Hispanic legal marketing platform. Next.js, FastAPI, CrewAI, OpenAI API, Supabase.",
+        "Prototyped a watch-along AI agent for video platforms using Gemini's multimodal YouTube integration for time-stamped chat responses.",
+        "All projects built with Claude Code as primary development environment."
+      ]
+    },
+    {
+      "company": "Stratpoint Technologies",
+      "role": "AI Engineer · Rapid Prototyping Unit",
+      "dates": "Jul 2023 — Jul 2024",
+      "bullets": [
+        "Secured a partnership with a FAANG research lab on a climate tech initiative by completing two ML screening tasks: solar plant site suitability predictor for California (scikit-learn + SageMaker, >95% accuracy validated against real solar farm locations) and geospatial image-to-map matcher (SuperGlue/LoFTR feature matching + horizon detection for pitch/yaw estimation, OpenCV).",
+        "Built a climate research chat interface with Gemini API + LangChain + ReAct framework, connected to Semantic Scholar for paper retrieval. Deployed to Hugging Face Spaces.",
+        "Established ML best practices through code reviews and documentation as team scaled from 4 to 13 engineers."
+      ]
+    },
+    {
+      "company": "Kodexa",
+      "role": "Associate Product Manager (Software Engineer in practice)",
+      "dates": "2022 — 2023 · part-time",
+      "bullets": [
+        "Built a Snowflake data connector in Java, referencing existing S3 and Azure connectors.",
+        "Trained ~150 invoice vendor formats for an OCR document parsing model using regex-based annotation scripts.",
+        "Built Apache Superset dashboards to visualize invoice training progress for a large enterprise client — critical for client transparency on a multi-thousand-vendor project."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "MFA, Music Technology",
+      "school": "California Institute of the Arts",
+      "dates": "2024 — 2026",
+      "gpa": "4.0 GPA",
+      "bullets": [
+        "Thesis: CHULOOPA — a real-time intelligent drum looper for live performance using a personalized KNN beatbox classifier and a 4.8M-parameter Transformer variation engine.",
+        "Coursework in Max/MSP, TouchDesigner, Arduino, p5.js, Ableton Live, and musical information retrieval.",
+        "Explored AI-human creative collaboration through the Parallel Paths art installation at CalArts."
+      ]
+    },
+    {
+      "degree": "BS, Computer Science",
+      "school": "University of the Philippines Diliman",
+      "dates": "2018 — 2023",
+      "bullets": [
+        "Senior thesis (Computer Vision and Machine Intelligence Group): violence prediction system with aggressor identification using OpenPose body keypoint extraction + SVM classification.",
+        "Coursework in data structures, algorithms, networks, AI, software engineering, data engineering, and discrete mathematics."
+      ]
     }
   ],
   "projects": [
     {
       "id": "chuloopa",
       "title": "CHULOOPA",
-      "subtitle": "Transformer-based drum generation",
-      "description": "Low-latency transformer for real-time rhythmic generation in live performance. Researching efficient inference pipelines for generative audio.",
-      "tags": ["PyTorch", "Audio ML", "Real-time", "ChucK", "Transformers"],
+      "subtitle": "Real-time AI drum looper · MFA Thesis",
+      "description": "Three-process live performance system: ChucK handles audio/MIDI/ChuGL visuals, Python runs a 4.8M-param Transformer variation engine (GPTBarPair decoder, trained on 12,085 bar pairs), and a spice detector analyzes live audio energy every 500ms to select variations in real time. Personalized KNN beatbox classifier (MFCC-13 → kick/snare/hi-hat) sends MIDI to Ableton via IAC Driver.",
+      "tags": ["ChucK", "PyTorch", "Audio ML", "Transformers", "OSC", "Real-time"],
       "category": "ml",
       "featured": true,
       "links": {
@@ -37,24 +94,24 @@
       }
     },
     {
-      "id": "video-analysis",
-      "title": "Multi-Modal Video Analysis",
-      "subtitle": "Concurrent Gemini pipeline · production",
-      "description": "Real-time video analysis pipeline with concurrent processing for low-latency response. Deployed in production for thousands of users.",
-      "tags": ["Gemini API", "Concurrent", "Python", "Production", "Multi-Modal"],
-      "category": "ml",
+      "id": "ascii-drone",
+      "title": "ASCII Drone Synth",
+      "subtitle": "Gesture-controlled web synthesizer",
+      "description": "Browser-based gestural instrument driven by MediaPipe hand tracking at 30fps. Four-voice major chord (8 oscillators, triangle/sawtooth crossfade) with filter → chorus → stereo widener → reverb. WebGL ASCII rendering via THREE.InstancedMesh + custom GLSL shaders — each character is a GPU instance updated every frame from live webcam data.",
+      "tags": ["MediaPipe", "Tone.js", "Three.js", "GLSL", "Web Audio", "Creative Coding"],
+      "category": "creative",
       "featured": true,
       "links": {
         "github": null,
-        "demo": null
+        "demo": "https://paolosand.github.io/ascii_drone/"
       }
     },
     {
-      "id": "geospatial-ml",
-      "title": "Geospatial ML Pipeline",
-      "subtitle": "Custom CNN · >90% accuracy",
-      "description": "Custom CNN architecture with data preprocessing and evaluation framework. Achieved >90% accuracy through model optimization.",
-      "tags": ["PyTorch", "Computer Vision", "CNN", "Optimization"],
+      "id": "climate-ml",
+      "title": "Climate Tech ML",
+      "subtitle": "FAANG research lab · geospatial + solar",
+      "description": "Phase 1: Solar site suitability predictor for California — scikit-learn + SageMaker, >95% accuracy validated against real solar farm locations. Phase 2: Geospatial image-to-map matcher — feature matching (SuperGlue/LoFTR) + horizon detection for pitch/yaw, OpenCV. Both tasks secured a production partnership with a FAANG research lab.",
+      "tags": ["scikit-learn", "SageMaker", "OpenCV", "Computer Vision", "Feature Matching"],
       "category": "ml",
       "featured": true,
       "links": {
@@ -66,34 +123,34 @@
       "id": "hai",
       "title": "HAI · Head as Interface",
       "subtitle": "Wearable gestural instrument",
-      "description": "Wearable gestural interface for musical performance using IMU sensors. Real-time Max/MSP audio processing controlled by head movements via Arduino.",
-      "tags": ["Arduino", "Max/MSP", "Wearable", "HCI", "Real-time"],
+      "description": "Two HC-SR04 ultrasonic sensors (one per ear) on Arduino → serial to Max/MSP. Left sensor controls lowpass filter cutoff; right sensor controls playback speed and pitch. DSP logic in a dedicated Max/MSP abstraction with FM synthesis patch for extended sound design.",
+      "tags": ["Arduino", "Max/MSP", "Wearable", "HCI", "Real-time Audio"],
       "category": "creative",
       "featured": true,
       "links": {
         "github": null,
-        "demo": null
-      }
-    },
-    {
-      "id": "ascii-drone",
-      "title": "ASCII Drone Synth",
-      "subtitle": "Gesture-controlled web synth",
-      "description": "Gesture-controlled drone synthesizer. MediaPipe hand tracking drives web audio synthesis with Tone.js.",
-      "tags": ["MediaPipe", "Tone.js", "Web Audio", "Creative Coding"],
-      "category": "creative",
-      "featured": false,
-      "links": {
-        "github": null,
-        "demo": "https://paolosand.github.io/ascii_drone/"
+        "demo": "https://www.youtube.com/watch?v=rxaJTSi7KDY"
       }
     },
     {
       "id": "parallel-paths",
       "title": "Parallel Paths",
-      "subtitle": "Responsible AI in music",
-      "description": "Exploration of responsible AI integration in songwriting practice using Gemini and Suno APIs. Research on ethical creative AI workflows.",
-      "tags": ["Gemini", "Suno", "Ethics", "Creative AI"],
+      "subtitle": "AI × music art installation · CalArts 2024",
+      "description": "Debut album exhibited alongside Inbetweens — an album made in 2 weeks using Gemini for co-writing and Suno for co-production. Rule: AI provides bones, artist finalizes phrasing and adds elements. Exhibited as a listening installation at CalArts. Explores responsible AI in creative practice.",
+      "tags": ["Gemini", "Suno", "Creative AI", "Music Tech", "Ethics"],
+      "category": "ml",
+      "featured": false,
+      "links": {
+        "github": null,
+        "demo": "https://soundcloud.com/paolosandejas/sets/inbetweens"
+      }
+    },
+    {
+      "id": "video-analysis",
+      "title": "Multi-Modal Video Analysis",
+      "subtitle": "Concurrent Gemini pipeline · production",
+      "description": "Real-time video analysis pipeline with concurrent processing for low-latency response. Built for production deployment at Nuts and Bolts AI, serving thousands of users.",
+      "tags": ["Gemini API", "Concurrent", "Python", "Production", "Multi-Modal"],
       "category": "ml",
       "featured": false,
       "links": {
@@ -103,53 +160,11 @@
     }
   ],
   "skills": {
-    "Languages & Core": ["Python", "C++", "SQL", "JavaScript", "TypeScript"],
-    "ML & AI": ["PyTorch", "TensorFlow", "Scikit-learn", "Computer Vision", "Audio ML", "LLMs", "RAG", "Multi-Modal AI", "MediaPipe"],
-    "ML Infrastructure": ["Model Deployment", "Evaluation", "Optimization", "Data Processing", "CI/CD", "Docker"],
-    "APIs & Tools": ["Gemini API", "OpenAI API", "Claude API", "Claude Code", "Hugging Face", "AWS", "GCP"],
-    "Creative Tech": ["Max/MSP", "ChucK", "p5.js", "Tone.js", "GSAP"]
-  },
-  "experience": [
-    {
-      "company": "Nuts and Bolts AI",
-      "role": "Software Engineer Consultant",
-      "dates": "Jun 2025 — Present",
-      "bullets": [
-        "Built real-time multi-modal video analysis using Google Gemini with concurrent pipelines optimized for low latency.",
-        "Architected GenAI solutions integrating Gemini · OpenAI · Claude into production systems serving 12,000+ users.",
-        "Designed AI recommendation engine with evaluation framework and data pipelines for high-volume workflows.",
-        "Cross-functional collaboration on system requirements, design reviews, and documentation."
-      ]
-    },
-    {
-      "company": "Stratpoint Technologies",
-      "role": "AI Engineer · Rapid Prototyping Unit",
-      "dates": "Jul 2023 — Jul 2024",
-      "bullets": [
-        "Developed production LLM assistant with ReAct agents and RAG; retrieval pipelines, embeddings, prompt engineering.",
-        "Built geospatial ML pipelines in PyTorch; >90% accuracy via model optimization and data preprocessing.",
-        "Designed evaluation frameworks and debugging workflows to validate ML feasibility for production.",
-        "Established best practices through code reviews and docs while team scaled from 4 → 13 engineers."
-      ]
-    }
-  ],
-  "education": [
-    {
-      "degree": "MFA, Music Technology",
-      "school": "California Institute of the Arts",
-      "dates": "2024 — 2026",
-      "gpa": "4.0 GPA",
-      "bullets": [
-        "Developing real-time generative audio systems with PyTorch; researching low-latency ML inference and custom audio generation models."
-      ]
-    },
-    {
-      "degree": "BS, Computer Science",
-      "school": "University of the Philippines",
-      "dates": "2018 — 2023",
-      "bullets": [
-        "Built computer vision pipelines using Python, OpenCV, scikit-learn. Coursework in algorithms, data structures, and ML."
-      ]
-    }
-  ]
+    "Languages & Core": ["Python", "JavaScript", "TypeScript", "Java", "SQL", "C++"],
+    "AI & ML": ["PyTorch", "scikit-learn", "LangChain", "CrewAI", "ReAct Agents", "Computer Vision", "Audio ML", "RAG", "Feature Matching", "KNN", "MediaPipe"],
+    "ML Infrastructure": ["SageMaker", "Hugging Face Spaces", "Jupyter", "Model Deployment", "Evaluation", "Data Processing", "Docker"],
+    "APIs & Tools": ["Gemini API", "OpenAI API", "Claude API", "Claude Code", "Figma MCP", "Cal.com", "Rapid API"],
+    "Full-Stack": ["Next.js", "Node.js", "FastAPI", "Supabase", "PostgreSQL", "Vercel"],
+    "Creative Tech": ["ChucK", "Max/MSP", "Ableton", "TouchDesigner", "Arduino", "Tone.js", "Three.js", "p5.js", "GSAP", "librosa", "OSC"]
+  }
 }
