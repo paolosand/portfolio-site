@@ -47,8 +47,11 @@ Full-screen overlay (high z-index, backdrop blur). Closes on X button or Escape 
   - *The World Is So Small* — debut album, 2024
   - *Inbetweens* — full AI-assisted album, 2024 (SoundCloud)
   - Sophomore album in progress — target early 2027
-- Custom-styled SoundCloud player (see below). Default loads `https://soundcloud.com/paolosand/sets/inbetweens`; user can navigate within the widget.
-- Streaming link row: Spotify · SoundCloud · Apple Music. **Note: Spotify and Apple Music profile URLs are placeholders — Paolo to supply before deploy.**
+- Spotify embed player (see below)
+- Streaming link row: Spotify · SoundCloud · Apple Music.
+  - Spotify: `https://open.spotify.com/artist/7aerdWadzubpu06Oxysg6R`
+  - Apple Music: `https://music.apple.com/us/artist/paolo-sandejas/1404323148`
+  - SoundCloud: `https://soundcloud.com/paolosandejas`
 - Press: *"google 'paolo sandejas' for press and editorial coverage"*
 
 **AI × Music footer callout:**
@@ -56,16 +59,18 @@ Full-screen overlay (high z-index, backdrop blur). Closes on X button or Escape 
 
 Links to the Inbetweens SoundCloud set: `https://soundcloud.com/paolosand/sets/inbetweens`
 
-### Custom SoundCloud Player
+### Spotify Embed Player
 
-A hidden `<iframe>` loads the SoundCloud Widget API (invisible, audio engine only). A fully custom player UI communicates with it via `SC.Widget`:
-- Play/pause toggle
-- Track title and artist (pulled from SC widget events)
-- Progress bar with scrubbing
-- Track time display
-- Previous/next (if using a playlist)
+A standard Spotify iframe embed inside the modal right panel:
 
-All controls styled in JetBrains Mono, ink borders, riso color accents — no SoundCloud branding visible in the player UI itself. Streaming links below the player serve as the "follow me" call to action.
+```
+https://open.spotify.com/embed/artist/7aerdWadzubpu06Oxysg6R?utm_source=generator
+```
+
+- Logged-in Spotify users get full playback; non-logged-in users get 30-second previews
+- No custom player logic — Spotify's embed UI handles everything
+- Light theme (`theme=1`) to complement the riso paper aesthetic
+- Streaming links below the embed serve as follow-through CTAs
 
 ---
 
@@ -184,7 +189,7 @@ All files get a full rewrite matching the above, with additional depth permitted
 | `src/index.css` | TopBar pill styles, playing-dot state |
 | `src/components/music/ArtistModal.jsx` | New component |
 | `src/components/music/ArtistModal.css` | New file |
-| `src/components/music/SoundCloudPlayer.jsx` | New component |
+| `src/components/music/ArtistModal.jsx` | Spotify iframe embed lives here (no separate player component needed) |
 | `api/knowledge/experience.md` | Full rewrite |
 | `api/knowledge/projects.md` | Full rewrite |
 | `api/knowledge/skills.md` | Full rewrite |

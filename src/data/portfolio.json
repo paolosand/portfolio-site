@@ -30,7 +30,7 @@
       "bullets": [
         "Sole engineer on an executive coaching platform for a Fortune 500 outplacement firm — product design through deployment. Next.js, Node.js, Supabase, Cal.com. 200+ users, live Q4 2026.",
         "Built a full-stack affiliate merchandise storefront for a major restaurant chain. Instagram API integration populates storefronts; images filtered for explicit content. Next.js, Node.js, Supabase.",
-        "Delivered a major frontend redesign for a B2C video platform — Figma MCP + Claude Code compressed a 6-month scope to 2 months. Next.js.",
+        "Delivered a major frontend redesign for a B2C video platform — Figma MCP + Claude Code compressed what was estimated as a 6-month scope to 2 months. Next.js.",
         "Built an AI blog publishing tool with automated fact-verification and image generation for a Hispanic legal marketing platform. Next.js, FastAPI, CrewAI, OpenAI API, Supabase.",
         "Prototyped a watch-along AI agent for video platforms using Gemini's multimodal YouTube integration for time-stamped chat responses.",
         "All projects built with Claude Code as primary development environment."
@@ -161,7 +161,7 @@
   ],
   "skills": {
     "Languages & Core": ["Python", "JavaScript", "TypeScript", "Java", "SQL", "C++"],
-    "AI & ML": ["PyTorch", "scikit-learn", "LangChain", "CrewAI", "ReAct Agents", "Computer Vision", "Audio ML", "RAG", "Feature Matching", "KNN", "MediaPipe"],
+    "AI & ML": ["scikit-learn", "Audio ML", "Computer Vision", "LangChain", "CrewAI", "ReAct Agents", "RAG", "Feature Matching", "KNN", "MediaPipe", "PyTorch"],
     "ML Infrastructure": ["SageMaker", "Hugging Face Spaces", "Jupyter", "Model Deployment", "Evaluation", "Data Processing", "Docker"],
     "APIs & Tools": ["Gemini API", "OpenAI API", "Claude API", "Claude Code", "Figma MCP", "Cal.com", "Rapid API"],
     "Full-Stack": ["Next.js", "Node.js", "FastAPI", "Supabase", "PostgreSQL", "Vercel"],
