@@ -10,15 +10,23 @@ import './App.css';
 
 function App() {
   const [view, setView] = useState('portfolio');
+  const [musicOpen, setMusicOpen] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = view === 'chat' ? 'hidden' : 'auto';
     return () => { document.body.style.overflow = 'auto'; };
   }, [view]);
 
+  useEffect(() => {
+    if (!musicOpen) return;
+    const handler = (e) => { if (e.key === 'Escape') setMusicOpen(false); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [musicOpen]);
+
   return (
     <div className={`app ${view === 'chat' ? 'is-chat' : ''}`}>
-      <TopBar view={view} setView={setView} />
+      <TopBar view={view} setView={setView} onMusicClick={() => setMusicOpen(true)} />
 
       {view === 'portfolio' && (
         <>

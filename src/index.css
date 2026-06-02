@@ -201,6 +201,15 @@ button {
   white-space: nowrap;
 }
 .tb-meta b { color: var(--ink); }
+.tb-nav button.tb-nav-music {
+  background: var(--c-pink);
+  color: var(--paper);
+  border-right: none;
+}
+.tb-nav button.tb-nav-music:hover {
+  background: var(--c-pink);
+  filter: brightness(0.88);
+}
 
 /* ===================================================================
    ASCII PRIMITIVES

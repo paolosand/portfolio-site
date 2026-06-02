@@ -1,6 +1,6 @@
 import './TopBar.css';
 
-export default function TopBar({ view, setView }) {
+export default function TopBar({ view, setView, onMusicClick }) {
   return (
     <header className="topbar">
       <div className="tb-mark">
@@ -18,6 +18,9 @@ export default function TopBar({ view, setView }) {
         <button className={view === 'portfolio' ? 'is-active' : ''} onClick={() => setView('portfolio')}>
           <span className="dot"></span>
           portfolio
+        </button>
+        <button className="tb-nav-music" onClick={onMusicClick}>
+          ♪ listen
         </button>
       </nav>
       <div className="tb-meta">
