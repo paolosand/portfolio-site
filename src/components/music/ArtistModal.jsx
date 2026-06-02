@@ -3,7 +3,7 @@ import './ArtistModal.css';
 export default function ArtistModal({ onClose }) {
   return (
     <div className="artist-overlay" onClick={onClose}>
-      <div className="artist-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="artist-modal" role="dialog" aria-modal="true" aria-label="Artist profile" onClick={(e) => e.stopPropagation()}>
         <button className="artist-close" onClick={onClose} aria-label="Close">×</button>
 
         <div className="artist-inner">
