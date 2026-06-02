@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import TopBar from './components/layout/TopBar';
+import ArtistModal from './components/music/ArtistModal';
 import ChatInterface from './components/chat/ChatInterface';
 import Hero from './components/Hero';
 import Projects from './components/Projects';
@@ -27,6 +28,8 @@ function App() {
   return (
     <div className={`app ${view === 'chat' ? 'is-chat' : ''}`}>
       <TopBar view={view} setView={setView} onMusicClick={() => setMusicOpen(true)} />
+
+      {musicOpen && <ArtistModal onClose={() => setMusicOpen(false)} />}
 
       {view === 'portfolio' && (
         <>
