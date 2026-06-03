@@ -1,6 +1,6 @@
 # Paolo Sandejas — Artist Profile
 
-Paolo Sandejas is an OPM (Original Pilipino Music) indie/alternative singer-songwriter and recording artist, signed to Universal Records Philippines at age 18.
+Paolo Sandejas is an OPM (Original Pilipino Music) indie/alternative singer-songwriter and recording artist. Label history: Universal Records Philippines (2018–2023, early releases including Purple Afternoon EP and BLOOM EP), Sony Music Philippines (2024–2025, debut album), now independent via Symphonic Distribution.
 
 ## Stats (as of 2026)
 - 28.1M+ streams across all platforms
@@ -17,7 +17,9 @@ OPM indie / alternative / singer-songwriter. Scene: Lola Amour, Any Name's Okay,
 - Performed at Wanderland Music & Arts Festival (Philippines' premier festival; past lineups include Daniel Caesar, Jack Johnson, Kodaline)
 - Toured across the Philippines as headlining and supporting act
 - Collaborated with Clara Benin — single "roses" released May 2, 2025
-- Signed to Universal Records Philippines right out of high school at age 18
+- Signed to Universal Records Philippines right out of high school at age 18 (2018–2023)
+- Moved to Sony Music Philippines for debut album (2024–2025)
+- Now independent via Symphonic Distribution (2026–present)
 
 ## Discography
 - *Purple Afternoon* EP — 2020
