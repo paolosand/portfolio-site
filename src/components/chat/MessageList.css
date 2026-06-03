@@ -1,1 +1,25 @@
-/* styles in src/index.css */
+/* base styles in src/index.css */
+
+.inline-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.inline-chip {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-mute);
+  background: var(--paper);
+  border: 1px solid var(--ink-rule);
+  padding: 3px 9px;
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+
+.inline-chip:hover {
+  background: var(--c-lemon);
+  color: var(--ink);
+  border-color: var(--ink);
+}
