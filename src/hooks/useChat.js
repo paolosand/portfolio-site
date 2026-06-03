@@ -88,6 +88,11 @@ export function useChat() {
     await _executeStream(userMessage, apiHistory);
   }, [_executeStream]);
 
+  // Greeting: no user message added to history, just an assistant message
+  const greet = useCallback(async () => {
+    await _executeStream('__greeting', []);
+  }, [_executeStream]);
+
   const retry = useCallback(async () => {
     const text = lastUserTextRef.current;
     if (!text) return;
@@ -104,5 +109,5 @@ export function useChat() {
     lastApiHistoryRef.current = [];
   }, []);
 
-  return { messages, isLoading, error, send, retry, clearError, reset };
+  return { messages, isLoading, error, send, greet, retry, clearError, reset };
 }
