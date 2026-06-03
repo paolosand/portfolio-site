@@ -1,12 +1,25 @@
-// api/chat.js
+import { readFileSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { check, filterResponse } from './lib/guard.js';
-import { loadKnowledge, generate } from './lib/rag.js';
+import { generate } from './lib/rag.js';
+import { isGreetingSentinel, GREETING_BLOCKS } from './lib/personality.js';
 
-let _knowledge = null;
-function getKnowledge() {
-  if (!_knowledge) _knowledge = loadKnowledge();
-  return _knowledge;
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+function getProjectIds() {
+  try {
+    const raw = readFileSync(join(__dirname, '..', 'src', 'data', 'portfolio.json'), 'utf8');
+    const json = JSON.parse(raw);
+    // Only projects have stable .id fields. Work IDs are hardcoded in buildSystemPrompt defaults.
+    return (json.projects ?? []).map(p => p.id);
+  } catch {
+    return [];
+  }
 }
+
+const projectIds = getProjectIds();
+const workIds = []; // use buildSystemPrompt defaults
 
 function setSseHeaders(res) {
   res.setHeader('Content-Type', 'text/event-stream');
@@ -52,6 +65,17 @@ export default async function handler(req, res) {
   setSseHeaders(res);
 
   try {
+    // Greeting sentinel: return hardcoded blocks, skip RAG and guard
+    if (isGreetingSentinel(query)) {
+      const textBlock = GREETING_BLOCKS.find(b => b.type === 'text');
+      const embedBlocks = GREETING_BLOCKS.filter(b => b.type !== 'text');
+      if (textBlock) streamText(res, textBlock.content);
+      if (embedBlocks.length > 0) sendEvent(res, { type: 'embeds', blocks: embedBlocks });
+      res.write('data: [DONE]\n\n');
+      res.end();
+      return;
+    }
+
     const guardResult = check(query);
     if (guardResult.isMalicious) {
       streamText(res, guardResult.response);
@@ -60,8 +84,7 @@ export default async function handler(req, res) {
       return;
     }
 
-    const context = getKnowledge();
-    const blocks = await generate(query, context, history);
+    const blocks = await generate(query, history, { projectIds, workIds });
     const filteredBlocks = blocks.map(block =>
       block.type === 'text'
         ? { ...block, content: filterResponse(block.content) }
@@ -76,10 +99,7 @@ export default async function handler(req, res) {
     const embedBlocks = filteredBlocks.filter(b => b.type !== 'text');
 
     streamText(res, textContent);
-
-    if (embedBlocks.length > 0) {
-      sendEvent(res, { type: 'embeds', blocks: embedBlocks });
-    }
+    if (embedBlocks.length > 0) sendEvent(res, { type: 'embeds', blocks: embedBlocks });
 
     res.write('data: [DONE]\n\n');
     res.end();
