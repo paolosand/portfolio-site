@@ -46,3 +46,6 @@ backend/data/
 backend/test_*.py
 backend/scripts/test_*.py
 .vercel
+
+# Generated Knowledge Base
+api/knowledge/vectors.json
