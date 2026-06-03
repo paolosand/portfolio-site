@@ -182,8 +182,22 @@
 
 .artist-label {
   font-size: 11px;
-  color: var(--ink-mute);
   margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.label-current {
+  color: var(--ink);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.label-history {
+  color: var(--ink-mute);
+  font-size: 10px;
 }
 
 /* Highlights */

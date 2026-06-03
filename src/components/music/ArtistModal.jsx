@@ -73,15 +73,19 @@ export default function ArtistModal({ onClose }) {
             </div>
 
             <div className="artist-tags">OPM · indie / alternative · singer-songwriter</div>
-            <div className="artist-label">Universal Records Philippines · signed age 18</div>
+            <div className="artist-label">
+              <span className="label-current">Independent · Symphonic Distribution</span>
+              <span className="label-history">prev: Sony Music PH (2024–25) · Universal Records PH (2018–22, signed age 18)</span>
+            </div>
 
             <ul className="artist-highlights">
-              <li>Wish Urban Song of the Year 2020 — "Sway"</li>
-              <li>5× Wish Awards nominee</li>
+              <li>Spotify RADAR Philippines 2023 — global emerging artist spotlight</li>
+              <li>First Filipino artist at Golden Melody Awards &amp; Festival (Taiwan) — Asia's Grammy equivalent</li>
+              <li>Wish Urban Song of the Year 2020 — "Sway" · 5× Wish Awards nominee</li>
               <li>V (Kim Taehyung / BTS) sang "Sorry" in a public vlog → international streaming spike</li>
-              <li>Wanderland Music &amp; Arts Festival</li>
-              <li>Nationwide touring — headlining and supporting</li>
-              <li>Collaboration with Clara Benin — "roses" (May 2025)</li>
+              <li>Wanderland Music &amp; Arts Festival · Salo-Salo Fest 2022 (w/ Parokya ni Edgar)</li>
+              <li>Collab with Clara Benin — "roses" (May 2025)</li>
+              <li>Sophomore album in progress — target release early 2027</li>
             </ul>
 
             <div className="artist-socials">
