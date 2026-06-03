@@ -25,22 +25,21 @@ test('loadKnowledge: loads known files', () => {
   assert.ok(sources.some(s => s.includes('skills')));
 });
 
-test('generate: returns an array of blocks (integration — requires GOOGLE_API_KEY)', async (t) => {
-  if (!process.env.GOOGLE_API_KEY) {
-    t.skip('GOOGLE_API_KEY not set');
-    return;
-  }
-  const { generate, loadKnowledge } = await import('./rag.js');
-  const context = loadKnowledge();
-  const blocks = await generate('What projects have you worked on?', context, []);
-  assert.ok(Array.isArray(blocks), 'generate() must return an array');
-  assert.ok(blocks.length > 0, 'must return at least one block');
+test('generate: integration — returns valid blocks (requires GOOGLE_API_KEY)', async (t) => {
+  if (!process.env.GOOGLE_API_KEY) { t.skip('GOOGLE_API_KEY not set'); return; }
+  const { generate } = await import('./rag.js');
+  const blocks = await generate('What projects have you worked on?', []);
+  assert.ok(Array.isArray(blocks));
+  assert.ok(blocks.length > 0);
   const textBlocks = blocks.filter(b => b.type === 'text');
-  assert.ok(textBlocks.length > 0, 'must contain at least one text block');
+  assert.ok(textBlocks.length > 0);
   for (const b of blocks) {
-    assert.ok(typeof b.type === 'string', 'each block must have a string type');
-    assert.ok(b.type === 'text' || b.type === 'project' || b.type === 'work', `unknown type: ${b.type}`);
-    if (b.type === 'text') assert.ok(typeof b.content === 'string', 'text block must have content');
-    if (b.type === 'project' || b.type === 'work') assert.ok(typeof b.id === 'string', 'card block must have id');
+    assert.ok(typeof b.type === 'string');
+    const validTypes = ['text', 'project', 'work', 'music', 'chips'];
+    assert.ok(validTypes.includes(b.type), `unknown type: ${b.type}`);
+    if (b.type === 'text') assert.ok(typeof b.content === 'string');
+    if (b.type === 'project' || b.type === 'work' || b.type === 'music') {
+      assert.ok(typeof b.id === 'string');
+    }
   }
 });

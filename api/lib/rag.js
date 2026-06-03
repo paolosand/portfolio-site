@@ -1,12 +1,12 @@
+import { GoogleGenAI, Type } from '@google/genai';
+import { buildSystemPrompt } from './personality.js';
+import { queryRelevant } from './retrieval.js';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { GoogleGenAI, Type } from '@google/genai';
-import { SYSTEM_PROMPT } from './personality.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const KNOWLEDGE_DIR = join(__dirname, '..', 'knowledge');
-
 const MODEL = 'gemini-2.5-flash';
 
 const RESPONSE_SCHEMA = {
@@ -17,6 +17,7 @@ const RESPONSE_SCHEMA = {
       type:    { type: Type.STRING },
       content: { type: Type.STRING },
       id:      { type: Type.STRING },
+      items:   { type: Type.ARRAY, items: { type: Type.STRING } },
     },
     required: ['type'],
   },
@@ -31,12 +32,11 @@ const GENERATION_CONFIG = {
 
 let _client = null;
 function getClient() {
-  if (!_client) {
-    _client = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
-  }
+  if (!_client) _client = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
   return _client;
 }
 
+// Fallback: load all knowledge markdown files as flat docs (used by retrieval.js when vectors.json absent)
 export function loadKnowledge() {
   const files = readdirSync(KNOWLEDGE_DIR).filter(f => f.endsWith('.md'));
   return files.map(file => ({
@@ -45,11 +45,9 @@ export function loadKnowledge() {
   }));
 }
 
-export async function generate(query, context, history) {
+export async function generate(query, history, { projectIds = [], workIds = [] } = {}) {
   const client = getClient();
-  const contextBlock = context
-    .map(doc => `[${doc.metadata.source}]\n${doc.content}`)
-    .join('\n\n---\n\n');
+  const contextBlock = await queryRelevant(query);
 
   const recentHistory = history.slice(-5);
   const historyBlock = recentHistory
@@ -57,8 +55,10 @@ export async function generate(query, context, history) {
     .join('\n');
 
   const today = new Date().toISOString().split('T')[0];
+  const systemPrompt = buildSystemPrompt(projectIds, workIds);
+
   const prompt = [
-    SYSTEM_PROMPT,
+    systemPrompt,
     `\nToday's date: ${today}`,
     '\n\n--- CONTEXT ---\n',
     contextBlock,
