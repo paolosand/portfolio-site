@@ -5,7 +5,6 @@ Paolo Sandejas is an OPM (Original Pilipino Music) indie/alternative singer-song
 ## Stats (as of 2026)
 - 28.1M+ streams across all platforms
 - 127K+ followers across social media
-- 43.5K+ Last.fm listeners | 488K+ scrobbles
 - Born August 13, 2000, Philippines
 
 ## Genre & Scene
