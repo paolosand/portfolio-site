@@ -45,6 +45,12 @@ async function collectChunks() {
 }
 
 async function run() {
+  if (!process.env.GOOGLE_API_KEY) {
+    console.warn('[ingest] GOOGLE_API_KEY not set — skipping embedding. ' +
+      'The app will use the loadKnowledge() fallback until vectors.json is generated.');
+    return;
+  }
+
   console.log('[ingest] collecting chunks...');
   const chunks = await collectChunks();
   console.log(`[ingest] ${chunks.length} chunks collected`);
