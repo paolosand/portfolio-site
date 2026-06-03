@@ -8,7 +8,7 @@ function getClient() {
 
 export async function embed(text) {
   const response = await getClient().models.embedContent({
-    model: 'text-embedding-004',
+    model: 'gemini-embedding-001',
     contents: text,
   });
   return response.embeddings[0].values;
@@ -17,7 +17,7 @@ export async function embed(text) {
 export async function embedBatch(texts) {
   if (texts.length === 0) return [];
   const response = await getClient().models.embedContent({
-    model: 'text-embedding-004',
+    model: 'gemini-embedding-001',
     contents: texts,
   });
   return response.embeddings.map(e => e.values);
