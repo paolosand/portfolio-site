@@ -8,6 +8,25 @@ function getKnowledge() {
   return _knowledge;
 }
 
+function setSseHeaders(res) {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
+}
+
+function sendEvent(res, payload) {
+  res.write(`data: ${JSON.stringify(payload)}\n\n`);
+  res.flush?.();
+}
+
+function streamText(res, text) {
+  const tokens = text.match(/\S+\s*/g) ?? [];
+  for (const token of tokens) {
+    sendEvent(res, { type: 'token', text: token });
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
@@ -30,13 +49,14 @@ export default async function handler(req, res) {
     return;
   }
 
+  setSseHeaders(res);
+
   try {
     const guardResult = check(query);
     if (guardResult.isMalicious) {
-      res.status(200).json({
-        blocks: [{ type: 'text', content: guardResult.response }],
-        blocked: true,
-      });
+      streamText(res, guardResult.response);
+      res.write('data: [DONE]\n\n');
+      res.end();
       return;
     }
 
@@ -48,9 +68,28 @@ export default async function handler(req, res) {
         : block
     );
 
-    res.status(200).json({ blocks: filteredBlocks, blocked: false });
+    const textContent = filteredBlocks
+      .filter(b => b.type === 'text')
+      .map(b => b.content)
+      .join('\n\n');
+
+    const embedBlocks = filteredBlocks.filter(b => b.type !== 'text');
+
+    streamText(res, textContent);
+
+    if (embedBlocks.length > 0) {
+      sendEvent(res, { type: 'embeds', blocks: embedBlocks });
+    }
+
+    res.write('data: [DONE]\n\n');
+    res.end();
   } catch (err) {
     console.error('Chat handler error:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      sendEvent(res, { type: 'error', message: 'Something went wrong — try again in a moment' });
+      res.end();
+    }
   }
 }

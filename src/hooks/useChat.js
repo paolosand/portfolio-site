@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
-import { sendMessage } from '../services/api';
+import { sendMessageStream } from '../services/api';
 
 function blocksToContent(blocks) {
   if (!blocks) return '';
@@ -17,6 +17,56 @@ export function useChat() {
   const lastUserTextRef = useRef(null);
   const lastApiHistoryRef = useRef([]);
 
+  const _executeStream = useCallback(async (userText, apiHistory) => {
+    const emptyAssistant = {
+      role: 'assistant',
+      blocks: [{ type: 'text', content: '' }],
+      timestamp: new Date().toISOString(),
+    };
+    messagesRef.current = [...messagesRef.current, emptyAssistant];
+    setMessages(prev => [...prev, emptyAssistant]);
+    setIsLoading(true);
+    setError(null);
+
+    let streamText = '';
+    let streamEmbeds = [];
+
+    await sendMessageStream(userText, apiHistory, {
+      onToken: (text) => {
+        streamText += text;
+        setMessages(prev => {
+          const msgs = [...prev];
+          const last = { ...msgs[msgs.length - 1] };
+          last.blocks = [{ type: 'text', content: streamText }];
+          msgs[msgs.length - 1] = last;
+          return msgs;
+        });
+      },
+      onEmbeds: (blocks) => {
+        streamEmbeds = blocks;
+      },
+      onDone: () => {
+        const finalBlocks = [{ type: 'text', content: streamText }, ...streamEmbeds];
+        const finalMsg = { ...emptyAssistant, blocks: finalBlocks };
+        messagesRef.current = [...messagesRef.current.slice(0, -1), finalMsg];
+        if (streamEmbeds.length > 0) {
+          setMessages(prev => {
+            const msgs = [...prev];
+            msgs[msgs.length - 1] = finalMsg;
+            return msgs;
+          });
+        }
+        setIsLoading(false);
+      },
+      onError: (msg) => {
+        messagesRef.current = messagesRef.current.slice(0, -1);
+        setMessages(prev => prev.slice(0, -1));
+        setError(msg || 'Chat is unavailable — try again in a moment');
+        setIsLoading(false);
+      },
+    });
+  }, []);
+
   const send = useCallback(async (userMessage) => {
     const userMsg = {
       role: 'user',
@@ -24,7 +74,6 @@ export function useChat() {
       timestamp: new Date().toISOString(),
     };
 
-    // Build history before updating ref — previous messages only; current message sent separately as query
     const apiHistory = messagesRef.current.slice(-4).map(m => ({
       role: m.role,
       content: m.role === 'assistant' ? blocksToContent(m.blocks) : m.content,
@@ -36,47 +85,14 @@ export function useChat() {
     messagesRef.current = [...messagesRef.current, userMsg];
     setMessages(prev => [...prev, userMsg]);
 
-    setIsLoading(true);
-    setError(null);
+    await _executeStream(userMessage, apiHistory);
+  }, [_executeStream]);
 
-    try {
-      const response = await sendMessage(userMessage, apiHistory);
-
-      const assistantMsg = {
-        role: 'assistant',
-        blocks: response.blocks,
-        timestamp: new Date().toISOString(),
-      };
-      messagesRef.current = [...messagesRef.current, assistantMsg];
-      setMessages(prev => [...prev, assistantMsg]);
-    } catch (err) {
-      setError(err.message || 'Chat is unavailable — try again in a moment');
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  // Retry the last failed API call without re-adding the user message
   const retry = useCallback(async () => {
     const text = lastUserTextRef.current;
     if (!text) return;
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await sendMessage(text, lastApiHistoryRef.current);
-      const assistantMsg = {
-        role: 'assistant',
-        blocks: response.blocks,
-        timestamp: new Date().toISOString(),
-      };
-      messagesRef.current = [...messagesRef.current, assistantMsg];
-      setMessages(prev => [...prev, assistantMsg]);
-    } catch (err) {
-      setError(err.message || 'Chat is unavailable — try again in a moment');
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+    await _executeStream(text, lastApiHistoryRef.current);
+  }, [_executeStream]);
 
   const clearError = useCallback(() => setError(null), []);
 

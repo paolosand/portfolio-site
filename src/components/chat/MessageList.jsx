@@ -4,19 +4,28 @@ import ProjectEmbed from './embeds/ProjectEmbed';
 import WorkEmbed from './embeds/WorkEmbed';
 import './MessageList.css';
 
-function AssistantBlocks({ blocks = [] }) {
-  return blocks.map((block, i) => {
-    if (block.type === 'text') {
-      return <ReactMarkdown key={i}>{block.content}</ReactMarkdown>;
-    }
-    if (block.type === 'project') {
-      return <ProjectEmbed key={i} id={block.id} />;
-    }
-    if (block.type === 'work') {
-      return <WorkEmbed key={i} id={block.id} />;
-    }
-    return null;
-  });
+function AssistantBlocks({ blocks = [], isStreaming = false }) {
+  const textBlocks = blocks.filter(b => b.type === 'text');
+  const embedBlocks = blocks.filter(b => b.type !== 'text');
+  const hasText = textBlocks.some(b => b.content);
+
+  return (
+    <>
+      {textBlocks.map((block, i) => (
+        <ReactMarkdown key={i}>{block.content}</ReactMarkdown>
+      ))}
+      {isStreaming && !hasText && <div className="typing-caret">▌</div>}
+      {embedBlocks.length > 0 && (
+        <div className="msg-embeds">
+          {embedBlocks.map((block, i) => {
+            if (block.type === 'project') return <ProjectEmbed key={i} id={block.id} />;
+            if (block.type === 'work') return <WorkEmbed key={i} id={block.id} />;
+            return null;
+          })}
+        </div>
+      )}
+    </>
+  );
 }
 
 export default function MessageList({ messages, isLoading }) {
@@ -28,24 +37,22 @@ export default function MessageList({ messages, isLoading }) {
 
   return (
     <div className="msgs">
-      {messages.map((m, i) => (
-        <div className={`msg ${m.role}`} key={i}>
-          <div className="from">{m.role === 'user' ? 'you ▸' : 'pao-gpt ▸'}</div>
-          <div className="bubble">
-            {m.role === 'user'
-              ? <p>{m.content}</p>
-              : <AssistantBlocks blocks={m.blocks} />}
+      {messages.map((m, i) => {
+        const isLastMsg = i === messages.length - 1;
+        return (
+          <div className={`msg ${m.role}`} key={i}>
+            <div className="from">{m.role === 'user' ? 'you ▸' : 'pao-gpt ▸'}</div>
+            <div className="bubble">
+              {m.role === 'user'
+                ? <p>{m.content}</p>
+                : <AssistantBlocks
+                    blocks={m.blocks}
+                    isStreaming={isLoading && isLastMsg}
+                  />}
+            </div>
           </div>
-        </div>
-      ))}
-      {isLoading && (
-        <div className="msg assistant">
-          <div className="from">pao-gpt ▸</div>
-          <div className="bubble">
-            <div className="typing"><span></span><span></span><span></span></div>
-          </div>
-        </div>
-      )}
+        );
+      })}
       <div ref={endRef}></div>
     </div>
   );

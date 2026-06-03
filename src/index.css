@@ -201,10 +201,11 @@ button {
   white-space: nowrap;
 }
 .tb-meta b { color: var(--ink); }
+.tb-label-short { display: none; }
+
 .tb-nav button.tb-nav-music {
   background: var(--c-pink);
   color: var(--paper);
-  border-right: none;
 }
 .tb-nav button.tb-nav-music:hover {
   background: var(--c-pink);
@@ -1054,28 +1055,29 @@ button {
   color: var(--ink-mute);
   position: relative;
 }
-.msg .from::after {
-  content: "";
-  position: absolute;
-  right: -8px;
-  top: 12px;
-  width: 8px;
-  border-top: 1.5px solid var(--ink);
-}
 .msg.user .from { color: var(--c-blue); }
 .msg.assistant .from { color: var(--c-pink); }
 
 .msg .bubble {
-  border-left: 1.5px solid var(--ink);
-  padding: 0 0 0 18px;
+  border: 1.5px solid var(--ink);
+  padding: 12px 16px;
+  box-shadow: 3px 3px 0 var(--ink);
   font-size: 14px;
   line-height: 1.6;
   color: var(--ink);
   min-width: 0;
   overflow-wrap: break-word;
 }
+.msg.user .bubble {
+  background: var(--ink);
+  color: var(--paper);
+}
+.msg.assistant .bubble {
+  background: var(--paper-2);
+}
 .msg .bubble p { margin: 0 0 8px; }
 .msg .bubble p:last-child { margin: 0; }
+.msg-embeds { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
 
 .chat-error {
   flex: 0 0 auto;
@@ -1122,23 +1124,16 @@ button {
   cursor: not-allowed;
 }
 
-.typing {
-  display: inline-flex;
-  gap: 4px;
-  align-items: center;
-  padding-top: 6px;
+.typing-caret {
+  color: var(--c-pink);
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 1;
+  animation: caret-blink 1s step-end infinite;
 }
-.typing span {
-  width: 6px; height: 6px;
-  background: var(--c-pink);
-  border-radius: 50%;
-  animation: typing-bounce 1.2s ease-in-out infinite;
-}
-.typing span:nth-child(2) { animation-delay: 0.15s; background: var(--c-blue); }
-.typing span:nth-child(3) { animation-delay: 0.3s; background: var(--c-mint); }
-@keyframes typing-bounce {
-  0%,100% { transform: translateY(0); opacity: 0.5; }
-  50% { transform: translateY(-4px); opacity: 1; }
+@keyframes caret-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 /* input */
@@ -1182,13 +1177,13 @@ button {
   text-transform: uppercase;
   font-weight: 700;
   border: 1.5px solid var(--ink);
-  box-shadow: 3px 3px 0 var(--c-pink);
+  box-shadow: 3px 3px 0 var(--ink);
   transition: transform 0.08s ease, box-shadow 0.08s ease;
   cursor: pointer;
 }
-.chat-input .send:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--c-pink); }
-.chat-input .send:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--c-pink); }
-.chat-input .send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: 3px 3px 0 var(--c-pink); }
+.chat-input .send:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+.chat-input .send:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+.chat-input .send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: 3px 3px 0 var(--ink); }
 .chat-input .send-glyph { margin-left: 6px; color: var(--c-lemon); }
 
 /* ===================================================================
@@ -1196,15 +1191,20 @@ button {
    =================================================================== */
 @media (max-width: 880px) {
   .app { padding: 0 18px 60px; }
-  .topbar { grid-template-columns: 1fr auto; }
+  .topbar { grid-template-columns: 1fr auto; overflow: hidden; }
   .tb-meta { display: none; }
   .tb-mark .name { display: none; }
   .tb-mark .sub { display: none; }
-  .tb-nav button { padding: 10px 12px; }
+  .tb-nav { overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .tb-nav button { padding: 12px 12px; }
+  .tb-label-full { display: none; }
+  .tb-label-short { display: inline; }
   .chat-shell { margin-top: 0; }
   .chat-paper { padding: 16px 12px; }
-  .msg { grid-template-columns: 52px 1fr; gap: 8px; }
-  .welcome-banner { overflow-x: auto; }
+  .chat-paper::-webkit-scrollbar { display: none; }
+  .msg { grid-template-columns: 76px 1fr; gap: 8px; }
+  .welcome-banner { display: none; }
+  .welcome h1 { font-size: 26px; }
   .hero-grid { grid-template-columns: 1fr; gap: 28px; }
   .props { grid-template-columns: 1fr; }
   .prop { border-right: none; border-bottom: 1.5px solid var(--ink); }

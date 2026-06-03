@@ -7,7 +7,7 @@ export default function WelcomeScreen({ onPick }) {
       <h1>hi, i'm pao-gpt <span className="wave">★</span></h1>
       <p className="lead">
         the friendly little machine that knows what paolo's been building.
-        ask me about ml in production, audio/cv work, or the wearable instruments —
+        ask me about ml in production, audio/cv work, or the wearable instruments.
         i'll answer in his voice.
       </p>
 

@@ -13,14 +13,17 @@ export default function TopBar({ view, setView, onMusicClick }) {
       <nav className="tb-nav">
         <button className={view === 'chat' ? 'is-active' : ''} onClick={() => setView('chat')}>
           <span className="dot"></span>
-          chat / pao-gpt
+          <span className="tb-label-full">chat / pao-gpt</span>
+          <span className="tb-label-short">chat</span>
         </button>
         <button className={view === 'portfolio' ? 'is-active' : ''} onClick={() => setView('portfolio')}>
           <span className="dot"></span>
-          portfolio
+          <span className="tb-label-full">portfolio</span>
+          <span className="tb-label-short">portfolio</span>
         </button>
         <button className="tb-nav-music" onClick={onMusicClick}>
-          ♪ listen
+          <span className="tb-label-full">♪ listen</span>
+          <span className="tb-label-short">♪</span>
         </button>
       </nav>
       <div className="tb-meta">
