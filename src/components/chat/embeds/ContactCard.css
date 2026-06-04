@@ -1,0 +1,49 @@
+.contact-card {
+  display: flex;
+  margin: 4px 0;
+  border: 1.5px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  background: var(--paper);
+  text-decoration: none;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+.contact-card:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.contact-rail {
+  flex: 0 0 11px;
+  background: var(--c-lemon);
+}
+
+.contact-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 11px;
+  font-family: var(--font-mono);
+}
+
+.contact-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--ink);
+}
+
+.contact-glyph { font-size: 14px; }
+
+.contact-go {
+  font-size: 10px;
+  font-weight: 700;
+  border: 1px solid var(--ink);
+  padding: 3px 9px;
+  background: var(--ink);
+  color: var(--paper);
+  white-space: nowrap;
+}
