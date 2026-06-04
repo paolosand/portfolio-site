@@ -1,6 +1,7 @@
 import { GoogleGenAI, Type } from '@google/genai';
 import { buildSystemPrompt } from './personality.js';
 import { queryRelevant } from './retrieval.js';
+import { withRetry } from './retry.js';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -25,7 +26,7 @@ const RESPONSE_SCHEMA = {
 
 const GENERATION_CONFIG = {
   temperature: 0.7,
-  maxOutputTokens: 1024,
+  maxOutputTokens: 2048,
   responseMimeType: 'application/json',
   responseSchema: RESPONSE_SCHEMA,
 };
@@ -43,6 +44,19 @@ export function loadKnowledge() {
     content: readFileSync(join(KNOWLEDGE_DIR, file), 'utf8'),
     metadata: { source: basename(file, '.md') },
   }));
+}
+
+// Parse the model's JSON array of blocks. Returns null on truncated/malformed output
+// so the caller shows a graceful message instead of leaking raw JSON to the user.
+function parseBlocks(text) {
+  if (typeof text !== 'string') return null;
+  try {
+    const parsed = JSON.parse(text);
+    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+  } catch {
+    // truncated or malformed JSON — fall through to graceful fallback
+  }
+  return null;
 }
 
 export async function generate(query, history, { projectIds = [], workIds = [] } = {}) {
@@ -66,17 +80,19 @@ export async function generate(query, history, { projectIds = [], workIds = [] }
     `\n\n--- QUESTION ---\n${query}`,
   ].join('');
 
-  const response = await client.models.generateContent({
+  const response = await withRetry(() => client.models.generateContent({
     model: MODEL,
     contents: prompt,
     config: GENERATION_CONFIG,
-  });
+  }));
 
-  try {
-    const blocks = JSON.parse(response.text);
-    if (Array.isArray(blocks)) return blocks;
-    return [{ type: 'text', content: response.text }];
-  } catch {
-    return [{ type: 'text', content: response.text }];
-  }
+  const blocks = parseBlocks(response.text);
+  if (blocks) return blocks;
+
+  const finishReason = response?.candidates?.[0]?.finishReason;
+  console.error('[rag] unparseable model output', {
+    finishReason,
+    raw: typeof response.text === 'string' ? response.text.slice(0, 300) : response.text,
+  });
+  return [{ type: 'text', content: "hmm, my response got a little tangled on that one — mind asking again? a slightly more specific question usually helps." }];
 }

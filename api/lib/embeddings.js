@@ -1,4 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
+import { withRetry } from './retry.js';
 
 const MODEL = 'gemini-embedding-001';
 
@@ -9,21 +10,25 @@ function getClient() {
 }
 
 export async function embed(text) {
-  const response = await getClient().models.embedContent({
-    model: MODEL,
-    contents: text,
+  return withRetry(async () => {
+    const response = await getClient().models.embedContent({
+      model: MODEL,
+      contents: text,
+    });
+    return response.embeddings[0].values;
   });
-  return response.embeddings[0].values;
 }
 
 export async function embedBatch(texts) {
   if (texts.length === 0) return [];
   try {
-    const response = await getClient().models.embedContent({
-      model: MODEL,
-      contents: texts,
+    return await withRetry(async () => {
+      const response = await getClient().models.embedContent({
+        model: MODEL,
+        contents: texts,
+      });
+      return response.embeddings.map(e => e.values);
     });
-    return response.embeddings.map(e => e.values);
   } catch (err) {
     // gemini-embedding-001 enforces a stricter per-request limit than text-embedding-004.
     // If the batched array is rejected, degrade to one call per text rather than failing the run.
