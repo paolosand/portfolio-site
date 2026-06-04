@@ -9,7 +9,7 @@
     "ingest": "node api/scripts/ingest.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "node --test api/lib/*.test.js"
+    "test": "node --test api/lib/*.test.js src/components/chat/embeds/*.test.js"
   },
   "dependencies": {
     "@google/genai": "^2.6.0",
