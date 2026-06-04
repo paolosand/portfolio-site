@@ -1,5 +1,33 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { sendMessageStream } from '../services/api';
+
+const STORAGE_KEY = 'paogpt:session';
+
+function loadStored() {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : null;
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveStored(messages) {
+  try {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+  } catch {
+    // storage unavailable (private mode / quota) — non-fatal
+  }
+}
+
+function clearStored() {
+  try {
+    sessionStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // ignore
+  }
+}
 
 function blocksToContent(blocks) {
   if (!blocks) return '';
@@ -10,12 +38,18 @@ function blocksToContent(blocks) {
 }
 
 export function useChat() {
-  const [messages, setMessages] = useState([]);
-  const messagesRef = useRef([]);
+  const [messages, setMessages] = useState(loadStored);
+  const messagesRef = useRef(messages);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const lastUserTextRef = useRef(null);
   const lastApiHistoryRef = useRef([]);
+
+  // Persist the conversation for this tab session. Skip while streaming so we don't
+  // store half-finished assistant messages.
+  useEffect(() => {
+    if (!isLoading) saveStored(messages);
+  }, [messages, isLoading]);
 
   const _executeStream = useCallback(async (userText, apiHistory) => {
     const emptyAssistant = {
@@ -107,6 +141,7 @@ export function useChat() {
     setError(null);
     lastUserTextRef.current = null;
     lastApiHistoryRef.current = [];
+    clearStored();
   }, []);
 
   return { messages, isLoading, error, send, greet, retry, clearError, reset };

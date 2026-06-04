@@ -9,7 +9,7 @@ export default function ChatInterface() {
   const { messages, isLoading, error, send, greet, retry, clearError, reset } = useChat();
 
   useEffect(() => {
-    greet();
+    if (messages.length === 0) greet();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
