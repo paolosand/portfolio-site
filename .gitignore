@@ -49,3 +49,6 @@ backend/scripts/test_*.py
 
 # Generated Knowledge Base
 api/knowledge/vectors.json
+
+# brainstorm visual companion
+.superpowers/
