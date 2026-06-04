@@ -35,7 +35,7 @@ test('generate: integration — returns valid blocks (requires GOOGLE_API_KEY)',
   assert.ok(textBlocks.length > 0);
   for (const b of blocks) {
     assert.ok(typeof b.type === 'string');
-    const validTypes = ['text', 'project', 'work', 'music', 'chips'];
+    const validTypes = ['text', 'project', 'work', 'music', 'chips', 'contact'];
     assert.ok(validTypes.includes(b.type), `unknown type: ${b.type}`);
     if (b.type === 'text') assert.ok(typeof b.content === 'string');
     if (b.type === 'project' || b.type === 'work' || b.type === 'music') {
