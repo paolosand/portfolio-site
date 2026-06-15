@@ -1079,6 +1079,21 @@ button {
 .msg .bubble p:last-child { margin: 0; }
 .msg-embeds { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
 
+/* Cards ease in from the right once the reply has finished typing. Slow and
+   deliberate — a beat after the text lands, then a long decelerating glide so
+   the arrival reads as a moment, not a flicker. */
+.msg-embeds-enter > * {
+  animation: embed-slide-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.14s;
+}
+.msg-embeds-enter > *:nth-child(2) { animation-delay: 0.32s; }
+.msg-embeds-enter > *:nth-child(3) { animation-delay: 0.50s; }
+.msg-embeds-enter > *:nth-child(n + 4) { animation-delay: 0.68s; }
+@keyframes embed-slide-in {
+  from { opacity: 0; transform: translateX(48px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
 .chat-error {
   flex: 0 0 auto;
   display: flex;
@@ -1124,16 +1139,36 @@ button {
   cursor: not-allowed;
 }
 
-.typing-caret {
+/* The blinking caret. While typing, it rides inline at the end of the last
+   rendered element (::after) so it follows the incoming characters; the
+   standalone span only covers the brief wait before the first character. */
+.typing-caret,
+.assistant-md.is-typing > *:last-child:not(ul):not(ol)::after,
+.assistant-md.is-typing > :is(ul, ol):last-child li:last-child::after {
+  display: inline-block;
+  margin-left: 1px;
   color: var(--c-pink);
   font-weight: 800;
   font-size: 18px;
   line-height: 1;
+  vertical-align: text-bottom;
   animation: caret-blink 1s step-end infinite;
+}
+.assistant-md.is-typing > *:last-child:not(ul):not(ol)::after,
+.assistant-md.is-typing > :is(ul, ol):last-child li:last-child::after {
+  content: "▌";
 }
 @keyframes caret-blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
+}
+
+/* Honor reduced-motion: no slide, no blink. (Typing itself is disabled in JS.) */
+@media (prefers-reduced-motion: reduce) {
+  .msg-embeds-enter > * { animation: none; }
+  .typing-caret,
+  .assistant-md.is-typing > *:last-child:not(ul):not(ol)::after,
+  .assistant-md.is-typing > :is(ul, ol):last-child li:last-child::after { animation: none; }
 }
 
 /* input */

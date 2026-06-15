@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import ProjectEmbed from './embeds/ProjectEmbed';
 import WorkEmbed from './embeds/WorkEmbed';
@@ -7,6 +7,7 @@ import CitationChip from './embeds/CitationChip';
 import ContactCard from './embeds/ContactCard';
 import EmbedModal from './embeds/EmbedModal';
 import { annotateEmbeds } from './embeds/annotateEmbeds';
+import { useTypewriter, usePrefersReducedMotion } from '../../hooks/useTypewriter';
 import './MessageList.css';
 
 function InlineChips({ items, onPick }) {
@@ -32,26 +33,37 @@ function renderCard(block, i, onExpand) {
   return null;
 }
 
-function AssistantBlocks({ blocks = [], isStreaming = false, onPick, onExpand }) {
-  const textBlocks = blocks.filter(b => b.type === 'text');
-  const hasText = textBlocks.some(b => b.content);
+function AssistantBlocks({ blocks = [], animate = false, onReveal, onPick, onExpand }) {
+  const reducedMotion = usePrefersReducedMotion();
+  const typing = animate && !reducedMotion;
+
+  const fullText = blocks.filter(b => b.type === 'text').map(b => b.content).join('\n\n');
+  const { text, done } = useTypewriter(fullText, typing);
+  const embeds = blocks.filter(b => b.type !== 'text');
+
+  // Keep the latest characters in view as they type out.
+  useEffect(() => {
+    if (typing && !done) onReveal?.();
+  }, [text, typing, done, onReveal]);
 
   return (
     <>
-      {textBlocks.map((block, i) => (
-        <ReactMarkdown key={i}>{block.content}</ReactMarkdown>
-      ))}
-      {isStreaming && !hasText && <div className="typing-caret">▌</div>}
-      <div className="msg-embeds">
-        {blocks.filter(b => b.type !== 'text').map((block, i) => {
-          if (block.type === 'chips')   return <InlineChips key={i} items={block.items} onPick={onPick} />;
-          if (block.type === 'contact') return <ContactCard key={i} subject={block.content} />;
-          if (block.type === 'project' || block.type === 'work' || block.type === 'music') {
-            return renderCard(block, i, onExpand);
-          }
-          return null;
-        })}
+      <div className={`assistant-md${typing && !done ? ' is-typing' : ''}`}>
+        <ReactMarkdown>{text}</ReactMarkdown>
+        {typing && !done && !text && <span className="typing-caret">▌</span>}
       </div>
+      {done && embeds.length > 0 && (
+        <div className={`msg-embeds${typing ? ' msg-embeds-enter' : ''}`}>
+          {embeds.map((block, i) => {
+            if (block.type === 'chips')   return <InlineChips key={i} items={block.items} onPick={onPick} />;
+            if (block.type === 'contact') return <ContactCard key={i} subject={block.content} />;
+            if (block.type === 'project' || block.type === 'work' || block.type === 'music') {
+              return renderCard(block, i, onExpand);
+            }
+            return null;
+          })}
+        </div>
+      )}
     </>
   );
 }
@@ -61,30 +73,36 @@ export default function MessageList({ messages, isLoading, onPick }) {
   const [openEmbed, setOpenEmbed] = useState(null);
   const annotated = annotateEmbeds(messages);
 
-  useEffect(() => {
+  // Messages already present when this view mounts (restored from a prior
+  // session) should render fully; only replies that arrive afterward type out.
+  const [seenCount] = useState(messages.length);
+
+  const scrollToEnd = useCallback(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-  }, [messages.length, isLoading]);
+  }, []);
+
+  useEffect(() => {
+    scrollToEnd();
+  }, [messages.length, isLoading, scrollToEnd]);
 
   return (
     <div className="msgs">
-      {annotated.map((m, i) => {
-        const isLastMsg = i === annotated.length - 1;
-        return (
-          <div className={`msg ${m.role}`} key={i}>
-            <div className="from">{m.role === 'user' ? 'you ▸' : 'pao-gpt ▸'}</div>
-            <div className="bubble">
-              {m.role === 'user'
-                ? <p>{m.content}</p>
-                : <AssistantBlocks
-                    blocks={m.blocks}
-                    isStreaming={isLoading && isLastMsg}
-                    onPick={onPick}
-                    onExpand={setOpenEmbed}
-                  />}
-            </div>
+      {annotated.map((m, i) => (
+        <div className={`msg ${m.role}`} key={i}>
+          <div className="from">{m.role === 'user' ? 'you ▸' : 'pao-gpt ▸'}</div>
+          <div className="bubble">
+            {m.role === 'user'
+              ? <p>{m.content}</p>
+              : <AssistantBlocks
+                  blocks={m.blocks}
+                  animate={i >= seenCount}
+                  onReveal={scrollToEnd}
+                  onPick={onPick}
+                  onExpand={setOpenEmbed}
+                />}
           </div>
-        );
-      })}
+        </div>
+      ))}
       <div ref={endRef}></div>
       <EmbedModal embed={openEmbed} onClose={() => setOpenEmbed(null)} />
     </div>
