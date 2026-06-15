@@ -2,13 +2,13 @@
 
 export const PORTRAIT_ART = [
   { text: `╔═══════════════════════════════╗`, color: null },
-  { text: `║  `, color: null, after: { text: `░░▒▒▓▓██  PAOLO  ██▓▓▒▒░░`, color: 'blue' }, end: `  ║` },
+  { text: `║   `, color: null, after: { text: `░░▒▒▓▓██  PAOLO  ██▓▓▒▒░░`, color: 'blue' }, end: `   ║` },
   { text: `║                               ║`, color: null },
   { text: `║       `, color: null, after: { text: `╔═══════════════╗`, color: 'pink' }, end: `       ║` },
   { text: `║       `, color: null, after: { text: `║   ┌─┐   ┌─┐   ║`, color: 'pink' }, end: `       ║` },
   { text: `║       `, color: null, after: { text: `║   │o│   │o│   ║`, color: 'pink' }, end: `       ║` },
   { text: `║       `, color: null, after: { text: `║   └─┘   └─┘   ║`, color: 'pink' }, end: `       ║` },
-  { text: `║       `, color: null, after: { text: `║       ︶       ║`, color: 'pink' }, end: `       ║` },
+  { text: `║       `, color: null, after: { text: `║       ‿       ║`, color: 'pink' }, end: `       ║` },
   { text: `║       `, color: null, after: { text: `╚═══════════════╝`, color: 'pink' }, end: `       ║` },
   { text: `║                               ║`, color: null },
   { text: `║   `, color: null, after: { text: `> ml engineer · audio + cv`, color: 'mint' }, end: `  ║` },
