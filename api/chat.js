@@ -1,9 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { check, filterResponse } from './lib/guard.js';
-import { generate } from './lib/rag.js';
-import { isGreetingSentinel, GREETING_BLOCKS } from './lib/personality.js';
+import { check, filterResponse } from './_lib/guard.js';
+import { generate } from './_lib/rag.js';
+import { isGreetingSentinel, GREETING_BLOCKS } from './_lib/personality.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

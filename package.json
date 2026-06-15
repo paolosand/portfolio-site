@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node api/scripts/ingest.mjs && vite build",
-    "ingest": "node api/scripts/ingest.mjs",
+    "build": "node api/_scripts/ingest.mjs && vite build",
+    "ingest": "node api/_scripts/ingest.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "node --test api/lib/*.test.js src/components/chat/*.test.js src/components/chat/embeds/*.test.js"
+    "test": "node --test api/_lib/*.test.js src/components/chat/*.test.js src/components/chat/embeds/*.test.js"
   },
   "dependencies": {
     "@google/genai": "^2.6.0",

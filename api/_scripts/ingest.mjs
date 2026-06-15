@@ -1,9 +1,9 @@
 import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { embedBatch } from '../lib/embeddings.js';
-import { chunkMarkdown, chunkPortfolioJson, chunkCode } from '../lib/ingest-utils.js';
-import { fetchFile } from '../lib/github-fetcher.js';
+import { embedBatch } from '../_lib/embeddings.js';
+import { chunkMarkdown, chunkPortfolioJson, chunkCode } from '../_lib/ingest-utils.js';
+import { fetchFile } from '../_lib/github-fetcher.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..', '..');
