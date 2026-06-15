@@ -1,5 +1,5 @@
 import portfolioData from '../data/portfolio.json';
-import { PROP_ART } from './shared/ascii.js';
+import { PORTRAIT_ART, PROP_ART } from './shared/ascii.js';
 import './Hero.css';
 
 const TAGLINE = "Trained as a computer scientist. Wired by music. Building the kind of machines that listen back.";
@@ -47,20 +47,16 @@ export default function Hero({ onChatClick }) {
               <div className="dots"><span></span><span></span><span></span></div>
             </div>
             <pre className="ascii pc-art">
-{`╔═══════════════════════════════╗
-║  `}<span style={{color:'var(--c-blue)'}}>{`░░▒▒▓▓██  PAOLO  ██▓▓▒▒░░`}</span>{`  ║
-║                               ║
-║       `}<span style={{color:'var(--c-pink)'}}>{`╔═══════════════╗`}</span>{`       ║
-║       `}<span style={{color:'var(--c-pink)'}}>{`║   ┌─┐   ┌─┐   ║`}</span>{`       ║
-║       `}<span style={{color:'var(--c-pink)'}}>{`║   │o│   │o│   ║`}</span>{`       ║
-║       `}<span style={{color:'var(--c-pink)'}}>{`║   └─┘   └─┘   ║`}</span>{`       ║
-║       `}<span style={{color:'var(--c-pink)'}}>{`║       ︶       ║`}</span>{`       ║
-║       `}<span style={{color:'var(--c-pink)'}}>{`╚═══════════════╝`}</span>{`       ║
-║                               ║
-║   `}<span style={{color:'var(--c-mint)'}}>{`> ml engineer · audio + cv`}</span>{`  ║
-║   `}<span style={{color:'var(--c-mint)'}}>{`> creative tech researcher`}</span>{`  ║
-║   `}<span style={{color:'var(--c-mint)'}}>{`> built w/ patience + ░░░`}</span>{`   ║
-╚═══════════════════════════════╝`}
+{PORTRAIT_ART.map((row, i) => (
+  <span key={i}>
+    {row.text}
+    {row.after && (
+      <span style={{ color: `var(--c-${row.after.color})` }}>{row.after.text}</span>
+    )}
+    {row.end ?? ''}
+    {i < PORTRAIT_ART.length - 1 ? '\n' : ''}
+  </span>
+))}
             </pre>
             <div className="pc-foot">
               <span>caltech of the arts · MFA '26</span>
