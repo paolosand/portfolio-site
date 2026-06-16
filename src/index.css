@@ -1245,6 +1245,19 @@ button {
 /* ===================================================================
    RESPONSIVE
    =================================================================== */
+
+/* Hero portrait split — 3 tiers:
+   - >=1025px : 2fr/1fr (text-favored, default rule above)
+   - 641-1024 : even 1/1 split, still side by side
+   - <=640px  : stack, portrait drops below the text (compact) */
+@media (max-width: 1024px) and (min-width: 641px) {
+  .hero-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+}
+@media (max-width: 640px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 28px; }
+  .portrait-card .pc-art { flex: none; height: 280px; }
+}
+
 @media (max-width: 880px) {
   .app { padding: 0 18px 60px; }
   .topbar { grid-template-columns: 1fr auto; overflow: hidden; }
@@ -1261,13 +1274,6 @@ button {
   .msg { grid-template-columns: 76px 1fr; gap: 8px; }
   .welcome-banner { display: none; }
   .welcome h1 { font-size: 26px; }
-  .hero-grid { grid-template-columns: 1fr; gap: 28px; }
-  /* Stacked: no sibling column to match. Keep the portrait compact —
-     fixed modest height, art stays small and centered (not full-bleed). */
-  .portrait-card .pc-art {
-    flex: none;
-    height: 280px;
-  }
   .props { grid-template-columns: 1fr; }
   .prop { border-right: none; border-bottom: 1.5px solid var(--ink); }
   .prop:last-child { border-bottom: none; }
