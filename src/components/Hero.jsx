@@ -24,9 +24,10 @@ export default function Hero({ onChatClick }) {
           <p className="hero-tagline">{TAGLINE}</p>
           <dl className="hero-meta">
             <dt>role</dt><dd>AI / ML engineer</dd>
+            <dt>trained</dt><dd>CalArts MFA '26 · UP Diliman CS '23</dd>
             <dt>focus</dt><dd>audio · vision · generative</dd>
             <dt>stack</dt><dd>PyTorch · Gemini · Max/MSP · ChucK</dd>
-            <dt>shipping</dt><dd>models for 12,000+ users</dd>
+            <dt>building</dt><dd>responsible AI for creative work</dd>
           </dl>
           <div className="hero-cta">
             <button className="cta primary" onClick={onChatClick}>
