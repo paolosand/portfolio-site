@@ -314,6 +314,7 @@ button {
 }
 .hero-right {
   display: flex;
+  align-items: flex-start; /* card keeps its natural height, top-aligned */
   min-width: 0;
 }
 .hero-left .eyebrow {
@@ -404,6 +405,7 @@ button {
   background: var(--paper);
   box-shadow: 8px 8px 0 var(--ink);
   width: 100%;
+  max-height: 600px; /* safety cap so a wide column can't make a giant card */
   display: flex;
   flex-direction: column;
 }
@@ -433,7 +435,11 @@ button {
 .portrait-card .pc-head .dots span:nth-child(3) { background: var(--c-mint); opacity: 1; }
 
 .portrait-card .pc-art {
-  flex: 1 1 auto;
+  width: 100%;
+  /* Width-driven: card height follows the art's true aspect (published by
+     AsciiPortrait), so the portrait stays properly sized no matter how tall
+     the text column gets. min-height:0 lets it shrink under the max-height cap. */
+  aspect-ratio: var(--art-aspect, 0.82);
   min-height: 0;
   display: flex;
   align-items: center;
@@ -1255,7 +1261,7 @@ button {
 }
 @media (max-width: 640px) {
   .hero-grid { grid-template-columns: 1fr; gap: 28px; }
-  .portrait-card .pc-art { flex: none; height: 280px; }
+  .portrait-card .pc-art { aspect-ratio: auto; height: 280px; }
 }
 
 @media (max-width: 880px) {
