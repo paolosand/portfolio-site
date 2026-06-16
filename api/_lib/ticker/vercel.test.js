@@ -2,6 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { head, fetchLines } from './vercel.js';
 
+process.env.VERCEL_TOKEN = 'test-token';
+
 const NOW = Date.parse('2026-06-16T12:00:00Z');
 const BODY = { deployments: [{ uid: 'dpl_9', readyState: 'READY', target: 'production', ready: NOW - 3 * 3600_000 }] };
 
