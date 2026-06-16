@@ -308,9 +308,13 @@ button {
 }
 .hero-grid {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: 56px;
-  align-items: start;
+  align-items: stretch;
+}
+.hero-right {
+  display: flex;
+  min-width: 0;
 }
 .hero-left .eyebrow {
   font-size: 11px;
@@ -399,6 +403,9 @@ button {
   border: 1.5px solid var(--ink);
   background: var(--paper);
   box-shadow: 8px 8px 0 var(--ink);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 .portrait-card .pc-head {
   display: flex;
@@ -426,9 +433,16 @@ button {
 .portrait-card .pc-head .dots span:nth-child(3) { background: var(--c-mint); opacity: 1; }
 
 .portrait-card .pc-art {
-  font-size: 10px;
-  line-height: 1.05;
-  padding: 18px 14px;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.4px; /* fallback; AsciiPortrait fits this to the card at runtime */
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: pre;
+  padding: 16px 14px;
   color: var(--ink);
   overflow: hidden;
   margin: 0;
@@ -441,6 +455,13 @@ button {
   grid-template-columns: 1fr auto;
   font-size: 11px;
   align-items: center;
+}
+.portrait-card .pc-foot .role {
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  transition: opacity 0.25s ease;
 }
 .portrait-card .pc-foot .badge {
   font-size: 9px;
@@ -1224,6 +1245,19 @@ button {
 /* ===================================================================
    RESPONSIVE
    =================================================================== */
+
+/* Hero portrait split — 3 tiers:
+   - >=1025px : 2fr/1fr (text-favored, default rule above)
+   - 641-1024 : even 1/1 split, still side by side
+   - <=640px  : stack, portrait drops below the text (compact) */
+@media (max-width: 1024px) and (min-width: 641px) {
+  .hero-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+}
+@media (max-width: 640px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 28px; }
+  .portrait-card .pc-art { flex: none; height: 280px; }
+}
+
 @media (max-width: 880px) {
   .app { padding: 0 18px 60px; }
   .topbar { grid-template-columns: 1fr auto; overflow: hidden; }
@@ -1240,7 +1274,6 @@ button {
   .msg { grid-template-columns: 76px 1fr; gap: 8px; }
   .welcome-banner { display: none; }
   .welcome h1 { font-size: 26px; }
-  .hero-grid { grid-template-columns: 1fr; gap: 28px; }
   .props { grid-template-columns: 1fr; }
   .prop { border-right: none; border-bottom: 1.5px solid var(--ink); }
   .prop:last-child { border-bottom: none; }

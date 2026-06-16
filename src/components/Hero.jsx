@@ -1,5 +1,6 @@
 import portfolioData from '../data/portfolio.json';
-import { PORTRAIT_ART, PROP_ART } from './shared/ascii.js';
+import { PROP_ART } from './shared/ascii.js';
+import AsciiPortrait from './AsciiPortrait.jsx';
 import './Hero.css';
 
 const TAGLINE = "Trained as a computer scientist. Wired by music. Building the kind of machines that listen back.";
@@ -41,28 +42,7 @@ export default function Hero({ onChatClick }) {
         </div>
 
         <div className="hero-right">
-          <div className="portrait-card">
-            <div className="pc-head">
-              <span>~/paolo · live</span>
-              <div className="dots"><span></span><span></span><span></span></div>
-            </div>
-            <pre className="ascii pc-art">
-{PORTRAIT_ART.map((row, i) => (
-  <span key={i}>
-    {row.text}
-    {row.after && (
-      <span style={{ color: `var(--c-${row.after.color})` }}>{row.after.text}</span>
-    )}
-    {row.end ?? ''}
-    {i < PORTRAIT_ART.length - 1 ? '\n' : ''}
-  </span>
-))}
-            </pre>
-            <div className="pc-foot">
-              <span>caltech of the arts · MFA '26</span>
-              <span className="badge">v0.4.1</span>
-            </div>
-          </div>
+          <AsciiPortrait />
         </div>
       </div>
 

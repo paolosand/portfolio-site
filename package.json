@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "node api/_scripts/ingest.mjs && vite build",
     "ingest": "node api/_scripts/ingest.mjs",
+    "build:portrait": "node scripts/build-portrait-frames.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "node --test api/_lib/*.test.js src/components/chat/*.test.js src/components/chat/embeds/*.test.js"

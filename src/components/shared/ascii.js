@@ -1,21 +1,6 @@
 // ASCII art constants and utilities for the riso-print portfolio
-
-export const PORTRAIT_ART = [
-  { text: `╔═══════════════════════════════╗`, color: null },
-  { text: `║   `, color: null, after: { text: `░░▒▒▓▓██  PAOLO  ██▓▓▒▒░░`, color: 'blue' }, end: `   ║` },
-  { text: `║                               ║`, color: null },
-  { text: `║       `, color: null, after: { text: `╔═══════════════╗`, color: 'pink' }, end: `       ║` },
-  { text: `║       `, color: null, after: { text: `║   ┌─┐   ┌─┐   ║`, color: 'pink' }, end: `       ║` },
-  { text: `║       `, color: null, after: { text: `║   │o│   │o│   ║`, color: 'pink' }, end: `       ║` },
-  { text: `║       `, color: null, after: { text: `║   └─┘   └─┘   ║`, color: 'pink' }, end: `       ║` },
-  { text: `║       `, color: null, after: { text: `║       ‿       ║`, color: 'pink' }, end: `       ║` },
-  { text: `║       `, color: null, after: { text: `╚═══════════════╝`, color: 'pink' }, end: `       ║` },
-  { text: `║                               ║`, color: null },
-  { text: `║   `, color: null, after: { text: `> ml engineer · audio + cv`, color: 'mint' }, end: `  ║` },
-  { text: `║   `, color: null, after: { text: `> creative tech researcher`, color: 'mint' }, end: `  ║` },
-  { text: `║   `, color: null, after: { text: `> built w/ patience + ░░░`, color: 'mint' }, end: `   ║` },
-  { text: `╚═══════════════════════════════╝`, color: null },
-];
+// The hero portrait now renders from src/components/shared/portraitFrames.json
+// via <AsciiPortrait/> (see scripts/build-portrait-frames.mjs).
 
 export const PROJECT_ART = {
   chuloopa: `  ┌─[ TRX ]──────────────┐
