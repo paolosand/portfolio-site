@@ -41,7 +41,7 @@ test('unchanged heads → changed:false, returns cached untouched', async () => 
     lines: [{ id: 'curated:0', label: 'reading', text: 'a book', source: 'curated' }],
   };
   let summarizeCalls = 0;
-  const deps = makeDeps({ summarize: { summarizeCommitGroups: async (g) => { summarizeCalls++; return []; } } });
+  const deps = makeDeps({ summarize: { summarizeCommitGroups: async () => { summarizeCalls++; return []; } } });
   const { changed, feed } = await buildFeed({ cached, now: NOW, client: {}, deps });
   assert.equal(changed, false);
   assert.equal(feed, cached);
