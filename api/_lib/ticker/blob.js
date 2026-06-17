@@ -8,7 +8,7 @@ export async function readFeed() {
     if (!url) return null;
     const res = await fetch(`${url}?t=${Date.now()}`, { cache: 'no-store' });
     if (!res.ok) return null;
-    return res.json();
+    return await res.json();
   } catch (err) {
     console.warn('[ticker/blob] readFeed failed', err);
     return null;
