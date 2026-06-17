@@ -1,20 +1,22 @@
 import * as github from './github.js';
 import * as vercel from './vercel.js';
 import * as curated from './curated.js';
+import * as spotify from './spotify.js';
 import * as summarize from './summarize.js';
 import * as fingerprint from './fingerprint.js';
 import { TTL_MS } from './constants.js';
 
-const defaultDeps = { github, vercel, curated, summarize, fingerprint };
+const defaultDeps = { github, vercel, curated, spotify, summarize, fingerprint };
 
-const SOURCE_ORDER = ['github', 'vercel', 'curated'];
+const SOURCE_ORDER = ['spotify', 'github', 'vercel', 'curated'];
 
 async function gatherHeads(deps) {
-  const [gh, vc] = await Promise.all([deps.github.head(), deps.vercel.head()]);
-  return { github: gh, vercel: vc, curated: deps.curated.head() };
+  const [sp, gh, vc] = await Promise.all([deps.spotify.head(), deps.github.head(), deps.vercel.head()]);
+  return { spotify: sp, github: gh, vercel: vc, curated: deps.curated.head() };
 }
 
 async function linesForSource(source, now, client, deps) {
+  if (source === 'spotify') return deps.spotify.fetchLines();
   if (source === 'github') {
     const groups = await deps.github.fetchCommitGroups();
     return deps.summarize.summarizeCommitGroups(groups, client);
