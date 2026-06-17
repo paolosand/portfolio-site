@@ -22,6 +22,10 @@ function makeDeps(over = {}) {
       head: () => 'cur1',
       fetchLines: () => [{ id: 'curated:0', label: 'reading', text: 'a book', source: 'curated' }],
     },
+    strava: {
+      head: async () => 'st1',
+      fetchLines: async () => [{ id: 'strava:last', label: 'ran', text: '8.2k · morning run', source: 'strava' }],
+    },
     summarize: {
       summarizeCommitGroups: async (groups) => groups.map(g => ({ id: `gh:${g.repo}`, label: 'building', text: 'building stuff', source: 'github' })),
     },
@@ -32,8 +36,8 @@ function makeDeps(over = {}) {
 test('cold build (no cache) produces all lines + fingerprint + timestamps', async () => {
   const { changed, feed } = await buildFeed({ cached: null, now: NOW, client: {}, deps: makeDeps() });
   assert.equal(changed, true);
-  assert.deepEqual(feed.fingerprint, { spotify: 'sp1', github: 'gh1', vercel: 'dpl1', curated: 'cur1' });
-  assert.deepEqual(feed.lines.map(l => l.source), ['spotify', 'github', 'vercel', 'curated']);
+  assert.deepEqual(feed.fingerprint, { spotify: 'sp1', github: 'gh1', vercel: 'dpl1', curated: 'cur1', strava: 'st1' });
+  assert.deepEqual(feed.lines.map(l => l.source), ['spotify', 'github', 'vercel', 'curated', 'strava']);
   assert.equal(feed.generatedAt, new Date(NOW).toISOString());
   assert.equal(feed.nextRefreshAt, new Date(NOW + 30 * 60 * 1000).toISOString());
 });
@@ -41,7 +45,7 @@ test('cold build (no cache) produces all lines + fingerprint + timestamps', asyn
 test('unchanged heads → changed:false, returns cached untouched', async () => {
   const cached = {
     generatedAt: '2026-06-16T11:00:00Z', nextRefreshAt: '2026-06-16T11:30:00Z',
-    fingerprint: { spotify: 'sp1', github: 'gh1', vercel: 'dpl1', curated: 'cur1' },
+    fingerprint: { spotify: 'sp1', github: 'gh1', vercel: 'dpl1', curated: 'cur1', strava: 'st1' },
     lines: [{ id: 'curated:0', label: 'reading', text: 'a book', source: 'curated' }],
   };
   let summarizeCalls = 0;
@@ -55,7 +59,7 @@ test('unchanged heads → changed:false, returns cached untouched', async () => 
 test('only changed source is rebuilt; unchanged source keeps cached lines', async () => {
   const cached = {
     generatedAt: '2026-06-16T11:00:00Z', nextRefreshAt: '2026-06-16T11:30:00Z',
-    fingerprint: { spotify: 'sp1', github: 'OLD', vercel: 'dpl1', curated: 'cur1' },
+    fingerprint: { spotify: 'sp1', github: 'OLD', vercel: 'dpl1', curated: 'cur1', strava: 'st1' },
     lines: [
       { id: 'spotify:now', label: 'now playing', text: 'a song', source: 'spotify' },
       { id: 'gh:portfolio-site', label: 'building', text: 'old git line', source: 'github' },

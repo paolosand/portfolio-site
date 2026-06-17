@@ -2,17 +2,18 @@ import * as github from './github.js';
 import * as vercel from './vercel.js';
 import * as curated from './curated.js';
 import * as spotify from './spotify.js';
+import * as strava from './strava.js';
 import * as summarize from './summarize.js';
 import * as fingerprint from './fingerprint.js';
 import { TTL_MS } from './constants.js';
 
-const defaultDeps = { github, vercel, curated, spotify, summarize, fingerprint };
+const defaultDeps = { github, vercel, curated, spotify, strava, summarize, fingerprint };
 
-const SOURCE_ORDER = ['spotify', 'github', 'vercel', 'curated'];
+const SOURCE_ORDER = ['spotify', 'github', 'vercel', 'curated', 'strava'];
 
 async function gatherHeads(deps) {
-  const [sp, gh, vc] = await Promise.all([deps.spotify.head(), deps.github.head(), deps.vercel.head()]);
-  return { spotify: sp, github: gh, vercel: vc, curated: deps.curated.head() };
+  const [sp, gh, vc, st] = await Promise.all([deps.spotify.head(), deps.github.head(), deps.vercel.head(), deps.strava.head()]);
+  return { spotify: sp, github: gh, vercel: vc, curated: deps.curated.head(), strava: st };
 }
 
 async function linesForSource(source, now, client, deps) {
@@ -23,6 +24,7 @@ async function linesForSource(source, now, client, deps) {
   }
   if (source === 'vercel') return deps.vercel.fetchLines(now);
   if (source === 'curated') return deps.curated.fetchLines();
+  if (source === 'strava') return deps.strava.fetchLines();
   return [];
 }
 
