@@ -30,7 +30,8 @@ async function rebuild(now) {
 export default async function handler(req, res) {
   // Optional daily safety-floor cron (Hobby allows once/day).
   if (req.query?.cron === '1') {
-    if (req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) {
+    const secret = process.env.CRON_SECRET;
+    if (!secret || req.headers.authorization !== `Bearer ${secret}`) {
       res.status(401).json({ error: 'unauthorized' });
       return;
     }
@@ -43,6 +44,11 @@ export default async function handler(req, res) {
   const { body, rebuild: needsRebuild } = await resolveTicker({ now, blob: blobStore });
   if (needsRebuild) waitUntil(rebuild(now));
 
-  res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=86400');
+  res.setHeader(
+    'Cache-Control',
+    body.lines.length === 0
+      ? 'no-store'
+      : 'public, s-maxage=300, stale-while-revalidate=86400'
+  );
   res.status(200).json(body);
 }

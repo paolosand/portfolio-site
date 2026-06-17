@@ -79,3 +79,29 @@ test('only changed source is rebuilt; unchanged source keeps cached lines', asyn
   const ghLine = feed.lines.find(l => l.source === 'github');
   assert.equal(ghLine.text, 'building stuff');
 });
+
+test('throwing source falls back to cached lines; feed resolves and changed is true', async () => {
+  const cached = {
+    generatedAt: '2026-06-16T11:00:00Z', nextRefreshAt: '2026-06-16T11:30:00Z',
+    fingerprint: { spotify: 'sp1', github: 'OLD', vercel: 'dpl1', curated: 'cur1', strava: 'st1' },
+    lines: [
+      { id: 'spotify:now', label: 'now playing', text: 'a song', source: 'spotify' },
+      { id: 'gh:portfolio-site', label: 'building', text: 'cached git line', source: 'github' },
+      { id: 'vercel:last', label: 'last shipped', text: '3h ago', source: 'vercel' },
+      { id: 'curated:0', label: 'reading', text: 'a book', source: 'curated' },
+      { id: 'strava:last', label: 'ran', text: '8.2k · morning run', source: 'strava' },
+    ],
+  };
+  const deps = makeDeps({
+    github: {
+      head: async () => 'NEW',
+      fetchCommitGroups: async () => { throw new Error('boom'); },
+    },
+  });
+  const { changed, feed } = await buildFeed({ cached, now: NOW, client: {}, deps });
+  assert.equal(changed, true);
+  const ghLine = feed.lines.find(l => l.source === 'github');
+  assert.equal(ghLine?.text, 'cached git line', 'github must fall back to cached line when source throws');
+  const stravaLine = feed.lines.find(l => l.source === 'strava');
+  assert.ok(stravaLine, 'strava (non-throwing, unchanged) must still appear in feed');
+});

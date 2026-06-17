@@ -11,9 +11,22 @@ const defaultDeps = { github, vercel, curated, spotify, strava, summarize, finge
 
 const SOURCE_ORDER = ['spotify', 'github', 'vercel', 'curated', 'strava'];
 
+async function safeHead(fn) {
+  try { return await fn(); }
+  catch (err) { console.warn('[ticker/build-feed] head failed', err); return null; }
+}
+
 async function gatherHeads(deps) {
-  const [sp, gh, vc, st] = await Promise.all([deps.spotify.head(), deps.github.head(), deps.vercel.head(), deps.strava.head()]);
-  return { spotify: sp, github: gh, vercel: vc, curated: deps.curated.head(), strava: st };
+  const [sp, gh, vc, st] = await Promise.all([
+    safeHead(() => deps.spotify.head()),
+    safeHead(() => deps.github.head()),
+    safeHead(() => deps.vercel.head()),
+    safeHead(() => deps.strava.head()),
+  ]);
+  let cur = null;
+  try { cur = deps.curated.head(); }
+  catch (err) { console.warn('[ticker/build-feed] curated head failed', err); }
+  return { spotify: sp, github: gh, vercel: vc, curated: cur, strava: st };
 }
 
 async function linesForSource(source, now, client, deps) {
@@ -44,9 +57,16 @@ export async function buildFeed({ cached = null, now = Date.now(), client = null
   const changedSet = new Set(changed);
   const linesBySource = {};
   for (const source of SOURCE_ORDER) {
-    linesBySource[source] = changedSet.has(source)
-      ? await linesForSource(source, now, client, deps)
-      : cachedLinesForSource(cached, source);
+    if (!changedSet.has(source)) {
+      linesBySource[source] = cachedLinesForSource(cached, source);
+      continue;
+    }
+    try {
+      linesBySource[source] = await linesForSource(source, now, client, deps);
+    } catch (err) {
+      console.warn(`[ticker/build-feed] source ${source} failed, using cached`, err);
+      linesBySource[source] = cachedLinesForSource(cached, source);
+    }
   }
 
   const seen = new Set();
