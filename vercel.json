@@ -2,11 +2,9 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "functions": {
-    "api/chat.js": {
-      "maxDuration": 30
-    }
+    "api/chat.js": { "maxDuration": 30 },
+    "api/ticker.js": { "maxDuration": 30 }
   },
-  "rewrites": [
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
-  ]
+  "crons": [{ "path": "/api/ticker?cron=1", "schedule": "0 9 * * *" }],
+  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }]
 }
