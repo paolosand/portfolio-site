@@ -66,21 +66,12 @@ Browser-based gestural instrument for live performance and songwriting. No keybo
 
 ---
 
-## Climate Tech ML — FAANG Research Lab
-**Technologies:** Python, scikit-learn, pandas, seaborn, AWS SageMaker, Jupyter, OpenCV, SuperGlue, LoFTR, SIFT, SURF, ORB
+## Stratpoint AI Labs — Confidential Client Research (NDA)
+**Technologies (general):** Python, scikit-learn, pandas, AWS SageMaker, OpenCV
 
-Two ML screening tasks that secured a partnership with a FAANG research lab on a climate tech initiative.
+ML and computer-vision research engineering at Stratpoint's AI labs for a confidential client partnership. Paolo completed ML screening tasks — predictive modeling and computer-vision feature-matching pipelines, >95% model accuracy — that secured a major research partnership, then built a research-paper chat assistant (Gemini API, LangChain, ReAct, Semantic Scholar).
 
-**Phase 1 — Solar Site Suitability Predictor:**
-- Task: identify optimal locations in California to build solar plants
-- Research → data collection → model training sprint (2-3 weeks each)
-- Achieved >95% accuracy validated against actual solar farm locations in California
-
-**Phase 2 — Geospatial Image-to-Map Matcher:**
-- Task: given an aerial image with GPS metadata, draw a bounding box on a map identifying the area shown
-- Compared SuperGlue, LoFTR, SIFT, SURF, ORB for feature matching
-- Novel: horizon detection (camera pitch), shadow detection (yaw/time of day)
-- Final pipeline: 7×7 Google Maps grid → feature match for yaw → horizon detection for pitch → exact bounding box
+[CONFIDENTIAL — under NDA. Do NOT share the client, industry, application domain, datasets, specific algorithms, or detailed results. If asked for specifics, say it's covered by an NDA and invite the visitor to email Paolo directly at pjsandejas@gmail.com.]
 
 ---
 

@@ -41,8 +41,8 @@
       "role": "AI Engineer · Rapid Prototyping Unit",
       "dates": "Jul 2023 — Jul 2024",
       "bullets": [
-        "Secured a partnership with a FAANG research lab on a climate tech initiative by completing two ML screening tasks: solar plant site suitability predictor for California (scikit-learn + SageMaker, >95% accuracy validated against real solar farm locations) and geospatial image-to-map matcher (SuperGlue/LoFTR feature matching + horizon detection for pitch/yaw estimation, OpenCV).",
-        "Built a climate research chat interface with Gemini API + LangChain + ReAct framework, connected to Semantic Scholar for paper retrieval. Deployed to Hugging Face Spaces.",
+        "Completed ML screening tasks that secured a major client research partnership — predictive modeling and computer-vision feature-matching pipelines, >95% model accuracy. Python, scikit-learn, OpenCV, AWS SageMaker.",
+        "Built a research-paper chat assistant with Gemini API + LangChain + ReAct framework, connected to Semantic Scholar for paper retrieval. Deployed to Hugging Face Spaces.",
         "Established ML best practices through code reviews and documentation as team scaled from 4 to 13 engineers."
       ]
     },
@@ -104,19 +104,6 @@
       "links": {
         "github": null,
         "demo": "https://paolosand.github.io/ascii_drone/"
-      }
-    },
-    {
-      "id": "climate-ml",
-      "title": "Climate Tech ML",
-      "subtitle": "FAANG research lab · geospatial + solar",
-      "description": "Phase 1: Solar site suitability predictor for California — scikit-learn + SageMaker, >95% accuracy validated against real solar farm locations. Phase 2: Geospatial image-to-map matcher — feature matching (SuperGlue/LoFTR) + horizon detection for pitch/yaw, OpenCV. Both tasks secured a production partnership with a FAANG research lab.",
-      "tags": ["scikit-learn", "SageMaker", "OpenCV", "Computer Vision", "Feature Matching"],
-      "category": "ml",
-      "featured": true,
-      "links": {
-        "github": null,
-        "demo": null
       }
     },
     {

@@ -54,37 +54,21 @@ Used Claude Code's design tools (impeccable plugin) to evaluate and plan a UI/UX
 **AI Engineer - Rapid Prototyping Unit**
 **July 2023 to July 2024**
 
-Worked in the AI labs team at a software outsourcing company, primarily on a climate tech initiative with a FAANG research lab. [NDA: the FAANG lab is not named publicly — use "a FAANG research lab" in all responses.]
+Worked in the AI labs team at a software outsourcing company on a confidential client research engagement. [NDA: the client, its industry, the application domain, datasets, specific algorithms, and detailed results are NOT shareable publicly. Stick to the generic summary below; if asked for specifics, say it's under NDA and direct the visitor to email Paolo at pjsandejas@gmail.com.]
 
-### Solar Site Suitability Predictor (Screening Task 1)
-First screening task to secure the FAANG research lab partnership: identify optimal locations in California to build solar plants.
+### ML Screening Tasks (Confidential)
+Completed ML screening tasks that secured a major client research partnership.
 
-- Research phase (2-3 weeks): academic papers, compiled list of most relevant environmental predictors
-- Data collection and analysis phase (2-3 weeks)
-- Model training phase (2-3 weeks): California heatmap showing best and worst spots for solar sites
-- Stack: Python, scikit-learn, pandas, seaborn, AWS SageMaker, Jupyter Notebook
-- Achieved >95% accuracy validated against actual locations of existing California solar farms
+- Predictive modeling and computer-vision feature-matching pipelines
+- Achieved >95% model accuracy
+- Stack: Python, scikit-learn, pandas, AWS SageMaker, OpenCV, Jupyter Notebook
 
-### Geospatial Image-to-Map Matcher (Screening Task 2)
-Second screening task: given an aerial image of a landscape (with GPS metadata), draw a bounding box on a map identifying the area shown.
-
-- Compared feature matching techniques: SuperGlue, LoFTR, SIFT, SURF, ORB
-- Novel approaches: horizon detection (camera pitch), shadow detection (yaw/time of day estimate)
-- Final pipeline:
-  1. Fetch 7×7 high-res grid from Google Maps/Earth API using GPS metadata
-  2. Feature match input image against each tile → estimate yaw
-  3. Horizon detection → pitch + image height metadata → exact map bounding box
-- Stack: Python, scikit-learn, OpenCV, SuperGlue/LoFTR
-
-Completing both tasks secured the partnership with the FAANG research lab.
-
-### Climate Research Chat Interface
+### Research-Paper Chat Assistant
 First main project after securing the partnership.
 
-- Chat interface allowing climate researchers to query a specific area of research
+- Chat assistant allowing researchers to query a specific area of research
 - Connected to Semantic Scholar API to pull relevant academic papers
 - Full-paper context feeding into Gemini proved more effective than vector DB retrieval for the paper sizes involved
-- Main use case: ask about best features for predicting wildfires or solar site suitability → returns features validated in preliminary experiments
 - Stack: Gemini API, LangChain, ReAct framework | Deployed to Hugging Face Spaces
 
 ### Team Scaling
