@@ -26,7 +26,7 @@ export default function Hero({ onChatClick }) {
             <dt>role</dt><dd>AI / ML engineer</dd>
             <dt>trained</dt><dd>CalArts MFA '26 · UP Diliman CS '23</dd>
             <dt>focus</dt><dd>audio · vision · generative</dd>
-            <dt>stack</dt><dd>PyTorch · Gemini · Max/MSP · ChucK</dd>
+            <dt>stack</dt><dd>PyTorch · Gemini · MediaPipe · ChucK</dd>
             <dt>building</dt><dd>responsible AI for creative work</dd>
           </dl>
           <div className="hero-cta">
