@@ -12,8 +12,8 @@ AI tools for creatives.
 ## What he brings
 - CS foundations from UP Diliman: Python, machine learning, scikit-learn, AI algorithms, and
   software engineering fundamentals.
-- Professional AI-lab experience: at Stratpoint's AI labs he built climate-tech ML data
-  pipelines and a research chat assistant in partnership with a FAANG research lab.
+- Professional AI-lab experience: at Stratpoint's AI labs he built ML and computer-vision
+  pipelines and a research chat assistant for a confidential client research partnership.
 - Rapid full-stack delivery: ships end-to-end products (Next.js, Node/FastAPI, Supabase,
   Vercel) using modern AI coding tools.
 - A rare blend: computer-science depth plus a real career as a recording artist and a CalArts
