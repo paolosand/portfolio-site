@@ -671,6 +671,16 @@ button {
 }
 .pc-links a { border-bottom: 1.5px solid var(--c-blue); padding-bottom: 1px; }
 .pc-links .disabled { color: var(--ink-faint); }
+.project-card.openable { cursor: pointer; }
+.project-card.openable:focus-visible {
+  outline: 2px solid var(--c-blue);
+  outline-offset: 3px;
+}
+.pc-links .pc-open {
+  color: var(--c-pink);
+  border-bottom: 1.5px solid var(--c-pink);
+  padding-bottom: 1px;
+}
 
 .pc-stamp {
   position: absolute;
