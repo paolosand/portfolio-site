@@ -1,0 +1,202 @@
+/* WORK MODAL ==================================================== */
+.work-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100; /* nav is 1000 — must clear it */
+  background: rgba(26, 19, 10, 0.72);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.work-modal {
+  position: relative;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+  max-width: 880px;
+  width: 100%;
+  max-height: 92vh;
+  overflow-y: auto;
+  outline: none;
+}
+
+/* ── top bar ─────────────────────────────────────────────────── */
+.work-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--ink);
+  color: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.work-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.work-topbar-left .topbar-mark { color: var(--c-lemon); }
+
+.work-close {
+  background: none;
+  border: 1.2px solid var(--paper);
+  color: var(--paper);
+  font: inherit;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 3px 9px;
+  cursor: pointer;
+}
+
+.work-close:hover {
+  background: var(--c-pink);
+  border-color: var(--c-pink);
+}
+
+/* ── body ────────────────────────────────────────────────────── */
+.work-inner {
+  padding: 26px 30px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.work-head {
+  border-bottom: 1.5px dotted var(--ink);
+  padding-bottom: 18px;
+}
+
+.work-title {
+  font-size: 27px;
+  letter-spacing: 0.02em;
+  margin: 0 0 4px;
+}
+
+.work-subtitle {
+  color: var(--ink-mute);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.work-loading {
+  color: var(--ink-mute);
+  font-size: 13px;
+  padding: 32px 0;
+  text-align: center;
+}
+
+/* ── blocks ──────────────────────────────────────────────────── */
+.work-inner figure { margin: 0; }
+
+.wm-label {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 8px;
+}
+
+.wm-label::before {
+  content: '§ ';
+  color: var(--c-pink);
+}
+
+.wm-prose p {
+  font-size: 14px;
+  line-height: 1.75;
+  margin: 0 0 10px;
+  max-width: 66ch;
+}
+
+.wm-prose p:last-child { margin-bottom: 0; }
+
+.wm-block figcaption {
+  font-size: 11.5px;
+  color: var(--ink-mute);
+  margin-top: 8px;
+  letter-spacing: 0.04em;
+}
+
+.wm-diagram pre {
+  font-size: 12px;
+  line-height: 1.45;
+  background: var(--paper-2);
+  border: 1.5px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  padding: 16px 18px;
+  overflow-x: auto;
+  margin: 0;
+}
+
+.wm-video iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1.5px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  background: var(--ink);
+}
+
+.wm-video.portrait iframe {
+  aspect-ratio: 9 / 16;
+  width: min(320px, 80%);
+  margin: 0 auto;
+}
+
+.wm-video.portrait figcaption { text-align: center; }
+
+.wm-image img {
+  display: block;
+  width: 100%;
+  border: 1.5px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  background: #fff;
+}
+
+.wm-image a { display: block; border-bottom: none; }
+.wm-image a:hover { background: none; }
+.wm-zoom-hint { color: var(--c-blue); }
+
+.wm-highlights {
+  list-style: none;
+  margin: 0;
+  padding: 14px 16px;
+  border: 1.5px dashed var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wm-highlights li {
+  font-size: 12.5px;
+  line-height: 1.5;
+  padding-left: 18px;
+  position: relative;
+}
+
+.wm-highlights li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--c-mint);
+}
+
+/* ── mobile ──────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .work-overlay { padding: 12px; }
+  .work-inner { padding: 18px 16px 28px; }
+  .work-title { font-size: 22px; }
+  .wm-diagram pre { font-size: 10.5px; }
+}
