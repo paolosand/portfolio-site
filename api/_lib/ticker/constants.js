@@ -3,3 +3,4 @@ export const BLOB_PATHNAME = 'ticker.json';
 export const GITHUB_USERNAME = 'paolosand';
 export const MAX_TEXT = 60;
 export const GEMINI_MODEL = 'gemini-2.5-flash';
+export const SPOTIFY_PLAYLIST_ID = '5KU2wudc4gDNq8PiPEkv8L';

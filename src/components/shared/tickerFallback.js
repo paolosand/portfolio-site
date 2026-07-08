@@ -1,7 +1,7 @@
 export const TICKER_FALLBACK = [
   { id: 'fb:playing', label: 'now playing', text: 'transformer experiments', source: 'fallback' },
   { id: 'fb:shipping', label: 'shipping', text: 'multi-modal video pipelines', source: 'fallback' },
-  { id: 'fb:reading', label: 'reading', text: '"the art of doing science and engineering"', source: 'fallback' },
+  { id: 'fb:reading', label: 'reading', text: '"ikigai"', source: 'fallback' },
   { id: 'fb:listening', label: 'listening', text: 'alva noto · oneohtrix · sade', source: 'fallback' },
   { id: 'fb:building', label: 'building', text: 'real-time drum machine in pytorch', source: 'fallback' },
 ];
