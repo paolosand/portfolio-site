@@ -1,4 +1,5 @@
 [
   { "label": "reading", "text": "\"ikigai: the japanese secret to a long and happy life\"" },
+  { "label": "listening", "text": "alva noto · oneohtrix · sade" },
   { "label": "building", "text": "real-time drum machine in pytorch" }
 ]
