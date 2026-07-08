@@ -57,3 +57,4 @@ api/knowledge/vectors.json
 .playwright-mcp/
 .vercel_python_packages/
 .impeccable/
+.env*
