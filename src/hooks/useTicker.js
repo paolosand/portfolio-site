@@ -3,6 +3,7 @@ import { buildTickerLines } from '../components/shared/tickerFallback.js';
 
 export function useTicker() {
   const [feed, setFeed] = useState(null);
+  const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
     let alive = true;
@@ -13,5 +14,12 @@ export function useTicker() {
     return () => { alive = false; };
   }, []);
 
-  return { lines: buildTickerLines(feed, new Date()) };
+  // Keep the status-line clock live — re-render every 30s so the time
+  // doesn't freeze at the moment the component first mounted.
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 30_000);
+    return () => clearInterval(id);
+  }, []);
+
+  return { lines: buildTickerLines(feed, now) };
 }
