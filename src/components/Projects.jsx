@@ -45,7 +45,7 @@ function ProjectCard({ p, idx, onOpen }) {
             <span key={t} className={`tag ${tagClassByName(t)}`}>{t}</span>
           ))}
         </div>
-        <div className="pc-links" onClick={(e) => e.stopPropagation()}>
+        <div className="pc-links" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
           {p.links.github
             ? <a href={p.links.github} target="_blank" rel="noopener noreferrer">↗ github</a>
             : <span className="disabled">— private —</span>}
