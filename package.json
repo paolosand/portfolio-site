@@ -10,10 +10,12 @@
     "build:portrait": "node scripts/build-portrait-frames.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "node --test api/_lib/*.test.js src/components/chat/*.test.js src/components/chat/embeds/*.test.js"
+    "test": "node --test api/_lib/*.test.js api/_lib/ticker/*.test.js src/components/chat/*.test.js src/components/chat/embeds/*.test.js src/components/shared/*.test.js"
   },
   "dependencies": {
     "@google/genai": "^2.6.0",
+    "@vercel/blob": "^2.4.0",
+    "@vercel/functions": "^3.7.1",
     "framer-motion": "^12.34.5",
     "p5": "^2.2.2",
     "react": "^19.2.0",
