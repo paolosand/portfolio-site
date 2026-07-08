@@ -17,7 +17,11 @@ function fallbackText(group) {
 }
 
 function toLine(repo, text) {
-  const clean = String(text).toLowerCase().replace(/[.\s]+$/, '').slice(0, MAX_TEXT).trim();
+  let clean = String(text).toLowerCase().replace(/[.\s]+$/, '').trim();
+  if (clean.length > MAX_TEXT) {
+    const cut = clean.lastIndexOf(' ', MAX_TEXT - 1);
+    clean = clean.slice(0, cut > 0 ? cut : MAX_TEXT - 1).trimEnd() + '…';
+  }
   return { id: `gh:${repo}`, label: 'building', text: clean, source: 'github' };
 }
 

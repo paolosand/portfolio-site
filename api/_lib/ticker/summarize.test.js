@@ -35,6 +35,28 @@ test('uses Gemini output, enforces lowercase + length cap', async () => {
   assert.equal(lines[1].text, 'sharper rag retrieval');
 });
 
+test('over-long Gemini output truncates at a word boundary with ellipsis', async () => {
+  const fakeClient = {
+    models: {
+      generateContent: async () => ({
+        text: JSON.stringify([
+          { repo: 'portfolio-site', text: 'fixed wizard download crash and improved dev environment setup flow' },
+          { repo: 'pao-gpt', text: 'sharper rag retrieval' },
+        ]),
+      }),
+    },
+  };
+  const lines = await summarizeCommitGroups(GROUPS, fakeClient);
+  assert.ok(lines[0].text.length <= MAX_TEXT);
+  assert.ok(lines[0].text.endsWith('…'), `expected ellipsis, got "${lines[0].text}"`);
+  assert.ok(!/\s…$/.test(lines[0].text), 'no dangling space before ellipsis');
+  const words = lines[0].text.slice(0, -1).trim();
+  assert.ok('fixed wizard download crash and improved dev environment setup flow'.startsWith(words),
+    `truncation broke a word: "${lines[0].text}"`);
+  assert.ok(words.endsWith('dev') || words.endsWith('environment') || words.endsWith('improved'),
+    `expected cut on a whole word, got "${lines[0].text}"`);
+});
+
 test('falls back deterministically when Gemini throws', async () => {
   const throwing = { models: { generateContent: async () => { throw new Error('boom'); } } };
   const lines = await summarizeCommitGroups(GROUPS, throwing);
