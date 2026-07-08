@@ -78,6 +78,21 @@
   padding-bottom: 18px;
 }
 
+.wm-head-top { margin-bottom: 10px; }
+
+.wm-head-top .cat {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--c-mint);
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.wm-head-top .cat.creative { background: var(--c-pink); color: var(--paper); }
+
 .work-title {
   font-size: 27px;
   letter-spacing: 0.02em;

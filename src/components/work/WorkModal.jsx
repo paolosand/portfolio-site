@@ -8,8 +8,8 @@ function ProseBlock({ block }) {
   return (
     <div className="wm-block wm-prose">
       {block.heading && <div className="wm-label">{block.heading}</div>}
-      {block.body.trim().split(/\n\s*\n/).map((para) => (
-        <p key={para.slice(0, 24)}>{para}</p>
+      {block.body.trim().split(/\n\s*\n/).map((para, i) => (
+        <p key={i}>{para}</p>
       ))}
     </div>
   );
@@ -61,7 +61,7 @@ function ImageBlock({ block }) {
 function HighlightsBlock({ block }) {
   return (
     <ul className="wm-block wm-highlights">
-      {block.items.map((item) => <li key={item}>{item}</li>)}
+      {block.items.map((item, i) => <li key={i}>{item}</li>)}
     </ul>
   );
 }
@@ -96,7 +96,23 @@ export default function WorkModal({ workId, onClose }) {
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     frameRef.current?.focus();
-    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    const handler = (e) => {
+      if (e.key === 'Escape') { onClose(); return; }
+      if (e.key !== 'Tab') return;
+      const frame = frameRef.current;
+      if (!frame) return;
+      const focusable = frame.querySelectorAll('a[href], button, iframe, [tabindex]:not([tabindex="-1"])');
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const current = document.activeElement;
+      const inFrame = frame.contains(current);
+      if (e.shiftKey) {
+        if (!inFrame || current === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (!inFrame || current === last) { e.preventDefault(); first.focus(); }
+      }
+    };
     window.addEventListener('keydown', handler);
     return () => {
       window.removeEventListener('keydown', handler);
@@ -128,6 +144,11 @@ export default function WorkModal({ workId, onClose }) {
 
         <div className="work-inner">
           <header className="work-head">
+            <div className="wm-head-top">
+              <span className={`cat ${project.category === 'creative' ? 'creative' : ''}`}>
+                {project.category === 'creative' ? 'creative' : 'ml / ai'}
+              </span>
+            </div>
             <h3 className="work-title">{project.title}</h3>
             {project.subtitle && <div className="work-subtitle">{project.subtitle}</div>}
             <div className="pc-tags">

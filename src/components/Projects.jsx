@@ -15,10 +15,14 @@ function ProjectCard({ p, idx, onOpen }) {
       onOpen();
     }
   };
+  const handleClick = () => {
+    if (window.getSelection()?.toString()) return;
+    onOpen();
+  };
   return (
     <article
       className={`project-card ${p.featured ? 'featured' : ''} ${isWide ? 'wide' : ''} ${openable ? 'openable' : ''}`}
-      onClick={openable ? onOpen : undefined}
+      onClick={openable ? handleClick : undefined}
       onKeyDown={openable ? handleKeyDown : undefined}
       role={openable ? 'button' : undefined}
       tabIndex={openable ? 0 : undefined}
