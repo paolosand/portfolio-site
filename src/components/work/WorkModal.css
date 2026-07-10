@@ -213,7 +213,7 @@
 
 /* ── mobile ──────────────────────────────────────────────────── */
 @media (max-width: 640px) {
-  .work-overlay { padding: 12px; }
+  .work-overlay { padding: 0; }
   .work-inner { padding: 18px 16px 28px; }
   .work-title { font-size: 22px; }
   .wm-diagram pre { font-size: 10.5px; }
