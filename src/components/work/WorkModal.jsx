@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import portfolioData from '../../data/portfolio.json';
 import { workRegistry } from '../../data/work/index.js';
+import { flattenChapters } from '../../data/work/blockTypes.js';
 import { tagClassByName } from '../shared/ascii.js';
 import './WorkModal.css';
 
@@ -159,7 +160,7 @@ export default function WorkModal({ workId, onClose }) {
           </header>
 
           {content ? (
-            content.blocks.map((block, i) => {
+            flattenChapters(content.chapters).map((block, i) => {
               const Block = BLOCK_RENDERERS[block.type];
               return Block ? <Block key={i} block={block} /> : null;
             })
