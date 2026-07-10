@@ -43,8 +43,9 @@ export function useDeckScroll(containerRef, chapterCount) {
   }, [containerRef, measure, chapterCount]);
 
   const jumpTo = useCallback((i) => {
+    const card = chapterRefs.current[i];
     containerRef.current?.scrollTo({
-      top: offsetsRef.current[i] ?? 0,
+      top: card ? card.offsetTop : 0,
       behavior: 'smooth',
     });
   }, [containerRef]);
