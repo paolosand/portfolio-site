@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { activeIndexFor, stickyTopFor, stopFractionsFor } from './deckMath.js';
 
 // Owns deck geometry side effects: measures chapter offsets, assigns each
@@ -23,7 +23,7 @@ export function useDeckScroll(containerRef, chapterCount) {
     setActiveIndex(activeIndexFor(el.scrollTop, offsetsRef.current, vh));
   }, [containerRef, chapterCount]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = containerRef.current;
     if (!el) return;
     measure();
@@ -33,11 +33,14 @@ export function useDeckScroll(containerRef, chapterCount) {
     el.addEventListener('scroll', onScroll, { passive: true });
     const ro = new ResizeObserver(measure);
     ro.observe(el);
+    chapterRefs.current.slice(0, chapterCount).forEach((card) => {
+      if (card) ro.observe(card);
+    });
     return () => {
       el.removeEventListener('scroll', onScroll);
       ro.disconnect();
     };
-  }, [containerRef, measure]);
+  }, [containerRef, measure, chapterCount]);
 
   const jumpTo = useCallback((i) => {
     containerRef.current?.scrollTo({
