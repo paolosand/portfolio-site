@@ -1,84 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
+import { useReducedMotion } from 'framer-motion';
 import portfolioData from '../../data/portfolio.json';
 import { workRegistry } from '../../data/work/index.js';
+import { flattenChapters } from '../../data/work/blockTypes.js';
 import { tagClassByName } from '../shared/ascii.js';
+import { RenderBlocks } from './WorkBlocks.jsx';
+import WorkDeck from './WorkDeck.jsx';
 import './WorkModal.css';
-
-function ProseBlock({ block }) {
-  return (
-    <div className="wm-block wm-prose">
-      {block.heading && <div className="wm-label">{block.heading}</div>}
-      {block.body.trim().split(/\n\s*\n/).map((para, i) => (
-        <p key={i}>{para}</p>
-      ))}
-    </div>
-  );
-}
-
-function AsciiDiagramBlock({ block }) {
-  return (
-    <figure className="wm-block wm-diagram">
-      <pre>{block.art.replace(/^\n/, '')}</pre>
-      {block.caption && <figcaption>{block.caption}</figcaption>}
-    </figure>
-  );
-}
-
-function VideoBlock({ block }) {
-  return (
-    <figure className={`wm-block wm-video ${block.orientation === 'portrait' ? 'portrait' : ''}`}>
-      <iframe
-        src={`https://www.youtube.com/embed/${block.videoId}`}
-        title={block.caption || 'demo video'}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-        loading="lazy"
-      />
-      {block.caption && <figcaption>{block.caption}</figcaption>}
-    </figure>
-  );
-}
-
-function ImageBlock({ block }) {
-  const img = <img src={block.src} alt={block.alt} loading="lazy" />;
-  return (
-    <figure className="wm-block wm-image">
-      {block.fullSrc ? (
-        <a href={block.fullSrc} target="_blank" rel="noopener noreferrer" title="open full size">
-          {img}
-        </a>
-      ) : img}
-      {block.caption && (
-        <figcaption>
-          {block.caption}
-          {block.fullSrc && <span className="wm-zoom-hint"> · click to open full size</span>}
-        </figcaption>
-      )}
-    </figure>
-  );
-}
-
-function HighlightsBlock({ block }) {
-  return (
-    <ul className="wm-block wm-highlights">
-      {block.items.map((item, i) => <li key={i}>{item}</li>)}
-    </ul>
-  );
-}
-
-const BLOCK_RENDERERS = {
-  prose: ProseBlock,
-  'ascii-diagram': AsciiDiagramBlock,
-  video: VideoBlock,
-  image: ImageBlock,
-  highlights: HighlightsBlock,
-};
 
 export default function WorkModal({ workId, onClose }) {
   const [content, setContent] = useState(null);
   const frameRef = useRef(null);
   const idx = portfolioData.projects.findIndex((p) => p.id === workId);
   const project = idx >= 0 ? portfolioData.projects[idx] : null;
+  const reducedMotion = useReducedMotion();
+  const showDeck = Boolean(content?.chapters) && !reducedMotion;
 
   useEffect(() => {
     let alive = true;
@@ -108,7 +44,7 @@ export default function WorkModal({ workId, onClose }) {
       const current = document.activeElement;
       const inFrame = frame.contains(current);
       if (e.shiftKey) {
-        if (!inFrame || current === first) { e.preventDefault(); last.focus(); }
+        if (!inFrame || current === first || current === frameRef.current) { e.preventDefault(); last.focus(); }
       } else {
         if (!inFrame || current === last) { e.preventDefault(); first.focus(); }
       }
@@ -124,7 +60,7 @@ export default function WorkModal({ workId, onClose }) {
   if (!project) return null;
 
   return (
-    <div className="work-overlay" onClick={onClose}>
+    <div className="work-overlay">
       <div
         className="work-modal"
         role="dialog"
@@ -132,7 +68,6 @@ export default function WorkModal({ workId, onClose }) {
         aria-label={`${project.title} case study`}
         ref={frameRef}
         tabIndex={-1}
-        onClick={(e) => e.stopPropagation()}
       >
         <div className="work-topbar">
           <div className="work-topbar-left">
@@ -142,31 +77,31 @@ export default function WorkModal({ workId, onClose }) {
           <button className="work-close" onClick={onClose} aria-label="Close">× esc</button>
         </div>
 
-        <div className="work-inner">
-          <header className="work-head">
-            <div className="wm-head-top">
-              <span className={`cat ${project.category === 'creative' ? 'creative' : ''}`}>
-                {project.category === 'creative' ? 'creative' : 'ml / ai'}
-              </span>
-            </div>
-            <h3 className="work-title">{project.title}</h3>
-            {project.subtitle && <div className="work-subtitle">{project.subtitle}</div>}
-            <div className="pc-tags">
-              {project.tags.map((t) => (
-                <span key={t} className={`tag ${tagClassByName(t)}`}>{t}</span>
-              ))}
-            </div>
-          </header>
-
-          {content ? (
-            content.blocks.map((block, i) => {
-              const Block = BLOCK_RENDERERS[block.type];
-              return Block ? <Block key={i} block={block} /> : null;
-            })
-          ) : (
-            <div className="work-loading">loading…</div>
-          )}
-        </div>
+        {showDeck ? (
+          content && <WorkDeck project={project} content={content} containerRef={frameRef} />
+        ) : (
+          <div className="work-inner">
+            <header className="work-head">
+              <div className="wm-head-top">
+                <span className={`cat ${project.category === 'creative' ? 'creative' : ''}`}>
+                  {project.category === 'creative' ? 'creative' : 'ml / ai'}
+                </span>
+              </div>
+              <h3 className="work-title">{project.title}</h3>
+              {project.subtitle && <div className="work-subtitle">{project.subtitle}</div>}
+              <div className="pc-tags">
+                {project.tags.map((t) => (
+                  <span key={t} className={`tag ${tagClassByName(t)}`}>{t}</span>
+                ))}
+              </div>
+            </header>
+            {content ? (
+              <RenderBlocks blocks={flattenChapters(content.chapters)} />
+            ) : (
+              <div className="work-loading">loading…</div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

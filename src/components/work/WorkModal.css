@@ -8,17 +8,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 0;
 }
 
 .work-modal {
   position: relative;
   background: var(--paper);
-  border: 1.5px solid var(--ink);
-  box-shadow: 6px 6px 0 var(--ink);
-  max-width: 880px;
   width: 100%;
-  max-height: 92vh;
+  height: 100%;
+  max-height: none;
+  border: none;
+  box-shadow: none;
   overflow-y: auto;
   outline: none;
 }
@@ -72,6 +72,9 @@
   flex-direction: column;
   gap: 24px;
 }
+
+/* legacy body (reduced-motion fallback) keeps a reading column */
+.work-inner { max-width: 880px; margin: 0 auto; }
 
 .work-head {
   border-bottom: 1.5px dotted var(--ink);
@@ -210,7 +213,7 @@
 
 /* ── mobile ──────────────────────────────────────────────────── */
 @media (max-width: 640px) {
-  .work-overlay { padding: 12px; }
+  .work-overlay { padding: 0; }
   .work-inner { padding: 18px 16px 28px; }
   .work-title { font-size: 22px; }
   .wm-diagram pre { font-size: 10.5px; }
