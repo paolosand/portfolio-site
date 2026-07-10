@@ -151,3 +151,128 @@
   top: 34px;
   width: 140px;
 }
+
+/* ── deck + chapters ──────────────────────────────────────────── */
+.work-deck { position: static; }
+
+.deck-chapter {
+  position: sticky; /* top set per-card by useDeckScroll */
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--paper);
+  border-top: 2px solid var(--ink);
+  overflow: hidden;
+}
+
+/* alternating paper shades so buried edges read as separate sheets */
+.deck-chapter:nth-child(odd of .deck-chapter) { background: var(--paper); }
+.deck-chapter:nth-child(even of .deck-chapter) { background: var(--paper-2); }
+
+.deck-label {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+.deck-label::before { content: '§ '; color: var(--c-pink); }
+
+.deck-title {
+  font-size: 26px;
+  margin: 4px 0 10px;
+  letter-spacing: 0.02em;
+}
+
+.deck-cover { margin-bottom: 18px; border-bottom: 1.5px dotted var(--ink); padding-bottom: 14px; }
+.deck-cover-title { font-size: 34px; margin: 0 0 4px; }
+.deck-cover-subtitle { color: var(--ink-mute); font-size: 13px; margin-bottom: 10px; }
+
+/* text area shared by two-col / text-poster / long */
+.deck-txt {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 70px 40px 40px 64px; /* top clears topbar+ledger, left clears trail */
+}
+
+/* poster */
+.shape-poster { display: flex; align-items: center; justify-content: center; }
+
+.poster-fill {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--paper-2);
+  padding: 64px 24px 24px 44px;
+}
+
+.poster-fill .wm-video { width: min(360px, 60%); margin: 0; }
+.poster-fill .wm-video iframe { box-shadow: 6px 6px 0 var(--ink); }
+.poster-fill .wm-image img { max-height: 78vh; width: auto; }
+.poster-fill .wm-diagram pre { font-size: 14px; }
+
+.poster-scrap {
+  position: absolute;
+  left: 64px;
+  bottom: 30px;
+  width: min(380px, 55%);
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  padding: 16px 18px 14px;
+  transform: rotate(-0.8deg);
+}
+
+.poster-scrap::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%) rotate(2deg);
+  width: 52px;
+  height: 14px;
+  background: var(--c-lemon);
+  border: 1px solid var(--ink);
+  opacity: 0.85;
+}
+
+.poster-scrap .deck-title { font-size: 20px; }
+.poster-scrap .wm-prose p { font-size: 13px; }
+
+/* two-col */
+.shape-two-col { display: grid; grid-template-columns: 1.05fr 0.85fr; }
+
+.deck-medwrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1.5px dashed var(--ink);
+  padding: 70px 28px 28px;
+}
+
+.deck-medwrap .wm-block { width: 100%; margin: 0; }
+.deck-medwrap .wm-video { width: min(320px, 80%); margin: 0 auto; }
+
+/* text-poster */
+.shape-text-poster .deck-txt { padding-right: max(40px, 22%); }
+
+/* long — natural height; min-height keeps the fold floor */
+.shape-long { overflow: visible; }
+.shape-long .deck-txt { justify-content: flex-start; padding-bottom: 90px; }
+.shape-long .wm-block { max-width: 640px; }
+
+/* ── phone ────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .deck-txt { padding: 66px 18px 30px 30px; }
+  .deck-title { font-size: 21px; }
+  .deck-cover-title { font-size: 26px; }
+  .shape-two-col { display: flex; flex-direction: column; }
+  .deck-medwrap { border-left: none; padding: 0 18px 28px 30px; }
+  .poster-fill { padding: 56px 14px 14px 24px; }
+  .poster-fill .wm-video { width: min(240px, 70%); }
+  .poster-scrap { left: 24px; right: 14px; width: auto; bottom: 16px; }
+  .shape-text-poster .deck-txt { padding-right: 18px; }
+}
