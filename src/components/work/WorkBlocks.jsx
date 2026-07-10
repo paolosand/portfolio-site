@@ -1,4 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
+import { BLOCK_REQUIRED_FIELDS } from '../../data/work/blockTypes.js';
 
 function ProseBlock({ block }) {
   return (
@@ -69,6 +70,15 @@ export const BLOCK_RENDERERS = {
   image: ImageBlock,
   highlights: HighlightsBlock,
 };
+
+// Fail loudly in dev if the content contract gains a type this file can't render.
+if (import.meta.env.DEV) {
+  for (const type of Object.keys(BLOCK_REQUIRED_FIELDS)) {
+    if (!BLOCK_RENDERERS[type]) {
+      console.error(`WorkBlocks: no renderer for contract block type "${type}"`);
+    }
+  }
+}
 
 export function RenderBlocks({ blocks }) {
   return blocks.map((block, i) => {

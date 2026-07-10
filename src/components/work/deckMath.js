@@ -20,3 +20,16 @@ export function stopFractionsFor(offsets, scrollableHeight) {
     scrollableHeight <= 0 ? 0 : Math.min(1, top / scrollableHeight),
   );
 }
+
+// Static (scroll-independent) chapter offsets. Reading offsetTop on a
+// position: sticky card includes its current sticky displacement, so offsets
+// are instead derived from the deck's own top plus cumulative card heights.
+export function staticOffsetsFor(deckTop, cardHeights) {
+  const offsets = [];
+  let acc = deckTop;
+  for (const h of cardHeights) {
+    offsets.push(acc);
+    acc += h;
+  }
+  return offsets;
+}

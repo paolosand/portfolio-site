@@ -4,6 +4,7 @@ import {
   stickyTopFor,
   activeIndexFor,
   stopFractionsFor,
+  staticOffsetsFor,
 } from './deckMath.js';
 
 test('stickyTopFor pins short cards at 0', () => {
@@ -34,4 +35,9 @@ test('stopFractionsFor maps chapter offsets to trail fractions', () => {
   assert.deepEqual(stopFractionsFor([0, 500, 1000], 1000), [0, 0.5, 1]);
   assert.deepEqual(stopFractionsFor([0, 2000], 1000), [0, 1]); // clamped
   assert.deepEqual(stopFractionsFor([0, 500], 0), [0, 0]);     // degenerate
+});
+
+test('staticOffsetsFor accumulates deck top plus preceding card heights', () => {
+  assert.deepEqual(staticOffsetsFor(44, [800, 917, 2000]), [44, 844, 1761]);
+  assert.deepEqual(staticOffsetsFor(0, []), []);
 });

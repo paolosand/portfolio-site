@@ -1,5 +1,5 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { activeIndexFor, stickyTopFor, stopFractionsFor } from './deckMath.js';
+import { activeIndexFor, staticOffsetsFor, stickyTopFor, stopFractionsFor } from './deckMath.js';
 
 // Owns deck geometry side effects: measures chapter offsets, assigns each
 // sticky card its top (tall cards scroll through before pinning), tracks the
@@ -18,7 +18,12 @@ export function useDeckScroll(containerRef, chapterCount) {
     cards.forEach((card) => {
       if (card) card.style.top = `${stickyTopFor(card.offsetHeight, vh)}px`;
     });
-    offsetsRef.current = cards.map((card) => (card ? card.offsetTop : 0));
+    const deck = cards[0]?.parentElement;
+    const deckTop = deck ? deck.offsetTop : 0;
+    offsetsRef.current = staticOffsetsFor(
+      deckTop,
+      cards.map((card) => (card ? card.offsetHeight : 0)),
+    );
     setStopFractions(stopFractionsFor(offsetsRef.current, el.scrollHeight - vh));
     setActiveIndex(activeIndexFor(el.scrollTop, offsetsRef.current, vh));
   }, [containerRef, chapterCount]);
@@ -43,11 +48,14 @@ export function useDeckScroll(containerRef, chapterCount) {
   }, [containerRef, measure, chapterCount]);
 
   const jumpTo = useCallback((i) => {
-    const card = chapterRefs.current[i];
-    containerRef.current?.scrollTo({
-      top: card ? card.offsetTop : 0,
-      behavior: 'smooth',
-    });
+    const cards = chapterRefs.current;
+    const deck = cards[0]?.parentElement;
+    const deckTop = deck ? deck.offsetTop : 0;
+    const offsets = staticOffsetsFor(
+      deckTop,
+      cards.map((card) => (card ? card.offsetHeight : 0)),
+    );
+    containerRef.current?.scrollTo({ top: offsets[i] ?? 0, behavior: 'smooth' });
   }, [containerRef]);
 
   return { chapterRefs, activeIndex, stopFractions, jumpTo };
