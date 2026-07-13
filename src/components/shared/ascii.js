@@ -8,6 +8,11 @@ export const PROJECT_ART = {
   │ ▁▃▅▇▅▃▁ kick  ▇▅▃▁ │
   │ snare ▃▅▇▅▃ hat ▃▁ │
   └────────────────  120bpm`,
+  tabit: `  ┌─[ ♪ chords ]─────────┐
+  │ ▓▓░░ ░░░░ ░░░░ ░░░░ │
+  │  Am    F    C   G⋯  │
+  │  key C · 120 · ▔now │
+  └─ audio → chords → ♪ ┘`,
   'video-analysis': `  ┌─[ stream ]───────────┐
   │ ▓▓▓▓░░░░ frame 0421  │
   │  [ obj ] [ obj ]     │

@@ -94,6 +94,16 @@
       }
     },
     {
+      "id": "tabit",
+      "title": "tabIt",
+      "subtitle": "Play-along chords from any song's audio",
+      "description": "Paste a YouTube URL and tabIt detects the chords, key, and scales from the audio itself — then follows along karaoke-style under the video via a Chrome extension. A Python MIR engine (Demucs source separation → crema chord model on the harmonic mix, CREPE bass tracking on the isolated stem, reconciled into slash chords like A/C#) emits a chart JSON that both a React web app and an MV3 extension render. Low-confidence chords are softened, never hidden.",
+      "tags": ["Python", "Audio ML", "Demucs", "FastAPI", "React", "Chrome Extension"],
+      "category": "ml",
+      "featured": true,
+      "links": { "github": "https://github.com/paolosand/tabIt", "demo": null }
+    },
+    {
       "id": "ascii-drone",
       "title": "ASCII Drone Synth",
       "subtitle": "Gesture-controlled web synthesizer",
