@@ -4,4 +4,5 @@
 
 export const workRegistry = {
   chuloopa: () => import('./chuloopa.js'),
+  tabit: () => import('./tabit.js'),
 };
