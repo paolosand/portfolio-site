@@ -1,83 +1,71 @@
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion, useTransform } from 'framer-motion';
 
-// Hand-drawn trail: dashed base route, pink ink that draws with scroll, a
-// traveling dot, and square station stops (pink diamond when current).
-// One spec, two variants — desktop gets the detour loop when the case study
-// has a detour chapter.
-const PATHS = {
-  desktop: {
-    width: 30,
-    detour: 'M 15 16 C 15 80 8 112 15 155 C 22 198 26 203 20 228 C 15 248 5 242 9 224 C 12 210 24 218 22 240 C 20 274 15 324 15 384',
-    straight: 'M 15 16 C 15 80 10 140 15 200 C 20 260 15 320 15 384',
-  },
-  phone: {
-    width: 18,
-    detour: 'M 9 16 C 9 70 6 110 9 155 C 12 200 12 210 9 250 C 6 290 9 330 9 384',
-    straight: 'M 9 16 C 9 70 6 110 9 155 C 12 200 12 210 9 250 C 6 290 9 330 9 384',
-  },
-};
+// Trail: a straight dashed spine with square station stops, a muted ink line
+// that grows with scroll, and a traveling dot. The viewBox tracks the SVG's
+// real pixel height (1:1 scale), so nothing distorts. A fixed-height viewBox
+// stretched to the viewport (the old approach) squished the square stops and
+// round dot into tall rectangles and ovals.
+const WIDTHS = { desktop: 30, phone: 18 };
+const PAD = 16; // keep the end stations clear of the top bar and bottom edge
 
 export default function Trail({
-  variant = 'desktop', hasDetour = false, stopFractions = [],
+  variant = 'desktop', stopFractions = [],
   activeIndex = 0, scrollYProgress, onJump, kickers = [],
-  pathOverride = null, // per-project geometry: {desktop?: 'M…', phone?: 'M…'}
 }) {
-  const pathRef = useRef(null);
-  const [geom, setGeom] = useState({ length: 0, points: [] });
-  const spec = PATHS[variant];
-  const d = pathOverride?.[variant] ?? (hasDetour ? spec.detour : spec.straight);
+  const ref = useRef(null);
+  const [h, setH] = useState(0);
+  const width = WIDTHS[variant] ?? 30;
+  const cx = width / 2;
 
-  useEffect(() => {
-    const path = pathRef.current;
-    if (!path) return;
-    const length = path.getTotalLength();
-    setGeom({
-      length,
-      points: stopFractions.map((f) => path.getPointAtLength(length * f)),
-    });
-  }, [stopFractions, d]);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const measure = () => setH(el.clientHeight);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
-  const dashOffset = useTransform(scrollYProgress, (f) => geom.length * (1 - f));
-  const dotCx = useTransform(scrollYProgress, (f) =>
-    geom.length ? pathRef.current.getPointAtLength(geom.length * f).x : -10);
-  const dotCy = useTransform(scrollYProgress, (f) =>
-    geom.length ? pathRef.current.getPointAtLength(geom.length * f).y : -10);
+  const top = PAD;
+  const bottom = Math.max(top, h - PAD);
+  const span = bottom - top;
+  const clamp = (f) => Math.min(1, Math.max(0, f));
+  const progressY = useTransform(scrollYProgress, (f) => top + clamp(f) * span);
 
   return (
     <svg
+      ref={ref}
       className={`deck-trail ${variant}`}
-      viewBox={`0 0 ${spec.width} 400`}
+      viewBox={`0 0 ${width} ${h || 1}`}
       preserveAspectRatio="none"
     >
-      <path className="trail-base" d={d} />
-      <motion.path
-        ref={pathRef}
-        className="trail-ink"
-        d={d}
-        strokeDasharray={geom.length || 1}
-        style={{ strokeDashoffset: dashOffset }}
-      />
-      {geom.points.map((pt, i) => (
-        <rect
-          key={i}
-          className={`trail-stop ${i < activeIndex ? 'done' : ''} ${i === activeIndex ? 'now' : ''}`}
-          x={pt.x - 4}
-          y={pt.y - 4}
-          width="8"
-          height="8"
-          transform={i === activeIndex ? `rotate(45 ${pt.x} ${pt.y})` : undefined}
-          role="button"
-          tabIndex={0}
-          aria-label={`jump to ${kickers[i] || `chapter ${i + 1}`}`}
-          onClick={() => onJump(i)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onJump(i); }
-          }}
-        />
-      ))}
-      <motion.circle className="trail-dot" r="4" cx={dotCx} cy={dotCy} />
+      <line className="trail-base" x1={cx} y1={top} x2={cx} y2={bottom} />
+      <motion.line className="trail-ink" x1={cx} y1={top} x2={cx} y2={progressY} />
+      {stopFractions.map((f, i) => {
+        const y = top + f * span;
+        return (
+          <rect
+            key={i}
+            className={`trail-stop ${i < activeIndex ? 'done' : ''} ${i === activeIndex ? 'now' : ''}`}
+            x={cx - 4}
+            y={y - 4}
+            width="8"
+            height="8"
+            transform={i === activeIndex ? `rotate(45 ${cx} ${y})` : undefined}
+            role="button"
+            tabIndex={0}
+            aria-label={`jump to ${kickers[i] || `chapter ${i + 1}`}`}
+            onClick={() => onJump(i)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onJump(i); }
+            }}
+          />
+        );
+      })}
+      <motion.circle className="trail-dot" r="4" cx={cx} cy={progressY} />
     </svg>
   );
 }

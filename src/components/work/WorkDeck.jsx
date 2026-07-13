@@ -7,17 +7,15 @@ import Trail from './Trail.jsx';
 import LedgerPostit from './LedgerPostit.jsx';
 import './WorkDeck.css';
 
-function useIsNarrow() {
-  const [narrow, setNarrow] = useState(
-    () => window.matchMedia('(max-width: 640px)').matches,
-  );
+function useMediaQuery(query) {
+  const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
   useEffect(() => {
-    const mq = window.matchMedia('(max-width: 640px)');
-    const onChange = (e) => setNarrow(e.matches);
+    const mq = window.matchMedia(query);
+    const onChange = (e) => setMatches(e.matches);
     mq.addEventListener('change', onChange);
     return () => mq.removeEventListener('change', onChange);
-  }, []);
-  return narrow;
+  }, [query]);
+  return matches;
 }
 
 // Project identity, shown once at the top of the first chapter's text area.
@@ -41,7 +39,8 @@ function ChapterMedia({ media, className }) {
 }
 
 function ChapterCard({ chapter, index, cover, refCb }) {
-  const label = `§ ${String(index + 1).padStart(2, '0')} · ${chapter.kicker}`;
+  // The '§ ' glyph is added by the .deck-label::before rule; don't repeat it here.
+  const label = `${String(index + 1).padStart(2, '0')} · ${chapter.kicker}`;
   const text = (
     <div className="deck-txt">
       {cover}
@@ -80,7 +79,12 @@ export default function WorkDeck({ project, content, containerRef }) {
   const { chapterRefs, activeIndex, stopFractions, jumpTo } =
     useDeckScroll(containerRef, chapters.length);
   const { scrollYProgress } = useScroll({ container: containerRef });
-  const narrow = useIsNarrow();
+  const narrow = useMediaQuery('(max-width: 640px)');
+  // The build log collapses to a chip until the viewport is wide enough that a
+  // full-width figure row (max 1040px) still clears the fixed post-it. Below
+  // that the compact chip stays out of the content's way; the full note is a
+  // wide-desktop flourish.
+  const ledgerCollapsed = useMediaQuery('(max-width: 1300px)');
   const hasDetour = chapters.some((c) => c.detour);
 
   return (
@@ -99,7 +103,7 @@ export default function WorkDeck({ project, content, containerRef }) {
         chapters={chapters}
         activeIndex={activeIndex}
         onJump={jumpTo}
-        collapsed={narrow}
+        collapsed={ledgerCollapsed}
       />
       {chapters.map((c, i) => (
         <ChapterCard

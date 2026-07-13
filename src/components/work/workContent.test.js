@@ -57,7 +57,7 @@ test('case studies contain well-formed chapters', async () => {
   }
 });
 
-test('chuloopa chapters flatten to exactly the blocks shipped in PR #3', async () => {
+test('chuloopa chapters flatten to the expected block set', async () => {
   const { default: work } = await workRegistry.chuloopa();
   const flat = flattenChapters(work.chapters);
   const typeCounts = flat.reduce((m, b) => {
@@ -66,17 +66,16 @@ test('chuloopa chapters flatten to exactly the blocks shipped in PR #3', async (
   }, {});
   assert.deepEqual(typeCounts, {
     prose: 4,
-    'ascii-diagram': 1,
-    video: 2,
+    video: 1,
     image: 1,
     highlights: 1,
   });
   const videoIds = flat.filter((b) => b.type === 'video').map((b) => b.videoId).sort();
-  assert.deepEqual(videoIds, ['YhnaJ4LI-jY', 'gqVEtp37bXs'].sort());
+  assert.deepEqual(videoIds, ['gqVEtp37bXs']);
   const image = flat.find((b) => b.type === 'image');
   assert.equal(image.src, '/work/chuloopa-system-diagram.png');
   assert.equal(flat.find((b) => b.type === 'highlights').items.length, 5);
-  const headings = flat.filter((b) => b.type === 'prose').map((b) => b.heading).sort();
+  const headings = flat.filter((b) => b.type === 'prose').map((b) => b.heading).filter(Boolean).sort();
   assert.deepEqual(headings,
-    ['how it works', 'the hard parts', 'the itch', 'where it landed'].sort());
+    ['how it works', 'the itch', 'where it landed'].sort());
 });

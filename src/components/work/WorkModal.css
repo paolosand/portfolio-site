@@ -126,11 +126,6 @@
   margin-bottom: 8px;
 }
 
-.wm-label::before {
-  content: '§ ';
-  color: var(--c-pink);
-}
-
 .wm-prose p {
   font-size: 14px;
   line-height: 1.75;
