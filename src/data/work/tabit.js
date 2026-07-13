@@ -30,31 +30,15 @@ tabit lives inside that moment. paste a youtube url (or drop an audio file) and 
     {
       kicker: 'process',
       title: 'three layers, one contract',
-      shape: 'two-col',
-      media: {
-        type: 'ascii-diagram',
-        caption: 'audio in, chart json out — the app and the extension are just renderers',
-        art: `
- youtube url / audio
-        │
-    [ ingest ]───────────────┐
-        │            │        │
- [ demucs ]     [ librosa ] [ essentia ]
-   │     │       beats·tempo    key
-harmonic bass       │            │
-   │     │          │            │
-[ crema ][ crepe ]  │            │
- chords  bass f0    │            │
-   └──┬──┘          │            │
- [ reconcile ] → A/C#            │
-      └────────┬───────┬─────────┘
-         [ post-process ]
-               │
-         ( chart json )
-          ├─ react web app
-          └─ chrome extension`,
-      },
+      shape: 'long',
       blocks: [
+        {
+          type: 'image',
+          src: '/work/tabit-pipeline.png',
+          fullSrc: '/work/tabit-pipeline.png',
+          alt: 'tabIt processing pipeline: a YouTube URL or audio file is ingested, Demucs separates stems on the GPU, the crema chord model runs on the harmonic mix while CREPE tracks the isolated bass, and the two reconcile into slash chords like A/C#; librosa finds beats and tempo and Essentia the key; post-processing emits a chart JSON rendered by both a React web app and the Chrome extension',
+          caption: 'audio in, chart json out — the web app and the extension are just renderers',
+        },
         {
           type: 'prose',
           heading: 'the pipeline',
@@ -70,25 +54,15 @@ everything lands in one json file. the react web app renders it as a full paper 
     {
       kicker: 'the decision',
       title: 'your machine, not the cloud',
-      shape: 'two-col',
-      media: {
-        type: 'ascii-diagram',
-        caption: "the backend runs on the listener's own machine",
-        art: `
- rejected — cloud backend
-   extension ─▶ data-center api ─▶ yt-dlp
-      · one shared queue → congestion
-      · youtube blocks data-center ips
-      · pay to scale gpus
-
- chosen — local helper
-   extension ─▶ localhost (login service)
-      · one curl install, starts at login
-      · residential ip → clean youtube pulls
-      · full local gpu + parallel stages
-      · private · free · no queue`,
-      },
+      shape: 'long',
       blocks: [
+        {
+          type: 'image',
+          src: '/work/tabit-local-first.png',
+          fullSrc: '/work/tabit-local-first.png',
+          alt: 'two backend architectures compared. rejected — cloud backend: extension to a data-center API to yt-dlp, suffering a shared-queue that congests under load, YouTube blocking data-center IPs, and paid GPU scaling. chosen — local helper: extension to a localhost background login service, installed with one curl command, using a residential IP for clean YouTube pulls, running on the full local GPU with detection stages in parallel, and private, free, and queue-free',
+          caption: "the backend runs on the listener's own machine, not a shared server",
+        },
         {
           type: 'prose',
           heading: 'why local-first',
