@@ -31,3 +31,26 @@ export function flattenChapters(chapters) {
     return media ? [media, ...c.blocks] : [...c.blocks];
   });
 }
+
+function fieldPresent(value) {
+  return Array.isArray(value)
+    ? value.length > 0
+    : value != null && String(value).trim() !== '';
+}
+
+// Returns an error string if `block` is invalid, else null. A `video` block is
+// valid with EITHER a YouTube `videoId` OR a self-hosted file `src`; every other
+// type requires all of its BLOCK_REQUIRED_FIELDS.
+export function blockValidationError(block) {
+  const required = BLOCK_REQUIRED_FIELDS[block.type];
+  if (!required) return `unknown block type "${block.type}"`;
+  if (block.type === 'video') {
+    return fieldPresent(block.videoId) || fieldPresent(block.src)
+      ? null
+      : 'video requires videoId or src';
+  }
+  for (const field of required) {
+    if (!fieldPresent(block[field])) return `missing "${field}" (${block.type})`;
+  }
+  return null;
+}

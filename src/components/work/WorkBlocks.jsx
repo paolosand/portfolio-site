@@ -22,8 +22,25 @@ function AsciiDiagramBlock({ block }) {
 }
 
 function VideoBlock({ block }) {
+  const cls = `wm-block wm-video ${block.orientation === 'portrait' ? 'portrait' : ''}`;
+  if (block.src) {
+    return (
+      <figure className={cls}>
+        <video
+          src={block.src}
+          poster={block.poster}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+        />
+        {block.caption && <figcaption>{block.caption}</figcaption>}
+      </figure>
+    );
+  }
   return (
-    <figure className={`wm-block wm-video ${block.orientation === 'portrait' ? 'portrait' : ''}`}>
+    <figure className={cls}>
       <iframe
         src={`https://www.youtube.com/embed/${block.videoId}`}
         title={block.caption || 'demo video'}

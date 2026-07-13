@@ -6,6 +6,7 @@ import {
   BLOCK_REQUIRED_FIELDS,
   CHAPTER_SHAPES,
   flattenChapters,
+  blockValidationError,
 } from '../../data/work/blockTypes.js';
 
 const portfolio = JSON.parse(
@@ -14,14 +15,8 @@ const portfolio = JSON.parse(
 const projectIds = new Set(portfolio.projects.map((p) => p.id));
 
 function assertValidBlock(block, where) {
-  const required = BLOCK_REQUIRED_FIELDS[block.type];
-  assert.ok(required, `unknown block type "${block.type}" at ${where}`);
-  for (const field of required) {
-    const value = block[field];
-    const present = Array.isArray(value) ? value.length > 0
-      : value != null && String(value).trim() !== '';
-    assert.ok(present, `missing "${field}" at ${where} (${block.type})`);
-  }
+  const err = blockValidationError(block);
+  assert.ok(!err, `${err} at ${where}`);
 }
 
 test('every registry key matches a portfolio project id', () => {
@@ -79,4 +74,12 @@ test('chuloopa chapters flatten to exactly the blocks shipped in PR #3', async (
   const headings = flat.filter((b) => b.type === 'prose').map((b) => b.heading).sort();
   assert.deepEqual(headings,
     ['how it works', 'the hard parts', 'the itch', 'where it landed'].sort());
+});
+
+test('video block is valid with either a youtube videoId or a self-hosted src', () => {
+  assert.equal(blockValidationError({ type: 'video', videoId: 'abc123' }), null);
+  assert.equal(blockValidationError({ type: 'video', src: '/work/tabit-demo.mp4' }), null);
+  assert.ok(blockValidationError({ type: 'video' }), 'video with neither must be invalid');
+  assert.ok(blockValidationError({ type: 'image', src: '/x.png' }), 'image still needs alt');
+  assert.equal(blockValidationError({ type: 'nope' }), 'unknown block type "nope"');
 });

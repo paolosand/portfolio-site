@@ -211,6 +211,7 @@
 
 .poster-fill .wm-video { width: min(360px, 60%); margin: 0; }
 .poster-fill .wm-video iframe { box-shadow: 6px 6px 0 var(--ink); }
+.poster-fill .wm-video video { box-shadow: 6px 6px 0 var(--ink); }
 .poster-fill .wm-image img { max-height: 78vh; width: auto; }
 .poster-fill .wm-diagram pre { font-size: 14px; }
 

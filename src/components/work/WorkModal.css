@@ -167,6 +167,15 @@
   background: var(--ink);
 }
 
+.wm-video video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1.5px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  background: var(--ink);
+}
+
 .wm-video.portrait iframe {
   aspect-ratio: 9 / 16;
   width: min(320px, 80%);
