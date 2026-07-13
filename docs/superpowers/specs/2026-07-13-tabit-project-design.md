@@ -62,10 +62,16 @@ export const workRegistry = {
 
 Same contract as `chuloopa.js` (`blockTypes.js`): `id`, `chapters[]` with `kicker`, `title`, `shape`, optional `media`, and `blocks[]`. Block types used: `prose`, `ascii-diagram`, `video`, `image`, `highlights`. Shapes used: `poster`, `two-col`, `long`, `text-poster`.
 
+**Contract change — self-hosted video.** The demo clip is a self-hosted MP4, not a YouTube embed. The `video` block must accept **either** `videoId` (YouTube, as chuloopa uses) **or** `src` (a self-hosted file path). Required-field validation in `blockTypes.js` changes from `video: ['videoId']` to "`video` requires `videoId` OR `src`", and the video renderer in `WorkModal.jsx` branches: `src` → an inline `<video>` (autoplay, muted, loop, playsInline, `poster`), `videoId` → the existing YouTube iframe. `workContent.test.js` gets a case for the `src` variant. The reduced-motion / `flattenChapters` path renders the same `<video>` — confirm behavior against the existing reduced-motion handling during implementation.
+
+**Assets already produced** (to be committed to `public/work/`):
+- `public/work/tabit-demo.mp4` — 2.1MB, 880×720, h264, 16.2s, faststart, audio stripped. Cap Studio recording of the real extension on the "just a song" video: hover → "♪ Get chords" → beat ribbon following the song (Key D major · 120 bpm · D-major-pentatonic solo · Dmaj7→Gmaj7 · amber sweep).
+- `public/work/tabit-demo-poster.jpg` — 54K poster frame (ribbon moment) for the `<video poster>` / reduced-motion fallback.
+
 ### Chapters
 
 1. **problem** — `shape: poster`, kicker `problem`.
-   - **media:** `video` — hero demo. **`videoId: 'TODO'`** (Paolo will record with Screen Studio/Cap and supply the ID; until then the chapter still validates because a `video` block only requires `videoId` — the string `'TODO'` satisfies the contract but must be swapped before ship). If recording slips, fall back to the `image` screenshot as chapter media.
+   - **media:** `video` — hero demo, **self-hosted**: `{ type: 'video', src: '/work/tabit-demo.mp4', poster: '/work/tabit-demo-poster.jpg', orientation: 'portrait', caption: 'the extension following "just a song" — click "♪ get chords", play along' }`. Recorded (Cap Studio); asset in place. No YouTube embed.
    - **prose:** the play-along moment (a song grabs you, you want to play *now*) + the coverage gap: chord sites only have what someone transcribed; unreleased songs, live versions, demos, your own recordings have no tab anywhere. tabIt detects chords from the audio, so you can play along to practically anything.
 
 2. **how it works** — `shape: two-col`, kicker `process`.
@@ -126,7 +132,7 @@ Same contract as `chuloopa.js` (`blockTypes.js`): `id`, `chapters[]` with `kicke
 ## Other integration points
 
 - **`WorkEmbed` / chat:** check whether `src/components/chat/embeds/WorkEmbed.jsx` or the chat knowledge references the work registry / needs a `tabit` case; update `api/knowledge/projects.md` if it enumerates projects. Verify during implementation — do not assume.
-- **`workContent.test.js`:** the case-study content test iterates the registry and validates each entry against `blockTypes.js`. Adding `tabit` to the registry means it will be validated automatically; ensure `tabit.js` satisfies every required field (notably the `TODO` videoId still needs `videoId` present).
+- **`workContent.test.js`:** the case-study content test iterates the registry and validates each entry against `blockTypes.js`. Adding `tabit` to the registry means it will be validated automatically; ensure `tabit.js` satisfies every required field and that the updated `video` validation (accepts `src` OR `videoId`) is reflected in the test.
 - **`PROJECT_ART` coverage:** `Projects.jsx` renders `PROJECT_ART[p.id]`; the new `tabit` key must exist or the card shows an empty `<pre>`.
 
 ## Testing / verification
@@ -137,11 +143,11 @@ Same contract as `chuloopa.js` (`blockTypes.js`): `id`, `chapters[]` with `kicke
 
 ## Out of scope / follow-ups
 
-- The hero demo **video recording** (Paolo records separately; swap `videoId: 'TODO'`).
+- The hero demo **video recording** — DONE (Cap Studio, self-hosted MP4 in `public/work/`).
 - Any change to tabIt itself. This is portfolio-only.
-- The 7MB `extension-demo.gif` is **not** used (video chosen for the hero; static PNG for the confidence chapter).
+- The 7MB `extension-demo.gif` is **not** used (self-hosted MP4 for the hero; static PNG for the confidence chapter).
 
 ## Open items to resolve before "done"
 
-- Real `videoId` for chapter 1 (currently `TODO`).
 - Confirm `PROJECT_ART.tabit` glyph alignment against the other cards at render time.
+- Confirm the self-hosted `<video>` renders correctly in both the deck and the reduced-motion fallback.
