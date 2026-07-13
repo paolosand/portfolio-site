@@ -9,13 +9,7 @@ export default {
     {
       kicker: 'problem',
       title: 'static loops are dead air',
-      shape: 'poster',
-      media: {
-        type: 'video',
-        videoId: 'YhnaJ4LI-jY',
-        orientation: 'portrait',
-        caption: 'demo · beatbox in, variations out',
-      },
+      shape: 'text-poster',
       blocks: [
         {
           type: 'prose',
@@ -30,30 +24,15 @@ chuloopa (chuck-based loop operator for performance audio) is the answer: a voic
     {
       kicker: 'process',
       title: 'beatbox in, variations out',
-      shape: 'two-col',
-      media: {
-        type: 'ascii-diagram',
-        caption: 'three concurrent processes, talking over osc',
-        art: `
-           live room audio ♪
-                 │
- ┌─ VARIANT CONTROLLER · chuck ──────────────┐
- │  rms → dbfs → spice (0.0 – 1.0)           │
- └─────────────────┬─────────────────────────┘
-                   │ osc /chuloopa/spice · 500 ms
-                   ▼
- ┌─ MAIN LOOPER · chuck ─────────────────────┐
- │  beatbox → onset → knn → loop             │
- │  spice-weighted pick at loop boundary ────┼── midi ──▶ ableton live
- └─────────┬─────────────────────▲───────────┘
-           │ 16-step pattern     │ osc bank_ready
-           ▼                     │
- ┌─ VARIANT GENERATOR · python ──────────────┐
- │  grid transformer × 5 temperatures        │
- │  → deviation sort → bank (v1 … v5)        │
- └───────────────────────────────────────────┘`,
-      },
+      shape: 'long',
       blocks: [
+        {
+          type: 'image',
+          src: '/work/chuloopa-system-diagram.png',
+          fullSrc: '/work/chuloopa-system-diagram.png',
+          alt: 'CHULOOPA system architecture: variant generator (python), variant controller and main looper (chuck), with OSC and MIDI signal paths into Ableton Live',
+          caption: 'the full system diagram, from the aimc 2026 paper',
+        },
         {
           type: 'prose',
           heading: 'how it works',
@@ -63,13 +42,6 @@ you beatbox a pattern. a knn classifier — trained on ten examples each of your
 the moment a loop is committed, a 4.8m-parameter grid transformer generates five variations in parallel at increasing sampling temperatures, then sorts them by deviation from the original into a predictable conservative-to-adventurous spectrum.
 
 meanwhile a separate process measures the live audio energy every 500 ms and maps it to a value called spice (0.0–1.0). at each loop boundary, the current spice level drives a weighted draw from the variation bank — quiet passages favor the original pattern, building energy pulls toward wilder variations. no pedal, no menu, no manual toggle.`,
-        },
-        {
-          type: 'image',
-          src: '/work/chuloopa-system-diagram.png',
-          fullSrc: '/work/chuloopa-system-diagram.png',
-          alt: 'CHULOOPA system architecture: variant generator (python), variant controller and main looper (chuck), with OSC and MIDI signal paths into Ableton Live',
-          caption: 'the full system diagram, straight from the aimc 2026 paper',
         },
       ],
     },
@@ -81,7 +53,6 @@ meanwhile a separate process measures the live audio energy every 500 ms and map
       blocks: [
         {
           type: 'prose',
-          heading: 'the hard parts',
           body: `
 getting chuck and python to cooperate in real time — three concurrent processes coordinated entirely over osc, with per-session ids validating every scheduled hit so nothing overlaps during transitions.
 
