@@ -40,6 +40,37 @@ MFA thesis project. Real-time intelligent drum looper for live performance by be
 
 ---
 
+## tabIt — Play-Along Chords from Any Song's Audio
+**Technologies:** Python 3.11 (Demucs, crema, CREPE, librosa, Essentia, PyTorch), FastAPI, React 19 + TypeScript, Vite, Chrome Extension (Manifest V3), uv + static ffmpeg (one-line installer)
+**GitHub:** https://github.com/paolosand/tabIt
+
+In active development. Turns any song — a YouTube URL or an audio file — into a synced, play-along guitar chord sheet: it detects the chords, key, and suggested scales from the audio itself and follows along karaoke-style as the music plays, including embedded right under the YouTube video via a Chrome extension. Built to cover songs that have no tab anywhere (unreleased songs, live versions, friends' demos, your own recordings), because it reads the audio instead of a transcription database.
+
+**Architecture (three layers sharing one contract — the chart JSON):**
+1. MIR engine (Python) — audio → chords + key + scales + beat grid → chart JSON. Complete.
+2. Web app (FastAPI + React) — paste a URL or drop a file → YouTube player + synced chord sheet. Complete.
+3. Chrome extension (MV3) — the same sheet overlaid as a beat ribbon below the player on youtube.com. Complete.
+The web app and the extension are both just renderers of the same chart JSON.
+
+**MIR pipeline:**
+- Demucs source separation (GPU) splits the track into stems.
+- crema chord model runs on the drums-removed harmonic mix.
+- CREPE pitch tracker follows the isolated bass stem; the two are reconciled to emit slash-chord inversions like A/C# (most tools skip these).
+- librosa handles beats and tempo; Essentia handles key detection.
+- Post-processing assembles the chart JSON; every repeat of a song is served instantly from a disk cache.
+
+**Local-first backend (a key design decision):**
+- The Chrome extension talks to a backend that runs on the user's OWN machine (localhost:28224), not a cloud server. It installs with a one-line curl command as a background login service (managed via `tabit status` / `logs` / `restart`).
+- Why local-first beats cloud here: no shared-server congestion (each user's requests run on their own hardware, often faster); YouTube blocks/throttles downloads from data-center IPs, but a residential machine pulls clean; full use of local hardware — Apple-Silicon GPU for separation and detection stages running in parallel with models kept warm.
+- The tradeoff (install friction) is mitigated by a one-line installer (provisions Python 3.11 via uv, a static ffmpeg, and model weights) and a graceful "helper is off" state in the extension that recovers on its own once the service is back.
+
+**Honest confidence:**
+- Chord detection is imperfect (state of the art is ~72% on 7th chords; human experts agree only ~54% on complex ones). Low-confidence chords are shown visibly softer with a dotted underline — never hidden or faked. Any chord can be clicked to correct it; edits persist locally.
+
+**Practice features & robustness:** key/tempo/scale chips, one-tap transpose, karaoke-style lookahead (the next chord is flagged before it arrives), and auto-scroll. The extension is ad-aware (pauses with the ad) and SPA-navigation safe. A real-song chord-accuracy benchmark harness (mir_eval scorer) tracks quality. Cold analysis is ~36s of compute for a 3.5-minute song on Apple Silicon (plus download), a few minutes on CPU-only machines; the bar shows each pipeline step live (download → separation → chords) while it runs.
+
+---
+
 ## ASCII Drone Synth — Gesture-Controlled Web Synthesizer
 **Technologies:** Tone.js, Three.js (WebGL + GLSL), MediaPipe Hands, vanilla JS
 **Live demo:** https://paolosand.github.io/ascii_drone/
