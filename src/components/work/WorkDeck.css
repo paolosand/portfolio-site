@@ -208,56 +208,46 @@
    narrow legacy modal, not this wide canvas */
 .work-deck .wm-prose p { max-width: none; }
 
-/* poster */
-.shape-poster { display: flex; align-items: center; justify-content: center; }
-
-.poster-fill {
-  position: absolute;
-  inset: 0;
+/* poster — the whole first page is ONE taped "posted note": header, demo
+   video, and the problem text on a single paper card. Identical on desktop and
+   narrow widths (no lane/stack split). Only tabIt uses this shape. */
+.shape-poster {
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--paper-2);
-  /* reserve a left lane for the taped scrap so the centered media never collides with it */
-  padding: 64px 24px 24px min(468px, 52%);
+  padding: 74px clamp(16px, 4vw, 40px) 52px;
 }
 
-.poster-fill .wm-video { width: min(480px, 88%); margin: 0; }
-/* mobile-only cover (see WorkDeck.jsx poster branch); on desktop the cover
-   lives inside the taped scrap, so hide this leading copy. */
-.poster-cover-mobile { display: none; }
-.poster-fill .wm-video iframe { box-shadow: 6px 6px 0 var(--ink); }
-.poster-fill .wm-video video { box-shadow: 6px 6px 0 var(--ink); }
-.poster-fill .wm-image img { max-height: 78vh; width: auto; }
-.poster-fill .wm-diagram pre { font-size: 14px; }
-
-.poster-scrap {
-  position: absolute;
-  left: 64px;
-  bottom: 30px;
-  width: min(380px, 55%);
+.poster-note {
+  position: relative;
+  width: min(760px, 100%);
   background: var(--paper);
   border: 1.5px solid var(--ink);
-  box-shadow: 4px 4px 0 var(--ink);
-  padding: 16px 18px 14px;
-  transform: rotate(-0.8deg);
+  box-shadow: 6px 6px 0 var(--ink);
+  padding: clamp(22px, 3vw, 34px) clamp(20px, 3vw, 36px) clamp(24px, 3vw, 34px);
+  transform: rotate(-0.5deg);
 }
 
-.poster-scrap::before {
+/* washi tape across the top edge */
+.poster-note::before {
   content: '';
   position: absolute;
-  top: -8px;
+  top: -9px;
   left: 50%;
-  transform: translateX(-50%) rotate(2deg);
-  width: 52px;
-  height: 14px;
+  transform: translateX(-50%) rotate(1.5deg);
+  width: 88px;
+  height: 18px;
   background: var(--c-lemon);
   border: 1px solid var(--ink);
   opacity: 0.85;
 }
 
-.poster-scrap .deck-title { font-size: 20px; }
-.poster-scrap .wm-prose p { font-size: 13px; }
+.poster-note-media { margin: 4px 0 20px; }
+.poster-note-media .wm-video { width: 100%; margin: 0; }
+.poster-note-media .wm-video video,
+.poster-note-media .wm-video iframe { box-shadow: 4px 4px 0 var(--ink); }
+.poster-note-media figcaption { text-align: left; }
 
 /* two-col */
 .shape-two-col { display: grid; grid-template-columns: 1.05fr 0.85fr; }
@@ -285,36 +275,6 @@
    wide screens and never grows absurd on ultrawide. */
 .shape-long .wm-image { max-width: min(1040px, 100%); }
 
-/* ── tablet + phone: poster unfolds into a single scrolling column ──
-   The desktop poster centers the media in a lane to the right of the taped
-   scrap. Below 900px there is no room for both side by side — and this deck's
-   media is a tall portrait video — so the chapter grows to natural height
-   (like .shape-long) and stacks: media panel on top, scrap card beneath. */
-@media (max-width: 900px) {
-  .shape-poster { overflow: visible; }
-  .poster-fill {
-    position: static;
-    inset: auto;
-    align-items: center;
-    padding: clamp(58px, 11vw, 70px) clamp(16px, 4vw, 28px) clamp(20px, 5vw, 28px);
-  }
-  .poster-fill .wm-video { width: min(340px, 72%); }
-  .poster-scrap {
-    position: static;
-    inset: auto;
-    width: auto;
-    margin: clamp(18px, 4vw, 26px) clamp(16px, 4vw, 36px) clamp(40px, 8vw, 56px);
-  }
-  /* stacked poster reads header -> media -> body: show the leading cover
-     above the media and drop the duplicate inside the taped scrap. */
-  .poster-cover-mobile {
-    display: block;
-    margin: clamp(58px, 11vw, 70px) clamp(16px, 4vw, 36px) 0;
-  }
-  .poster-fill { padding-top: clamp(20px, 5vw, 28px); }
-  .poster-scrap .deck-cover { display: none; }
-}
-
 /* ── phone ────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .deck-txt { padding: 66px 18px 30px 30px; }
@@ -322,8 +282,6 @@
   .deck-cover-title { font-size: 26px; }
   .shape-two-col { display: flex; flex-direction: column; }
   .deck-medwrap { border-left: none; padding: 0 18px 28px 30px; }
-  /* poster's side-by-side row (see 900px block) folds to a single column */
-  .shape-poster { flex-direction: column; align-items: stretch; }
-  .poster-fill .wm-video { width: min(260px, 82%); }
+  .shape-poster { padding: 64px 12px 40px; }
   .shape-text-poster .deck-txt { padding-right: 18px; }
 }

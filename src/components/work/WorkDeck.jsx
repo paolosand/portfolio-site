@@ -53,19 +53,15 @@ function ChapterCard({ chapter, index, cover, refCb }) {
   return (
     <section ref={refCb} className={`deck-chapter shape-${chapter.shape}`} aria-label={label}>
       {chapter.shape === 'poster' && (
-        <>
-          {/* narrow-width only: lifts the cover above the media so a stacked
-              poster reads header -> media -> body, not media-first. Hidden on
-              desktop, where the cover lives inside the taped scrap. */}
-          {cover && <div className="poster-cover-mobile">{cover}</div>}
-          <ChapterMedia media={chapter.media} className="poster-fill" />
-          <div className="poster-scrap">
-            {cover}
-            <span className="deck-label">{label}</span>
-            <h3 className="deck-title">{chapter.title}</h3>
-            <RenderBlocks blocks={chapter.blocks} />
-          </div>
-        </>
+        // one taped "posted note" holds the whole page: header, media, body —
+        // identical on desktop and narrow widths (no lane/stack split).
+        <div className="poster-note">
+          {cover}
+          {chapter.media && <ChapterMedia media={chapter.media} className="poster-note-media" />}
+          <span className="deck-label">{label}{chapter.detour ? ' ↩' : ''}</span>
+          <h3 className="deck-title">{chapter.title}</h3>
+          <RenderBlocks blocks={chapter.blocks} />
+        </div>
       )}
       {chapter.shape === 'two-col' && (
         <>
