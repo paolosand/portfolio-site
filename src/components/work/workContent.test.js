@@ -62,13 +62,14 @@ test('chuloopa chapters flatten to the expected block set', async () => {
   assert.deepEqual(typeCounts, {
     prose: 4,
     video: 1,
-    image: 1,
+    image: 2,
     highlights: 1,
   });
   const videoIds = flat.filter((b) => b.type === 'video').map((b) => b.videoId).sort();
   assert.deepEqual(videoIds, ['gqVEtp37bXs']);
-  const image = flat.find((b) => b.type === 'image');
-  assert.equal(image.src, '/work/chuloopa-system-diagram.png');
+  const imageSrcs = flat.filter((b) => b.type === 'image').map((b) => b.src).sort();
+  assert.deepEqual(imageSrcs,
+    ['/work/chuloopa-active.png', '/work/chuloopa-system-diagram.png'].sort());
   assert.equal(flat.find((b) => b.type === 'highlights').items.length, 5);
   const headings = flat.filter((b) => b.type === 'prose').map((b) => b.heading).filter(Boolean).sort();
   assert.deepEqual(headings,

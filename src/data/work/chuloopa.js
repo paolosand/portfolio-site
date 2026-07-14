@@ -9,7 +9,14 @@ export default {
     {
       kicker: 'problem',
       title: 'static loops are dead air',
-      shape: 'text-poster',
+      shape: 'poster',
+      media: {
+        type: 'image',
+        src: '/work/chuloopa-active.png',
+        fullSrc: '/work/chuloopa-active.png',
+        alt: "CHULOOPA's live ChuGL interface: a glowing yellow icosahedron pulsing on the beat, with an ECHO/VAR header, a STATE: Var 2/5 readout, and a GTR | VOX indicator — polyhedron shape and color encode the current variation state",
+        caption: 'the live chugl view — polyhedron and color track the variation state',
+      },
       blocks: [
         {
           type: 'prose',
