@@ -54,6 +54,10 @@ function ChapterCard({ chapter, index, cover, refCb }) {
     <section ref={refCb} className={`deck-chapter shape-${chapter.shape}`} aria-label={label}>
       {chapter.shape === 'poster' && (
         <>
+          {/* narrow-width only: lifts the cover above the media so a stacked
+              poster reads header -> media -> body, not media-first. Hidden on
+              desktop, where the cover lives inside the taped scrap. */}
+          {cover && <div className="poster-cover-mobile">{cover}</div>}
           <ChapterMedia media={chapter.media} className="poster-fill" />
           <div className="poster-scrap">
             {cover}

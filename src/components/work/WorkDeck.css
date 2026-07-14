@@ -222,7 +222,10 @@
   padding: 64px 24px 24px min(468px, 52%);
 }
 
-.poster-fill .wm-video { width: min(360px, 60%); margin: 0; }
+.poster-fill .wm-video { width: min(480px, 88%); margin: 0; }
+/* mobile-only cover (see WorkDeck.jsx poster branch); on desktop the cover
+   lives inside the taped scrap, so hide this leading copy. */
+.poster-cover-mobile { display: none; }
 .poster-fill .wm-video iframe { box-shadow: 6px 6px 0 var(--ink); }
 .poster-fill .wm-video video { box-shadow: 6px 6px 0 var(--ink); }
 .poster-fill .wm-image img { max-height: 78vh; width: auto; }
@@ -302,6 +305,14 @@
     width: auto;
     margin: clamp(18px, 4vw, 26px) clamp(16px, 4vw, 36px) clamp(40px, 8vw, 56px);
   }
+  /* stacked poster reads header -> media -> body: show the leading cover
+     above the media and drop the duplicate inside the taped scrap. */
+  .poster-cover-mobile {
+    display: block;
+    margin: clamp(58px, 11vw, 70px) clamp(16px, 4vw, 36px) 0;
+  }
+  .poster-fill { padding-top: clamp(20px, 5vw, 28px); }
+  .poster-scrap .deck-cover { display: none; }
 }
 
 /* ── phone ────────────────────────────────────────────────────── */
