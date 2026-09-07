@@ -20,6 +20,7 @@
   width: 100%;
   max-height: 92vh;
   overflow-y: auto;
+  overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
 }
@@ -407,17 +408,18 @@
 }
 
 @media (max-width: 768px) {
+  /* Full-viewport sheet, same as the case-study WorkModal: the modal is the
+     only scroll container, its sticky top bar pins to a true screen top, and
+     there is no backdrop strip for a touch gesture to fall through to. */
   .artist-overlay {
     padding: 0;
-    align-items: flex-end;
   }
 
   .artist-modal {
-    max-height: 88vh;
+    height: 100%;
+    max-height: none;
+    border: none;
     box-shadow: none;
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
     animation: slideUp 0.28s ease-out;
   }
 
@@ -456,5 +458,11 @@
   .artist-socials a {
     font-size: 8px;
     padding: 8px 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artist-modal {
+    animation: none;
   }
 }
