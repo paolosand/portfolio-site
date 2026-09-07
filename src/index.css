@@ -96,6 +96,14 @@ button {
 }
 
 .app.is-chat {
+  /* .app sets min-height: 100vh for the scrolling portfolio view; min-height
+     wins the cascade over height below, so without this reset the chat
+     shell stayed floored to the tallest possible viewport regardless of
+     what height said. Height itself is set inline from JS via
+     window.visualViewport (App.jsx) — the one measurement that reflects
+     the real visible area once a mobile keyboard opens. 100dvh here is
+     only the fallback for the rare environment without visualViewport. */
+  min-height: 0;
   padding-bottom: 0;
   display: flex;
   flex-direction: column;
@@ -1219,6 +1227,8 @@ button {
 .chat-input {
   border-top: 1.5px solid var(--ink);
   padding: 14px 18px;
+  /* Clears the home-indicator / gesture-bar area on notched phones. */
+  padding-bottom: max(14px, env(safe-area-inset-bottom));
   background: var(--paper-2);
   display: grid;
   grid-template-columns: 1fr auto;
@@ -1244,7 +1254,10 @@ button {
   outline: none;
   font: inherit;
   color: var(--ink);
-  font-size: 14px;
+  /* 16px, not the site's usual 14px body size: below 16px, iOS Safari
+     zooms the whole page in on focus, which perturbs the viewport mid-
+     interaction and is itself a source of keyboard-layout bugs. */
+  font-size: 16px;
 }
 .chat-input input::placeholder { color: var(--ink-faint); }
 .chat-input .send {
