@@ -1308,6 +1308,8 @@ button {
   .chat-paper { padding: 16px 12px; }
   .chat-paper::-webkit-scrollbar { display: none; }
   .msg { grid-template-columns: 76px 1fr; gap: 8px; }
+  .chat-input { padding: 10px 12px; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+  .chat-input .send { padding: 11px 16px; }
   .welcome-banner { display: none; }
   .welcome h1 { font-size: 26px; }
   .props { grid-template-columns: 1fr; }
