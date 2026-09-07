@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import TopBar from './components/layout/TopBar';
 import ArtistModal from './components/music/ArtistModal';
 import ChatInterface from './components/chat/ChatInterface';
@@ -13,6 +13,7 @@ import './App.css';
 function App() {
   const [view, setView] = useState('portfolio');
   const [musicOpen, setMusicOpen] = useState(false);
+  const closeMusic = useCallback(() => setMusicOpen(false), []);
   const vh = useVisualViewportHeight();
 
   useEffect(() => {
@@ -30,13 +31,6 @@ function App() {
     };
   }, [view]);
 
-  useEffect(() => {
-    if (!musicOpen) return;
-    const handler = (e) => { if (e.key === 'Escape') setMusicOpen(false); };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [musicOpen]);
-
   return (
     <div
       className={`app ${view === 'chat' ? 'is-chat' : ''}`}
@@ -44,7 +38,7 @@ function App() {
     >
       <TopBar view={view} setView={setView} onMusicClick={() => setMusicOpen(true)} />
 
-      {musicOpen && <ArtistModal onClose={() => setMusicOpen(false)} />}
+      {musicOpen && <ArtistModal onClose={closeMusic} />}
 
       {view === 'portfolio' && (
         <>

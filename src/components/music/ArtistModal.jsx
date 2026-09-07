@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import './ArtistModal.css';
 
 const ALBUMS = [
@@ -32,9 +33,51 @@ const ALBUMS = [
 ];
 
 export default function ArtistModal({ onClose }) {
+  const frameRef = useRef(null);
+
+  // Own the modal lifecycle the same way WorkModal does: lock body scroll so
+  // the page behind can't take the gesture, trap focus, and close on Escape.
+  useEffect(() => {
+    const prevFocus = document.activeElement;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    frameRef.current?.focus();
+    const handler = (e) => {
+      if (e.key === 'Escape') { onClose(); return; }
+      if (e.key !== 'Tab') return;
+      const frame = frameRef.current;
+      if (!frame) return;
+      const focusable = frame.querySelectorAll('a[href], button, iframe, [tabindex]:not([tabindex="-1"])');
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const current = document.activeElement;
+      const inFrame = frame.contains(current);
+      if (e.shiftKey) {
+        if (!inFrame || current === first || current === frameRef.current) { e.preventDefault(); last.focus(); }
+      } else {
+        if (!inFrame || current === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => {
+      window.removeEventListener('keydown', handler);
+      document.body.style.overflow = prevOverflow;
+      prevFocus?.focus?.();
+    };
+  }, [onClose]);
+
   return (
     <div className="artist-overlay" onClick={onClose}>
-      <div className="artist-modal" role="dialog" aria-modal="true" aria-label="Artist profile" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="artist-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Artist profile"
+        ref={frameRef}
+        tabIndex={-1}
+        onClick={(e) => e.stopPropagation()}
+      >
 
         <div className="artist-topbar">
           <div className="artist-topbar-left">
