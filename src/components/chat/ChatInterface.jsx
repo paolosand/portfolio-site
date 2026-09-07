@@ -2,12 +2,10 @@ import { useEffect } from 'react';
 import { useChat } from '../../hooks/useChat';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
-import ChipBar from './ChipBar';
 import './ChatInterface.css';
 
 export default function ChatInterface() {
   const { messages, isLoading, error, send, greet, retry, clearError, reset } = useChat();
-  const hasSentMessage = messages.some((m) => m.role === 'user');
 
   useEffect(() => {
     if (messages.length === 0) greet();
@@ -46,10 +44,6 @@ export default function ChatInterface() {
           </div>
         </div>
       )}
-      {/* Suggestion chips are a starting-point hint for an empty conversation —
-          once the user has actually asked something, they just eat space
-          that should go to the messages themselves. */}
-      {messages.length > 0 && !hasSentMessage && <ChipBar onPick={send} disabled={isLoading} />}
       <ChatInput onSend={send} disabled={isLoading} />
     </div>
   );
