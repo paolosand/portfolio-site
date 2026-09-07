@@ -699,7 +699,7 @@ button {
 }
 .skills-row {
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: 220px minmax(0, 1fr);
   border-bottom: 1.5px dashed var(--ink);
 }
 .skills-row:last-child { border-bottom: none; }
@@ -720,6 +720,7 @@ button {
   font-weight: 800;
 }
 .skills-row .pills {
+  min-width: 0;
   padding: 16px 18px;
   display: flex;
   flex-wrap: wrap;
@@ -1304,4 +1305,7 @@ button {
   .postcard { grid-template-columns: 1fr; }
   .postcard .left { border-right: none; border-bottom: 1.5px dashed var(--ink); }
   .prompts { grid-template-columns: 1fr; }
+  .skills-row { grid-template-columns: 1fr; }
+  .skills-row .cat { border-right: none; border-bottom: 1.5px solid var(--ink); }
+  .tl-head .where { white-space: normal; }
 }
