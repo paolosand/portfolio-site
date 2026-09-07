@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import ProjectEmbed from './embeds/ProjectEmbed';
 import WorkEmbed from './embeds/WorkEmbed';
@@ -33,18 +33,13 @@ function renderCard(block, i, onExpand) {
   return null;
 }
 
-function AssistantBlocks({ blocks = [], animate = false, onReveal, onPick, onExpand, chipsDisabled }) {
+function AssistantBlocks({ blocks = [], animate = false, onPick, onExpand, chipsDisabled }) {
   const reducedMotion = usePrefersReducedMotion();
   const typing = animate && !reducedMotion;
 
   const fullText = blocks.filter(b => b.type === 'text').map(b => b.content).join('\n\n');
   const { text, done } = useTypewriter(fullText, typing);
   const embeds = blocks.filter(b => b.type !== 'text');
-
-  // Keep the latest characters in view as they type out.
-  useEffect(() => {
-    if (typing && !done) onReveal?.();
-  }, [text, typing, done, onReveal]);
 
   return (
     <>
@@ -69,21 +64,12 @@ function AssistantBlocks({ blocks = [], animate = false, onReveal, onPick, onExp
 }
 
 export default function MessageList({ messages, isLoading, onPick }) {
-  const endRef = useRef(null);
   const [openEmbed, setOpenEmbed] = useState(null);
   const annotated = annotateEmbeds(messages);
 
   // Messages already present when this view mounts (restored from a prior
   // session) should render fully; only replies that arrive afterward type out.
   const [seenCount] = useState(messages.length);
-
-  const scrollToEnd = useCallback(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-  }, []);
-
-  useEffect(() => {
-    scrollToEnd();
-  }, [messages.length, isLoading, scrollToEnd]);
 
   return (
     <div className="msgs">
@@ -96,7 +82,6 @@ export default function MessageList({ messages, isLoading, onPick }) {
               : <AssistantBlocks
                   blocks={m.blocks}
                   animate={i >= seenCount}
-                  onReveal={scrollToEnd}
                   onPick={onPick}
                   onExpand={setOpenEmbed}
                   chipsDisabled={isLoading}
@@ -104,7 +89,6 @@ export default function MessageList({ messages, isLoading, onPick }) {
           </div>
         </div>
       ))}
-      <div ref={endRef}></div>
       <EmbedModal embed={openEmbed} onClose={() => setOpenEmbed(null)} />
     </div>
   );
