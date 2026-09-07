@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useChat } from '../../hooks/useChat';
+import { useStickToBottom } from '../../hooks/useStickToBottom';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
 import ChipBar from './ChipBar';
@@ -8,11 +9,19 @@ import './ChatInterface.css';
 export default function ChatInterface() {
   const { messages, isLoading, error, send, greet, retry, clearError, reset } = useChat();
   const hasSentMessage = messages.some((m) => m.role === 'user');
+  const { containerRef, onScroll, scrollToBottom } = useStickToBottom();
 
   useEffect(() => {
     if (messages.length === 0) greet();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // A brand-new turn always brings you to the bottom; growth *within* a message
+  // (the reply typing out) is left to the stick-to-bottom observer so scrolling
+  // up to re-read isn't fought.
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages.length, scrollToBottom]);
 
   const handleReset = () => {
     reset();
@@ -32,7 +41,7 @@ export default function ChatInterface() {
           ↺ restart
         </button>
       </div>
-      <div className="chat-paper">
+      <div className="chat-paper" ref={containerRef} onScroll={onScroll}>
         <MessageList messages={messages} isLoading={isLoading} onPick={send} />
       </div>
       {error && (
