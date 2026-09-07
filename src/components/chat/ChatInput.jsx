@@ -25,13 +25,16 @@ export default function ChatInput({ onSend, disabled }) {
     <form className="chat-input" onSubmit={handleSubmit}>
       <div className="field">
         <span className="caret">▌</span>
+        {/* Never `disabled` while a reply streams: on mobile that blurs the
+            field and dismisses the keyboard mid-conversation. A submit during
+            streaming is already a no-op (handleSubmit + useChat re-entrancy
+            guard), so the field just stays focused and ready. */}
         <input
           ref={inputRef}
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={disabled ? 'pao-gpt is typing…' : "ask anything — try 'what are you building?'"}
-          disabled={disabled}
         />
       </div>
       <button type="submit" className="send" disabled={disabled || !input.trim()}>
