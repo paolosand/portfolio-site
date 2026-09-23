@@ -92,7 +92,8 @@
       "featured": true,
       "links": {
         "github": "https://github.com/paolosand/CHULOOPA",
-        "demo": null
+        "demo": null,
+        "paper": "https://zenodo.org/records/22282851"
       }
     },
     {

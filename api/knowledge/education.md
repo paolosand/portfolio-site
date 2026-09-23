@@ -8,7 +8,7 @@
 Accepted on the strength of a unique blend of CS/engineering background and an active music career. The program's focus: building tools and software that enhance human creativity.
 
 **Thesis project: CHULOOPA**
-A real-time intelligent drum looper for live performance. Three-process system (ChucK + Python + ChucK) communicating via OSC. KNN beatbox classifier personalizes kick/snare/hi-hat detection per performer. 4.8M-parameter Transformer variation engine generates 5 drum variations at different spice levels. Audio-driven spice system selects variations in real time. Built for Paolo's own live performances.
+A real-time intelligent drum looper for live performance. Three-process system (ChucK + Python + ChucK) communicating via OSC. KNN beatbox classifier personalizes kick/snare/hi-hat detection per performer. 4.8M-parameter Transformer variation engine generates 5 drum variations at different spice levels. Audio-driven spice system selects variations in real time. Built for Paolo's own live performances. The thesis paper, "Loops That Listen: A Voice-Controlled Dynamic Drum Looper with AI Variation," was published at AIMC 2026 (Berlin): https://zenodo.org/records/22282851
 
 **Key courses and tools:**
 Max/MSP, TouchDesigner, Arduino, p5.js, Ableton Live, musical information retrieval, librosa, ChucK. Discussion-based courses exploring the place of AI in creative spaces.

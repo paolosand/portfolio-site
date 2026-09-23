@@ -87,14 +87,14 @@ and the hardest question: how do you evaluate a variation? each variant has to k
             '~25 ms beatbox-to-playback latency · mfcc-13 knn trains in under a second',
             '92% of input hit positions preserved at low spice · 7.1 → 14.1 hits/bar across the spice axis',
             'full variation bank generated in 3–5 s, entirely offline, on consumer cpu',
-            'accepted to aimc 2026 · berlin · september 2026',
+            'published at aimc 2026 · berlin · september 2026',
           ],
         },
         {
           type: 'prose',
           heading: 'where it landed',
           body: `
-built solo over about a year as my mfa thesis at calarts, advised by ajay kapur and jake cheng. the paper — "loops that listen: a voice-controlled dynamic drum looper with ai variation" — was accepted to aimc 2026 in berlin. the system holds up live: i've performed with it several times already, and the loop finally pushes back.`,
+built solo over about a year as my mfa thesis at calarts, advised by ajay kapur and jake cheng. the paper — "loops that listen: a voice-controlled dynamic drum looper with ai variation" — was published at aimc 2026 in berlin. the system holds up live: i've performed with it several times already, and the loop finally pushes back.`,
         },
       ],
     },

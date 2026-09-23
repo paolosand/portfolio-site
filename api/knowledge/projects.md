@@ -3,8 +3,9 @@
 ## CHULOOPA — Real-Time Intelligent Drum Looper (MFA Thesis)
 **Technologies:** ChucK 1.5.x (ChuGL, STK, MiniAudicle), Python (torch, scikit-learn, librosa, python-osc), Gemini API (optional cloud backend), Ableton Live (via IAC Driver)
 **GitHub:** https://github.com/paolosand/CHULOOPA
+**Paper:** "Loops That Listen: A Voice-Controlled Dynamic Drum Looper with AI Variation" (Sandejas, Cheng, Kapur), published at AIMC 2026 (Berlin) — https://zenodo.org/records/22282851
 
-MFA thesis project. Real-time intelligent drum looper for live performance by beatboxers, solo musicians, and live loop performers.
+MFA thesis project. Real-time intelligent drum looper for live performance by beatboxers, solo musicians, and live loop performers. The accompanying paper is peer-reviewed and publicly published — safe to cite/link when a visitor asks about CHULOOPA, publications, or research.
 
 **Architecture (three processes, all communicating via OSC):**
 1. `chuloopa_main.ck` — ChucK: real-time audio playback, MIDI output, ChuGL visuals. Listens on OSC port 5000.

@@ -56,6 +56,9 @@ function ProjectCard({ p, idx, onOpen }) {
           {p.links.demo
             ? <a href={p.links.demo} target="_blank" rel="noopener noreferrer">↗ live demo</a>
             : <span className="disabled">— no demo —</span>}
+          {p.links.paper && (
+            <a href={p.links.paper} target="_blank" rel="noopener noreferrer">↗ paper</a>
+          )}
           {openable && (
             <a
               href={`#/work/${p.id}`}

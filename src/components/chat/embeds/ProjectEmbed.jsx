@@ -38,6 +38,9 @@ export default function ProjectEmbed({ id }) {
           {project.links.demo
             ? <a href={project.links.demo} target="_blank" rel="noopener noreferrer">↗ live demo</a>
             : <span className="disabled">— no demo —</span>}
+          {project.links.paper && (
+            <a href={project.links.paper} target="_blank" rel="noopener noreferrer">↗ paper</a>
+          )}
         </div>
       </div>
     </div>
