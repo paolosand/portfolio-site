@@ -1,14 +1,30 @@
 import portfolioData from '../data/portfolio.json';
 import { PROP_ART } from './shared/ascii.js';
 import AsciiPortrait from './AsciiPortrait.jsx';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { useTicker } from '../hooks/useTicker.js';
+import { tickerDurationSeconds } from './shared/tickerFallback.js';
 import './Hero.css';
 
 const TAGLINE = "Trained as a computer scientist. Wired by music. Building the kind of machines that listen back.";
 
 export default function Hero({ onChatClick }) {
   const { personal, valueProps } = portfolioData;
-  const { lines } = useTicker();
+  const { lines, feedKey } = useTicker();
+  const tickerRef = useRef(null);
+  const [tickDuration, setTickDuration] = useState(null);
+
+  // Strip holds two copies; one loop scrolls half its width. Re-measure on
+  // font load, feed swap and clock ticks so the speed stays constant.
+  useLayoutEffect(() => {
+    const el = tickerRef.current;
+    if (!el) return;
+    const measure = () => setTickDuration(tickerDurationSeconds(el.scrollWidth / 2));
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [feedKey]);
 
   return (
     <section className="hero reg-marks">
@@ -50,7 +66,12 @@ export default function Hero({ onChatClick }) {
       </div>
 
       <div className="ticker">
-        <div className="ticker-inner">
+        <div
+          className="ticker-inner"
+          key={feedKey}
+          ref={tickerRef}
+          style={tickDuration ? { '--tick-duration': `${tickDuration}s` } : undefined}
+        >
           {[0, 1].map((k) => (
             <span key={k} style={{ display: 'contents' }}>
               {lines.map((line) => (

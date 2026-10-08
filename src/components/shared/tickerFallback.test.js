@@ -1,6 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { TICKER_FALLBACK, formatStatusLine, buildTickerLines } from './tickerFallback.js';
+import {
+  TICKER_FALLBACK, TICKER_SPEED_PX_PER_SEC, formatStatusLine, buildTickerLines, tickerDurationSeconds, tickerFeedKey,
+} from './tickerFallback.js';
 
 const D = new Date('2026-06-16T09:14:00-07:00'); // 9:14am PT
 
@@ -28,4 +30,22 @@ test('buildTickerLines falls back when feed empty', () => {
   const lines = buildTickerLines({ lines: [] }, D);
   assert.equal(lines[0].label, 'los angeles');
   assert.equal(lines[1].id, TICKER_FALLBACK[0].id);
+});
+
+test('ticker duration scales with loop width so speed stays constant', () => {
+  const short = tickerDurationSeconds(3000);
+  const long = tickerDurationSeconds(4700);
+  assert.equal(3000 / short, TICKER_SPEED_PX_PER_SEC);
+  assert.equal(4700 / long, TICKER_SPEED_PX_PER_SEC);
+});
+
+test('ticker duration has a floor for unmeasured or tiny strips', () => {
+  assert.ok(tickerDurationSeconds(0) > 0);
+  assert.ok(tickerDurationSeconds(NaN) > 0);
+});
+
+test('feed key only changes when live lines replace the fallback', () => {
+  assert.equal(tickerFeedKey(null), tickerFeedKey({ lines: [] }));
+  const live = { lines: [{ id: 'gh:x', label: 'building', text: 'stuff', source: 'github' }] };
+  assert.notEqual(tickerFeedKey(live), tickerFeedKey(null));
 });

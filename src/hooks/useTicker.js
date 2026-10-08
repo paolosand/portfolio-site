@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { buildTickerLines } from '../components/shared/tickerFallback.js';
+import { buildTickerLines, tickerFeedKey } from '../components/shared/tickerFallback.js';
 
 export function useTicker() {
   const [feed, setFeed] = useState(null);
@@ -21,5 +21,5 @@ export function useTicker() {
     return () => clearInterval(id);
   }, []);
 
-  return { lines: buildTickerLines(feed, now) };
+  return { lines: buildTickerLines(feed, now), feedKey: tickerFeedKey(feed) };
 }

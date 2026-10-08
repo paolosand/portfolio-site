@@ -522,7 +522,11 @@ button {
   display: inline-flex;
   white-space: nowrap;
   padding: 10px 0;
-  animation: tick 60s linear infinite;
+  /* Duration is set from the measured width in Hero.jsx (constant speed).
+     Remounted when the live feed arrives, so it restarts and fades in. */
+  animation:
+    tick var(--tick-duration, 60s) linear infinite,
+    ticker-in 0.6s ease-out;
 }
 .ticker span {
   margin: 0 28px;
@@ -531,6 +535,9 @@ button {
   align-items: center;
 }
 .ticker .sep { color: var(--c-pink); }
+@keyframes ticker-in {
+  from { opacity: 0; }
+}
 @keyframes tick {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
