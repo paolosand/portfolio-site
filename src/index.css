@@ -514,6 +514,9 @@ button {
   font-size: 12px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+  /* iOS Safari autosizing inflates the longer live-feed items unevenly. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 .ticker-inner {
   display: inline-flex;
