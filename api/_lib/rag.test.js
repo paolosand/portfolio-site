@@ -68,7 +68,38 @@ test('notifyUsage: passes metadata to the hook', () => {
   assert.deepEqual(seen, [{ promptTokenCount: 1 }]);
 });
 
-test('notifyUsage: no hook is fine; a throwing hook is swallowed', () => {
-  notifyUsage(undefined, {});
-  notifyUsage(() => { throw new Error('boom'); }, {});
+// Runs fn with console.error stubbed; returns the captured calls.
+async function captureErrors(fn) {
+  const calls = [];
+  const orig = console.error;
+  console.error = (...a) => calls.push(a);
+  try { await fn(); } finally { console.error = orig; }
+  return calls;
+}
+
+test('notifyUsage: no hook is a no-op', async () => {
+  const calls = await captureErrors(() => notifyUsage(undefined, {}));
+  assert.equal(calls.length, 0);
+});
+
+test('notifyUsage: a throwing hook is swallowed and logged once', async () => {
+  const calls = await captureErrors(() => notifyUsage(() => { throw new Error('boom'); }, {}));
+  assert.equal(calls.length, 1);
+});
+
+test('notifyUsage: a rejecting async hook is caught and logged, no unhandled rejection', async () => {
+  const unhandled = [];
+  const onUnhandled = (e) => unhandled.push(e);
+  process.on('unhandledRejection', onUnhandled);
+  try {
+    const calls = await captureErrors(async () => {
+      const ret = notifyUsage(async () => { throw new Error('async boom'); }, {});
+      assert.equal(ret, undefined); // stays synchronous for callers
+      await new Promise((r) => setImmediate(r));
+    });
+    assert.equal(calls.length, 1);
+  } finally {
+    process.off('unhandledRejection', onUnhandled);
+  }
+  assert.equal(unhandled.length, 0);
 });

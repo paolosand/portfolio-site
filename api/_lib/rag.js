@@ -69,12 +69,16 @@ export function usageDetailsFrom(usageMetadata) {
   return { input, output, total: u.totalTokenCount ?? input + output };
 }
 
-// A buggy spend hook must never cost the visitor their reply.
+// A buggy spend hook must never cost the visitor their reply. Async hooks are
+// fire-and-forget: their rejection is caught here so it can't go unhandled.
+// Exported for tests.
 export function notifyUsage(onUsage, usageMetadata) {
+  const log = (err) => console.error('[rag] onUsage hook failed', err);
   try {
-    onUsage?.(usageMetadata);
+    const r = onUsage?.(usageMetadata);
+    if (r && typeof r.then === 'function') r.then(undefined, log);
   } catch (err) {
-    console.error('[rag] onUsage hook failed', err);
+    log(err);
   }
 }
 
