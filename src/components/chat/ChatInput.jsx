@@ -35,6 +35,9 @@ export default function ChatInput({ onSend, disabled, lockedNote }) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           disabled={lockedNote ? true : undefined}
+          // A placeholder alone isn't a reliable accessible name; expose the note too.
+          title={lockedNote || undefined}
+          aria-label={lockedNote || undefined}
           placeholder={lockedNote ? lockedNote : disabled ? 'pao-gpt is typing…' : "ask anything — try 'what are you building?'"}
         />
       </div>

@@ -148,7 +148,7 @@ The public `/api/chat` endpoint is guarded against abuse and runaway Gemini spen
 | 75% to 100% | 10 |
 | 100% or more | monthly ceiling (no chat) |
 
-At a limit the visitor gets a friendly out-of-office reply (picked at random from the pool in `api/_lib/limitMessages.js`) with a hazard-tape label, an email card and a locked input. No Gemini call is made. The per-minute limit is different: it returns a plain 429 notice.
+At a limit the visitor gets a friendly out-of-office reply (picked at random from the pool in `api/_lib/limitMessages.js`) with a hazard-tape label, an email card and a locked input. No Gemini call is made. The per-minute limit is different: it returns a plain 429 notice. If Gemini itself reports the billing account as exhausted (402, "prepayment credits are depleted"), the visitor gets the same monthly out-of-office reply instead of an error.
 
 Environment variables (set in Vercel):
 
@@ -160,14 +160,15 @@ UPSTASH_REDIS_REST_TOKEN=...
 # KV_REST_API_URL=...
 # KV_REST_API_TOKEN=...
 
-# Random secret used to hash IPs; raw IPs are never stored
+# Random secret used to hash IPs; raw IPs are never stored.
+# Changing it resets every per-IP counter (old hashes no longer match).
 LIMITS_IP_SALT=some_long_random_string
 
 # Optional override of the monthly trip budget (default 15)
 MONTHLY_TRIP_BUDGET_USD=15
 ```
 
-If Redis is missing, errors or hangs (400ms deadline), the chat stays up: it falls back to in-memory per-minute and per-chat limits plus the size caps. With no Redis env at all (local dev), the in-memory store is used, per process.
+If Redis is missing, misconfigured, errors or hangs (400ms deadline), the chat stays up: it falls back to an in-memory store that runs the same rules, per-minute, per-IP daily, per-chat, site-daily and monthly. Spend is mirrored into it on every reply, so the ceilings still hold during an outage, but only approximately: each warm instance counts its own traffic and spend. With no Redis env at all (local dev), the in-memory store is used, per process.
 
 Tune the numbers in `api/_lib/limits-config.js` and the copy in `api/_lib/limitMessages.js`. Run the tests with `npm test`.
 
