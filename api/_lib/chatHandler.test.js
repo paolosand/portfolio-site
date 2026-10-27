@@ -212,6 +212,45 @@ test('recordSpend rejecting never fails the reply', async () => {
   assert.equal(events(res).at(-1), '[DONE]');
 });
 
+function assertMonthlyReply(res) {
+  assert.equal(res.statusCode, 200);
+  assert.equal(res.headers['content-type'], 'text/event-stream');
+  const evs = events(res);
+  assert.ok(evs[0].type === 'token' && evs[0].text.length > 0);
+  const limitIdx = evs.findIndex((e) => e.type === 'limit');
+  assert.deepEqual(evs[limitIdx], { type: 'limit', kind: 'monthly', label: 'out of office · talkative this month' });
+  assert.deepEqual(evs[limitIdx + 1], { type: 'embeds', blocks: [{ type: 'contact' }] });
+  assert.equal(evs[limitIdx + 2], '[DONE]');
+  assert.equal(evs.length, limitIdx + 3);
+  assert.ok(!evs.some((e) => e.type === 'error'));
+  assert.ok(res.ended);
+}
+
+test('Gemini billing exhaustion (402) gets the monthly out-of-office reply, not a 500', async () => {
+  for (const err of [
+    Object.assign(new Error('{"error":{"code":402,"status":"RESOURCE_EXHAUSTED"}}'), { status: 402 }),
+    Object.assign(new Error('payment required'), { code: 402 }),
+    new Error('RESOURCE_EXHAUSTED: Your Prepayment Credits Are Depleted. Please top up.'),
+  ]) {
+    const generate = spyGenerate(async () => { throw err; });
+    const { handler } = build({ generate });
+    const res = fakeRes();
+    const logged = await quietly(() => handler(fakeReq({ query: 'hi' }), res));
+    assertMonthlyReply(res);
+    assert.equal(logged.length, 1);
+    assert.ok(!logged.some((args) => args[0] === 'Chat handler error:'));
+  }
+});
+
+test('a generic 429 from generate is not mapped to the monthly reply', async () => {
+  const generate = spyGenerate(async () => { throw Object.assign(new Error('RESOURCE_EXHAUSTED quota'), { status: 429 }); });
+  const { handler } = build({ generate });
+  const res = fakeRes();
+  await quietly(() => handler(fakeReq({ query: 'hi' }), res));
+  assert.equal(res.statusCode, 500);
+  assert.deepEqual(res.body, { error: 'Internal server error' });
+});
+
 test('generate rejecting still yields the existing 500 JSON', async () => {
   const generate = spyGenerate(async () => { throw new Error('gemini down'); });
   const { handler } = build({ generate });

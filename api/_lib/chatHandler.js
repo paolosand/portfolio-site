@@ -54,6 +54,24 @@ function limitCounts(verdict) {
   return { used: verdict.used, cap: verdict.cap };
 }
 
+// Gemini out of prepaid credit: 402 RESOURCE_EXHAUSTED "Your prepayment credits are
+// depleted". A generic 429 is NOT this (it can be a per-minute quota blip).
+function isBillingExhausted(err) {
+  if (err?.status === 402 || err?.code === 402) return true;
+  return /prepayment credits are depleted/i.test(String(err?.message ?? ''));
+}
+
+// Out-of-office reply on an already-SSE response: text, limit pill, contact card, done.
+function sendLimitReply(res, { kind, used, cap, reason }) {
+  const text = pickLimitMessage(kind, cap);
+  streamText(res, text);
+  sendEvent(res, { type: 'limit', kind, label: limitLabel(kind, used, cap) });
+  sendEvent(res, { type: 'embeds', blocks: [{ type: 'contact' }] });
+  updateActiveObservation({ output: text, metadata: { outcome: 'limited', reason } });
+  res.write('data: [DONE]\n\n');
+  res.end();
+}
+
 export function createHandler({ generate, limiter, salt = '', projectIds = [], workIds = [] }) {
   return async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -139,14 +157,7 @@ export function createHandler({ generate, limiter, salt = '', projectIds = [], w
 
             const kind = verdict?.ok === false ? limitKind(verdict.reason) : null;
             if (kind) {
-              const { used, cap } = limitCounts(verdict);
-              const text = pickLimitMessage(kind, cap);
-              streamText(res, text);
-              sendEvent(res, { type: 'limit', kind, label: limitLabel(kind, used, cap) });
-              sendEvent(res, { type: 'embeds', blocks: [{ type: 'contact' }] });
-              updateActiveObservation({ output: text, metadata: { outcome: 'limited', reason: verdict.reason } });
-              res.write('data: [DONE]\n\n');
-              res.end();
+              sendLimitReply(res, { kind, ...limitCounts(verdict), reason: verdict.reason });
               return;
             }
 
@@ -168,7 +179,15 @@ export function createHandler({ generate, limiter, salt = '', projectIds = [], w
                 .catch((err) => console.error('[chat] recordSpend failed:', err?.message ?? err));
             };
 
-            const blocks = await generate(query, history, { projectIds, workIds, onUsage });
+            let blocks;
+            try {
+              blocks = await generate(query, history, { projectIds, workIds, onUsage });
+            } catch (err) {
+              if (!isBillingExhausted(err)) throw err; // everything else keeps the 500 path
+              console.error(`[chat] Gemini billing exhausted (${err?.status ?? err?.code ?? 'message match'}), sending the monthly reply`);
+              sendLimitReply(res, { kind: 'monthly', used: 0, cap: 0, reason: 'billing' });
+              return;
+            }
             // Order matters: scrub client names across the WHOLE response first (a hit
             // replaces everything with a uniform refusal, so no per-term signal escapes),
             // then apply the per-block PII redaction to whatever survives.
