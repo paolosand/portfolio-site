@@ -155,6 +155,29 @@ test('20 concurrent admits from one IP: exactly 6 succeed', async () => {
   assert.ok(results.filter((r) => !r.ok).every((r) => r.reason === 'rate'));
 });
 
+test('hung store: times out into the fallback; recordSpend does not hang', async () => {
+  const hang = () => new Promise(() => {});
+  const clock = { t: Date.parse('2026-10-15T12:00:00Z') };
+  const limiter = createLimiter({
+    store: { incr: hang, incrBy: hang, get: hang },
+    fallback: createMemoryStore(() => clock.t),
+    limits,
+    now: () => new Date(clock.t),
+    storeTimeoutMs: 20,
+  });
+  const originalError = console.error;
+  console.error = () => {};
+  try {
+    for (let i = 0; i < 6; i++) {
+      assert.deepEqual(await limiter.admit({ ipHash: 'ip', sessionKey: 's' }), { ok: true });
+    }
+    assert.equal((await limiter.admit({ ipHash: 'ip', sessionKey: 's' })).reason, 'rate');
+    await assert.doesNotReject(limiter.recordSpend({ ipHash: 'ip', sessionKey: 's', costUsd: 1 }));
+  } finally {
+    console.error = originalError;
+  }
+});
+
 test('failing store: fail open, fallback enforces minute + chat rules, recordSpend never throws', async () => {
   const boom = async () => { throw new Error('boom'); };
   const { limiter } = setup(undefined, { store: { incr: boom, incrBy: boom, get: boom } });

@@ -8,6 +8,21 @@ const MINUTE_TTL = 120;
 const DAY_TTL = 2 * DAY;
 const MONTH_TTL = 35 * DAY;
 
+// A hung store call must fail like an erroring one, not hold the request open.
+// The timer is always cleared so nothing keeps the process alive; a late
+// rejection from the losing branch is already handled by Promise.race.
+async function withDeadline(promise, ms) {
+  let timer;
+  const deadline = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`store timed out after ${ms}ms`)), ms);
+  });
+  try {
+    return await Promise.race([promise, deadline]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 const secondsUntil = (ms, from) => Math.max(1, Math.ceil((ms - from) / 1000));
 
 function buckets(d) {
@@ -29,6 +44,7 @@ export function createLimiter({
   fallback = createMemoryStore(),
   limits = LIMITS,
   now = () => new Date(),
+  storeTimeoutMs = 400,
 }) {
   const keys = (b, ipHash, sessionKey) => ({
     minute: `rl:ip:${ipHash}:m:${b.minute}`,
@@ -79,7 +95,7 @@ export function createLimiter({
     let b;
     try {
       b = buckets(now());
-      return await decide(b, ipHash, sessionKey);
+      return await withDeadline(decide(b, ipHash, sessionKey), storeTimeoutMs);
     } catch (err) {
       console.error('[limiter] store failed, using in-memory fallback:', err?.message ?? err);
       try {
@@ -96,10 +112,10 @@ export function createLimiter({
       const micros = Math.round(Number(costUsd) * 1e6);
       if (!(micros > 0)) return;
       const k = spendKeys(buckets(now()));
-      await Promise.all([
+      await withDeadline(Promise.all([
         store.incrBy(k.spendDay, micros, DAY_TTL),
         store.incrBy(k.spendMonth, micros, MONTH_TTL),
-      ]);
+      ]), storeTimeoutMs);
     } catch (err) {
       console.error('[limiter] recordSpend failed:', err?.message ?? err);
     }
