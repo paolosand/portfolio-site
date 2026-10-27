@@ -23,6 +23,11 @@ async function withDeadline(promise, ms) {
   }
 }
 
+// Upstash appends ", command was: [...]" to its messages, and our keys hold hashed IPs.
+// Log the error name and the part before that only.
+const errSummary = (err) =>
+  `${err?.name ?? 'Error'}: ${String(err?.message ?? err).split(', command was')[0]}`;
+
 const secondsUntil = (ms, from) => Math.max(1, Math.ceil((ms - from) / 1000));
 
 function buckets(d) {
@@ -85,7 +90,7 @@ export function createLimiter({
       b = buckets(now());
       return await withDeadline(decide(store, b, ipHash, sessionKey), storeTimeoutMs);
     } catch (err) {
-      console.error('[limiter] store failed, using in-memory fallback:', err?.message ?? err);
+      console.error('[limiter] store failed, using in-memory fallback:', errSummary(err));
       try {
         // Same rules against the fallback. Its counters (and the spend recordSpend
         // mirrors into it) are per-instance, so these ceilings are approximate: each
@@ -101,7 +106,7 @@ export function createLimiter({
   async function recordSpend({ costUsd }) {
     try {
       const micros = Math.round(Number(costUsd) * 1e6);
-      if (!(micros > 0)) return;
+      if (!(Number.isSafeInteger(micros) && micros > 0)) return; // also rejects Infinity/huge
       const k = spendKeys(buckets(now()));
       // Mirror into the fallback first, so an outage still sees this instance's spend.
       try {
@@ -110,14 +115,14 @@ export function createLimiter({
           fallback.incrBy(k.spendMonth, micros, MONTH_TTL),
         ]);
       } catch (err) {
-        console.error('[limiter] fallback recordSpend failed:', err?.message ?? err);
+        console.error('[limiter] fallback recordSpend failed:', errSummary(err));
       }
       await withDeadline(Promise.all([
         store.incrBy(k.spendDay, micros, DAY_TTL),
         store.incrBy(k.spendMonth, micros, MONTH_TTL),
       ]), storeTimeoutMs);
     } catch (err) {
-      console.error('[limiter] recordSpend failed:', err?.message ?? err);
+      console.error('[limiter] recordSpend failed:', errSummary(err));
     }
   }
 

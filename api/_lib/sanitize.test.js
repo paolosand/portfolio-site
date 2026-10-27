@@ -46,6 +46,15 @@ test('sanitizeHistory: truncates each message to 4000 chars', () => {
   assert.equal(out.content.length, 4000);
 });
 
+test('sanitizeHistory: a 4000-char cut through a surrogate pair ends on a whole character', () => {
+  const [out] = sanitizeHistory([msg('user', 'a'.repeat(3999) + '😀' + 'tail')]);
+  assert.equal(out.content, 'a'.repeat(3999));
+  assert.ok(!/[\uD800-\uDBFF]$/.test(out.content));
+  // An emoji that fits whole is kept; ordinary strings are unchanged.
+  assert.equal(sanitizeHistory([msg('user', 'a'.repeat(3998) + '😀')])[0].content, 'a'.repeat(3998) + '😀');
+  assert.equal(sanitizeHistory([msg('user', 'hello 😀')])[0].content, 'hello 😀');
+});
+
 test('sanitizeHistory: total <= 12000, oldest dropped first', () => {
   const input = ['1', '2', '3', '4', '5'].map((c) => msg('user', c.repeat(4000)));
   const out = sanitizeHistory(input);

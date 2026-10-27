@@ -146,6 +146,39 @@ test('spend is stored as integer micro-dollars', async () => {
   for (const a of amounts) assert.equal(a, 1235);
 });
 
+test('recordSpend with a non-finite or unsafe cost records nothing and does not throw', async () => {
+  const inner = createMemoryStore(() => 0);
+  const amounts = [];
+  const store = { ...inner, incrBy: (k, a, ttl) => { amounts.push(a); return inner.incrBy(k, a, ttl); } };
+  const { limiter } = setup(undefined, { store });
+  for (const costUsd of [Infinity, -Infinity, NaN, 1e300]) {
+    await assert.doesNotReject(limiter.recordSpend({ ipHash: 'x', sessionKey: 'x', costUsd }));
+  }
+  assert.deepEqual(amounts, []);
+  assert.deepEqual(await limiter.admit({ ipHash: 'ip', sessionKey: 's' }), { ok: true });
+});
+
+test('store failure logs keep the error name and drop the Upstash command/key detail', async () => {
+  const err = Object.assign(new Error('ERR max requests limit exceeded, command was: ["incr","rl:ip:abc123:m:2026"]'), { name: 'UpstashError' });
+  const boom = async () => { throw err; };
+  const { limiter } = setup(undefined, { store: { incr: boom, incrBy: boom, get: boom } });
+  const original = console.error;
+  const logged = [];
+  console.error = (...args) => logged.push(args.join(' '));
+  try {
+    await limiter.admit({ ipHash: 'abc123', sessionKey: 's' });
+    await limiter.recordSpend({ ipHash: 'abc123', sessionKey: 's', costUsd: 1 });
+  } finally {
+    console.error = original;
+  }
+  assert.equal(logged.length, 2);
+  for (const line of logged) {
+    assert.ok(line.includes('UpstashError'), line);
+    assert.ok(line.includes('ERR max requests limit exceeded'), line);
+    assert.ok(!line.includes('command was') && !line.includes('abc123'), line);
+  }
+});
+
 test('20 concurrent admits from one IP: exactly 6 succeed', async () => {
   const { limiter } = setup();
   const results = await Promise.all(

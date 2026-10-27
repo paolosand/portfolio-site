@@ -20,6 +20,13 @@ function getProjectIds() {
   }
 }
 
+// Used as-is: trimming here would change every hash (and reset the per-IP counters).
+const salt = process.env.LIMITS_IP_SALT ?? '';
+// Loud, not fatal: an unsalted IP hash is still a hash, and the chat must stay up.
+if (process.env.VERCEL_ENV === 'production' && !salt.trim()) {
+  console.error('[chat] LIMITS_IP_SALT is not set in production: IP hashes are unsalted. Set it in Vercel env.');
+}
+
 const projectIds = getProjectIds();
 const workIds = []; // use buildSystemPrompt defaults
 
@@ -27,7 +34,7 @@ export default createHandler({
   generate,
   // No Redis env (local dev): an in-memory store keeps the limits working per instance.
   limiter: createLimiter({ store: getDefaultStore() ?? createMemoryStore() }),
-  salt: process.env.LIMITS_IP_SALT ?? '',
+  salt,
   projectIds,
   workIds,
 });

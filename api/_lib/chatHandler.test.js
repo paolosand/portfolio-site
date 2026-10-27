@@ -1,7 +1,13 @@
-import { test } from 'node:test';
+import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createHandler } from './chatHandler.js';
 import { costUsd } from './spend.js';
+
+// No OTel SDK is registered in tests, so every updateActiveObservation makes Langfuse
+// warn "No active OTEL span in context". Silence console.warn for this file only.
+const originalWarn = console.warn;
+before(() => { console.warn = () => {}; });
+after(() => { console.warn = originalWarn; });
 
 const RAW_IP = '203.0.113.7';
 const SESSION_ID = '123e4567-e89b-42d3-a456-426614174000';
@@ -171,6 +177,29 @@ test('monthly limit uses the out-of-office label', async () => {
   const limit = events(res).find((e) => e.type === 'limit');
   assert.deepEqual(limit, { type: 'limit', kind: 'monthly', label: 'out of office · talkative this month' });
   assert.equal(events(res).at(-1), '[DONE]');
+});
+
+test('ip-daily limit shows the per-IP cap as reached, never used > cap', async () => {
+  const limiter = spyLimiter({ ok: false, reason: 'ip-daily', retryAfterSeconds: 1000 });
+  const { handler, generate } = build({ limiter });
+  const res = fakeRes();
+  await handler(fakeReq({ query: 'hi' }), res);
+
+  assert.equal(generate.calls.length, 0);
+  assert.equal(res.statusCode, 200);
+  const limit = events(res).find((e) => e.type === 'limit');
+  assert.deepEqual(limit, { type: 'limit', kind: 'session', label: 'chat limit · 150 / 150' });
+  assert.equal(events(res).at(-1), '[DONE]');
+});
+
+test('site-daily limit uses the out-of-office (monthly) label', async () => {
+  const limiter = spyLimiter({ ok: false, reason: 'site-daily', retryAfterSeconds: 1000 });
+  const { handler, generate } = build({ limiter });
+  const res = fakeRes();
+  await handler(fakeReq({ query: 'hi' }), res);
+
+  assert.equal(generate.calls.length, 0);
+  assertMonthlyReply(res);
 });
 
 test('rate limit gives a 429 with Retry-After and a JSON body, no SSE headers', async () => {

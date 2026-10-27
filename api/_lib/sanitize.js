@@ -15,7 +15,8 @@ export function sanitizeHistory(history, limits = LIMITS.history) {
     )
     .slice(-limits.lastN)
     // Rebuild so extra client-supplied fields never pass through.
-    .map((m) => ({ role: m.role, content: m.content.slice(0, limits.perMessageChars) }));
+    // A cut through a surrogate pair leaves a lone high surrogate, which Gemini 400s on.
+    .map((m) => ({ role: m.role, content: m.content.slice(0, limits.perMessageChars).replace(/[\uD800-\uDBFF]$/, '') }));
 
   let total = kept.reduce((n, m) => n + m.content.length, 0);
   while (kept.length > 0 && total > limits.totalChars) {
