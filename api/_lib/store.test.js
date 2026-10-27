@@ -54,6 +54,42 @@ test('getDefaultStore builds a store from either env pair without network', () =
   }
 });
 
+test('getDefaultStore trims a trailing newline from the URL and token', () => {
+  const s = getDefaultStore({ UPSTASH_REDIS_REST_URL: 'https://x.upstash.io\n', UPSTASH_REDIS_REST_TOKEN: ' t\n' });
+  assert.notEqual(s, null);
+  for (const m of ['incr', 'incrBy', 'get']) assert.equal(typeof s[m], 'function');
+});
+
+test('getDefaultStore treats whitespace-only values as unset', () => {
+  assert.equal(getDefaultStore({ UPSTASH_REDIS_REST_URL: '  \n', UPSTASH_REDIS_REST_TOKEN: 't' }), null);
+  assert.equal(getDefaultStore({ KV_REST_API_URL: 'https://x.upstash.io', KV_REST_API_TOKEN: ' ' }), null);
+  // A blank half of one family never borrows from the other.
+  assert.equal(
+    getDefaultStore({ UPSTASH_REDIS_REST_URL: 'https://x.upstash.io', UPSTASH_REDIS_REST_TOKEN: ' ', KV_REST_API_URL: ' ', KV_REST_API_TOKEN: 't' }),
+    null,
+  );
+});
+
+test('getDefaultStore returns null and logs once (without the token) on an invalid URL', () => {
+  const original = console.error;
+  const logged = [];
+  console.error = (...args) => logged.push(args.join(' '));
+  try {
+    assert.equal(getDefaultStore({ UPSTASH_REDIS_REST_URL: 'not a url', UPSTASH_REDIS_REST_TOKEN: 'sekrit-token' }), null);
+  } finally {
+    console.error = original;
+  }
+  assert.equal(logged.length, 1);
+  assert.ok(!logged[0].includes('sekrit-token'));
+});
+
+test('redis store: the Upstash client is built with retry disabled', () => {
+  const configs = [];
+  class FakeRedis { constructor(config) { configs.push(config); } }
+  createRedisStore({ url: 'https://x.upstash.io', token: 't', Client: FakeRedis });
+  assert.deepEqual(configs, [{ url: 'https://x.upstash.io', token: 't', retry: false }]);
+});
+
 // Same contract for every store implementation.
 function contract(name, make) {
   test(`${name}: incr counts up and does not extend the TTL`, async () => {

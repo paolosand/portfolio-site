@@ -52,8 +52,10 @@ export function createMemoryStore(now = () => Date.now()) {
 
 // EXPIRE ... NX in the same pipeline keeps the window fixed: the TTL is applied only
 // when the key has none, i.e. on creation. Errors propagate; the limiter fails open.
-// `client` is injectable so tests can run without a network.
-export function createRedisStore({ url, token, client = new Redis({ url, token }) }) {
+// `client` (or the `Client` class) is injectable so tests can run without a network.
+// retry: false because the limiter has its own deadline and fallback; the SDK's default
+// 5 retries with backoff would keep running in the background after that deadline.
+export function createRedisStore({ url, token, Client = Redis, client = new Client({ url, token, retry: false }) }) {
   const bump = async (key, amount, ttlSeconds) => {
     const p = client.pipeline();
     (amount === 1 ? p.incr(key) : p.incrby(key, amount)).expire(key, ttlSeconds, 'NX');
@@ -69,13 +71,22 @@ export function createRedisStore({ url, token, client = new Redis({ url, token }
 }
 
 // Env names differ between a manual Upstash setup and the Vercel Marketplace (KV_*).
+// Called at module load, so it must never throw: a bad value means the in-memory store.
 export function getDefaultStore(env = process.env) {
+  // `echo ... | vercel env add` leaves a trailing newline, which the SDK rejects.
+  const clean = (v) => (typeof v === 'string' ? v.trim() : '');
   // Take a complete pair; never mix a URL from one family with a token from the other.
   const pair = [
     [env.UPSTASH_REDIS_REST_URL, env.UPSTASH_REDIS_REST_TOKEN],
     [env.KV_REST_API_URL, env.KV_REST_API_TOKEN],
-  ].find(([u, t]) => u && t);
+  ].map(([u, t]) => [clean(u), clean(t)]).find(([u, t]) => u && t);
   if (!pair) return null;
   const [url, token] = pair;
-  return createRedisStore({ url, token });
+  try {
+    return createRedisStore({ url, token });
+  } catch (err) {
+    // Name only: the token must never reach the logs.
+    console.error(`[store] Redis config rejected (${err?.name ?? 'Error'}), using the in-memory store`);
+    return null;
+  }
 }
