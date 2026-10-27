@@ -1,4 +1,4 @@
-export async function sendMessageStream(message, history = [], { sessionId, onToken, onEmbeds, onDone, onError } = {}) {
+export async function sendMessageStream(message, history = [], { sessionId, onToken, onEmbeds, onDone, onError, onLimit, onRateLimit } = {}) {
   let response;
   try {
     response = await fetch('/api/chat', {
@@ -12,6 +12,18 @@ export async function sendMessageStream(message, history = [], { sessionId, onTo
     });
   } catch {
     onError?.('Chat is unavailable — check your connection and try again');
+    return;
+  }
+
+  // Rate limiting is expected, not a failure: route it away from onError.
+  if (response.status === 429) {
+    let body = null;
+    try { body = await response.json(); } catch { /* non-JSON body, use defaults */ }
+    const headerSeconds = Number(response.headers.get('Retry-After'));
+    onRateLimit?.({
+      message: body?.message || 'easy there — try again in a few seconds',
+      retryAfterSeconds: body?.retryAfterSeconds ?? (headerSeconds > 0 ? headerSeconds : 5),
+    });
     return;
   }
 
@@ -45,6 +57,7 @@ export async function sendMessageStream(message, history = [], { sessionId, onTo
           const event = JSON.parse(data);
           if (event.type === 'token') onToken?.(event.text);
           else if (event.type === 'embeds') onEmbeds?.(event.blocks);
+          else if (event.type === 'limit') onLimit?.({ kind: event.kind, label: event.label });
           else if (event.type === 'error') onError?.(event.message);
         } catch { /* malformed event, skip */ }
       }
