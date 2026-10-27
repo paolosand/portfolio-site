@@ -133,6 +133,44 @@ RATE_LIMIT_PER_MINUTE=10
 ENABLE_CONVERSATION_STORAGE=true
 ```
 
+### Chat limits
+
+The public `/api/chat` endpoint is guarded against abuse and runaway Gemini spend. Two layers:
+
+- **Always on:** `query` is capped at 2000 characters; `history` is trimmed to the last 5 messages (4000 chars each, 12000 total); each IP gets 6 requests per minute and 150 per day; the whole site gets a $2/day spend ceiling.
+- **Spend-aware:** each chat has a message cap (per 24h) that shrinks as this month's Gemini spend grows against a trip budget (default $15, kept below the $20 prepaid reload cap). At the budget, the monthly ceiling applies and chat stops until next month.
+
+| Month's spend (fraction of budget) | Messages per chat |
+| --- | --- |
+| under 25% | 50 |
+| 25% to 50% | 30 |
+| 50% to 75% | 20 |
+| 75% to 100% | 10 |
+| 100% or more | monthly ceiling (no chat) |
+
+At a limit the visitor gets a friendly out-of-office reply (picked at random from the pool in `api/_lib/limitMessages.js`) with a hazard-tape label, an email card and a locked input. No Gemini call is made. The per-minute limit is different: it returns a plain 429 notice.
+
+Environment variables (set in Vercel):
+
+```bash
+# Upstash Redis for shared counters: either pair works (the Vercel Marketplace
+# integration injects the KV_* pair)
+UPSTASH_REDIS_REST_URL=...
+UPSTASH_REDIS_REST_TOKEN=...
+# KV_REST_API_URL=...
+# KV_REST_API_TOKEN=...
+
+# Random secret used to hash IPs; raw IPs are never stored
+LIMITS_IP_SALT=some_long_random_string
+
+# Optional override of the monthly trip budget (default 15)
+MONTHLY_TRIP_BUDGET_USD=15
+```
+
+If Redis is missing, errors or hangs (400ms deadline), the chat stays up: it falls back to in-memory per-minute and per-chat limits plus the size caps. With no Redis env at all (local dev), the in-memory store is used, per process.
+
+Tune the numbers in `api/_lib/limits-config.js` and the copy in `api/_lib/limitMessages.js`. Run the tests with `npm test`.
+
 ### Architecture
 
 ```
