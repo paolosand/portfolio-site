@@ -28,3 +28,24 @@
   opacity: 0.4;
   cursor: not-allowed;
 }
+
+/* Out-of-office reply: hazard-tape strip across the top of the bubble. */
+.msg .bubble.limit-bubble {
+  padding: 0;
+  overflow: hidden;
+}
+
+.limit-strip {
+  padding: 5px 12px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--paper);
+  background: repeating-linear-gradient(135deg, var(--ink) 0 8px, var(--ink-2) 8px 16px);
+}
+
+.limit-body {
+  padding: 10px 12px;
+}

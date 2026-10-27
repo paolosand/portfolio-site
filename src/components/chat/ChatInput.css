@@ -1,1 +1,10 @@
-/* styles in src/index.css */
+/* base styles in src/index.css */
+
+/* Locked after a limit reply: dashed, greyed, note shown as the placeholder. */
+.chat-input.is-locked .field {
+  border-style: dashed;
+  background: var(--paper-2);
+}
+.chat-input.is-locked .field .caret { color: var(--ink-faint); }
+.chat-input.is-locked input { cursor: not-allowed; min-width: 0; text-overflow: ellipsis; }
+.chat-input.is-locked input::placeholder { color: var(--ink-mute); opacity: 1; }

@@ -1,1 +1,21 @@
-/* styles in src/index.css */
+/* base styles in src/index.css */
+
+/* Neutral, transient note (e.g. rate limited). Deliberately not pink: it is
+   not an error, there is nothing to retry. */
+.chat-notice {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 8px 18px;
+  border-top: 1.5px dashed var(--ink);
+  background: var(--paper-2);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+}
+.chat-notice-mark {
+  font-weight: 700;
+  color: var(--ink-mute);
+}
+.chat-notice-msg { flex: 1; min-width: 0; overflow-wrap: break-word; }

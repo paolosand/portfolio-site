@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import './ChatInput.css';
 
-export default function ChatInput({ onSend, disabled }) {
+export default function ChatInput({ onSend, disabled, lockedNote }) {
   const [input, setInput] = useState('');
   const inputRef = useRef(null);
 
@@ -16,13 +16,13 @@ export default function ChatInput({ onSend, disabled }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const v = input.trim();
-    if (!v || disabled) return;
+    if (!v || disabled || lockedNote) return;
     onSend(v);
     setInput('');
   };
 
   return (
-    <form className="chat-input" onSubmit={handleSubmit}>
+    <form className={`chat-input${lockedNote ? ' is-locked' : ''}`} onSubmit={handleSubmit}>
       <div className="field">
         <span className="caret">▌</span>
         {/* Never `disabled` while a reply streams: on mobile that blurs the
@@ -34,10 +34,11 @@ export default function ChatInput({ onSend, disabled }) {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder={disabled ? 'pao-gpt is typing…' : "ask anything — try 'what are you building?'"}
+          disabled={lockedNote ? true : undefined}
+          placeholder={lockedNote ? lockedNote : disabled ? 'pao-gpt is typing…' : "ask anything — try 'what are you building?'"}
         />
       </div>
-      <button type="submit" className="send" disabled={disabled || !input.trim()}>
+      <button type="submit" className="send" disabled={disabled || !!lockedNote || !input.trim()}>
         send <span className="send-glyph">↵</span>
       </button>
     </form>

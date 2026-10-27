@@ -3,10 +3,11 @@ import { useChat } from '../../hooks/useChat';
 import { useStickToBottom } from '../../hooks/useStickToBottom';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
+import { getLimitState } from './limitState';
 import './ChatInterface.css';
 
 export default function ChatInterface() {
-  const { messages, isLoading, error, send, greet, retry, clearError, reset } = useChat();
+  const { messages, isLoading, error, notice, send, greet, retry, clearError, reset } = useChat();
   const { containerRef, onScroll, scrollToBottom } = useStickToBottom();
 
   useEffect(() => {
@@ -53,7 +54,13 @@ export default function ChatInterface() {
           </div>
         </div>
       )}
-      <ChatInput onSend={send} disabled={isLoading} />
+      {notice && !error && (
+        <div className="chat-notice" role="status">
+          <span className="chat-notice-mark" aria-hidden="true">…</span>
+          <span className="chat-notice-msg">{notice}</span>
+        </div>
+      )}
+      <ChatInput onSend={send} disabled={isLoading} lockedNote={getLimitState(messages)?.inputNote} />
     </div>
   );
 }

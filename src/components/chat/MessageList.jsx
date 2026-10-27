@@ -76,16 +76,23 @@ export default function MessageList({ messages, isLoading, onPick }) {
       {annotated.map((m, i) => (
         <div className={`msg ${m.role}`} key={i}>
           <div className="from">{m.role === 'user' ? 'you ▸' : 'pao-gpt ▸'}</div>
-          <div className="bubble">
+          <div className={`bubble${m.role === 'assistant' && m.limit ? ' limit-bubble' : ''}`}>
+            {m.role === 'assistant' && m.limit && (
+              <div className="limit-strip">{typeof m.limit.label === 'string' ? m.limit.label : ''}</div>
+            )}
             {m.role === 'user'
               ? <p>{m.content}</p>
-              : <AssistantBlocks
-                  blocks={m.blocks}
-                  animate={i >= seenCount}
-                  onPick={onPick}
-                  onExpand={setOpenEmbed}
-                  chipsDisabled={isLoading}
-                />}
+              : (
+                <div className={m.limit ? 'limit-body' : undefined}>
+                  <AssistantBlocks
+                    blocks={m.blocks}
+                    animate={i >= seenCount}
+                    onPick={onPick}
+                    onExpand={setOpenEmbed}
+                    chipsDisabled={isLoading}
+                  />
+                </div>
+              )}
           </div>
         </div>
       ))}
