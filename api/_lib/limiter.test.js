@@ -207,3 +207,75 @@ test('failing store: fail open, fallback enforces minute + chat rules, recordSpe
     console.error = originalError;
   }
 });
+
+// Primary store always rejects, so every admit runs on the in-memory fallback.
+function setupDown(start) {
+  const boom = async () => { throw new Error('boom'); };
+  return setup(start, { store: { incr: boom, incrBy: boom, get: boom } });
+}
+
+async function silenced(fn) {
+  const original = console.error;
+  console.error = () => {};
+  try { return await fn(); } finally { console.error = original; }
+}
+
+test('fallback: 151st turn from one IP in a UTC day is ip-daily', () => silenced(async () => {
+  const { limiter, advance } = setupDown('2026-10-15T00:00:00Z');
+  for (let i = 0; i < 150; i++) {
+    if (i > 0 && i % 5 === 0) advance(60);
+    const r = await limiter.admit({ ipHash: 'ip', sessionKey: `s${Math.floor(i / 25)}` });
+    assert.deepEqual(r, { ok: true }, `turn ${i + 1}`);
+  }
+  advance(60);
+  const r = await limiter.admit({ ipHash: 'ip', sessionKey: 'fresh' });
+  assert.equal(r.ok, false);
+  assert.equal(r.reason, 'ip-daily');
+}));
+
+test('fallback: $2 recorded in a UTC day trips site-daily', () => silenced(async () => {
+  const { limiter } = setupDown('2026-10-15T12:00:00Z');
+  await limiter.recordSpend({ ipHash: 'x', sessionKey: 'x', costUsd: 1.5 });
+  assert.deepEqual(await limiter.admit({ ipHash: 'ip', sessionKey: 's' }), { ok: true });
+  await limiter.recordSpend({ ipHash: 'x', sessionKey: 'x', costUsd: 0.5 });
+  const r = await limiter.admit({ ipHash: 'ip', sessionKey: 's' });
+  assert.equal(r.ok, false);
+  assert.equal(r.reason, 'site-daily');
+}));
+
+test('fallback: spend totalling the monthly trip budget trips monthly', () => silenced(async () => {
+  const { limiter } = setupDown('2026-10-15T12:00:00Z');
+  await limiter.recordSpend({ ipHash: 'x', sessionKey: 'x', costUsd: 10 });
+  await limiter.recordSpend({ ipHash: 'x', sessionKey: 'x', costUsd: limits.tripBudgetUsd - 10 });
+  const r = await limiter.admit({ ipHash: 'ip', sessionKey: 's' });
+  assert.equal(r.ok, false);
+  assert.equal(r.reason, 'monthly');
+}));
+
+test('fallback: after $8 of monthly spend the chat cap is 20, not 50', () => silenced(async () => {
+  const { limiter, advance } = setupDown('2026-10-14T20:00:00Z');
+  await limiter.recordSpend({ ipHash: 'x', sessionKey: 'x', costUsd: 8 });
+  advance(6 * 3600); // next UTC day so site-daily resets; same month
+  for (let i = 0; i < 20; i++) {
+    assert.deepEqual(await limiter.admit({ ipHash: `n${i}`, sessionKey: 'new' }), { ok: true });
+  }
+  assert.deepEqual(
+    await limiter.admit({ ipHash: 'n-last', sessionKey: 'new' }),
+    { ok: false, reason: 'session', used: 20, cap: 20 },
+  );
+}));
+
+test('primary up: spend is mirrored to the fallback so an outage keeps the ceilings', async () => {
+  const clock = { t: Date.parse('2026-10-15T12:00:00Z') };
+  const ms = () => clock.t;
+  let down = false;
+  const primary = createMemoryStore(ms);
+  const flaky = Object.fromEntries(['incr', 'incrBy', 'get'].map((m) => [
+    m, (...a) => (down ? Promise.reject(new Error('down')) : primary[m](...a)),
+  ]));
+  const limiter = createLimiter({ store: flaky, fallback: createMemoryStore(ms), limits, now: () => new Date(clock.t) });
+  await limiter.recordSpend({ ipHash: 'x', sessionKey: 'x', costUsd: 2 });
+  down = true;
+  const r = await silenced(() => limiter.admit({ ipHash: 'ip', sessionKey: 's' }));
+  assert.equal(r.reason, 'site-daily');
+});

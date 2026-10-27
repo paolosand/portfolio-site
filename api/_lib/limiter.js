@@ -57,16 +57,17 @@ export function createLimiter({
   const sessionReject = (count, cap) =>
     count > cap ? { ok: false, reason: 'session', used: Math.min(count - 1, cap), cap } : null;
 
-  // Full rules against the shared store. Any rejection propagates to admit's catch.
-  async function decide(b, ipHash, sessionKey) {
+  // Full rules against one store: the shared one, or the in-memory fallback when it is
+  // down. Any rejection from the shared store propagates to admit's catch.
+  async function decide(s, b, ipHash, sessionKey) {
     const k = keys(b, ipHash, sessionKey);
     // Count first, rejected or not: a client retrying in a loop keeps paying for it.
     const [minute, ipDay, chat] = await Promise.all([
-      store.incr(k.minute, MINUTE_TTL),
-      store.incr(k.ipDay, DAY_TTL),
-      store.incr(k.chat, limits.chatKeyTtlSeconds),
+      s.incr(k.minute, MINUTE_TTL),
+      s.incr(k.ipDay, DAY_TTL),
+      s.incr(k.chat, limits.chatKeyTtlSeconds),
     ]);
-    const [monthMicros, dayMicros] = await Promise.all([store.get(k.spendMonth), store.get(k.spendDay)]);
+    const [monthMicros, dayMicros] = await Promise.all([s.get(k.spendMonth), s.get(k.spendDay)]);
 
     if (minute > limits.ip.perMinute) return { ok: false, reason: 'rate', retryAfterSeconds: b.toNextMinute };
     const tier = tierForSpend(monthMicros / 1e6, limits);
@@ -78,28 +79,18 @@ export function createLimiter({
     return sessionReject(chat, tier.chatCap) ?? { ok: true };
   }
 
-  // Store is down: no spend data, so only the per-instance minute and per-chat rules
-  // apply, with the chat cap of an unspent month. Keeps the chat up without going blind.
-  async function decideFallback(b, ipHash, sessionKey) {
-    const k = keys(b, ipHash, sessionKey);
-    const [minute, chat] = await Promise.all([
-      fallback.incr(k.minute, MINUTE_TTL),
-      fallback.incr(k.chat, limits.chatKeyTtlSeconds),
-    ]);
-    if (minute > limits.ip.perMinute) return { ok: false, reason: 'rate', retryAfterSeconds: b.toNextMinute };
-    const { chatCap } = tierForSpend(0, limits);
-    return (chatCap != null && sessionReject(chat, chatCap)) || { ok: true };
-  }
-
   async function admit({ ipHash, sessionKey }) {
     let b;
     try {
       b = buckets(now());
-      return await withDeadline(decide(b, ipHash, sessionKey), storeTimeoutMs);
+      return await withDeadline(decide(store, b, ipHash, sessionKey), storeTimeoutMs);
     } catch (err) {
       console.error('[limiter] store failed, using in-memory fallback:', err?.message ?? err);
       try {
-        return await decideFallback(b ?? buckets(new Date()), ipHash, sessionKey);
+        // Same rules against the fallback. Its counters (and the spend recordSpend
+        // mirrors into it) are per-instance, so these ceilings are approximate: each
+        // warm instance enforces them on its own traffic only.
+        return await decide(fallback, b ?? buckets(new Date()), ipHash, sessionKey);
       } catch {
         return { ok: true }; // fail open: never take the chat down over limiter trouble
       }
@@ -112,6 +103,15 @@ export function createLimiter({
       const micros = Math.round(Number(costUsd) * 1e6);
       if (!(micros > 0)) return;
       const k = spendKeys(buckets(now()));
+      // Mirror into the fallback first, so an outage still sees this instance's spend.
+      try {
+        await Promise.all([
+          fallback.incrBy(k.spendDay, micros, DAY_TTL),
+          fallback.incrBy(k.spendMonth, micros, MONTH_TTL),
+        ]);
+      } catch (err) {
+        console.error('[limiter] fallback recordSpend failed:', err?.message ?? err);
+      }
       await withDeadline(Promise.all([
         store.incrBy(k.spendDay, micros, DAY_TTL),
         store.incrBy(k.spendMonth, micros, MONTH_TTL),
