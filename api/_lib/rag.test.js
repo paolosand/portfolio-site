@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { loadKnowledge } from './rag.js';
+import { loadKnowledge, usageDetailsFrom, notifyUsage } from './rag.js';
 
 test('loadKnowledge: returns array of documents', () => {
   const docs = loadKnowledge();
@@ -42,4 +42,33 @@ test('generate: integration — returns valid blocks (requires GOOGLE_API_KEY)',
       assert.ok(typeof b.id === 'string');
     }
   }
+});
+
+test('usageDetailsFrom: output includes thinking tokens', () => {
+  assert.deepEqual(
+    usageDetailsFrom({ promptTokenCount: 4118, candidatesTokenCount: 86, thoughtsTokenCount: 408, totalTokenCount: 4612 }),
+    { input: 4118, output: 494, total: 4612 },
+  );
+});
+
+test('usageDetailsFrom: missing metadata gives zeros', () => {
+  assert.deepEqual(usageDetailsFrom(undefined), { input: 0, output: 0, total: 0 });
+});
+
+test('usageDetailsFrom: missing thoughts counts as 0; total falls back to input+output', () => {
+  assert.deepEqual(
+    usageDetailsFrom({ promptTokenCount: 10, candidatesTokenCount: 5 }),
+    { input: 10, output: 5, total: 15 },
+  );
+});
+
+test('notifyUsage: passes metadata to the hook', () => {
+  const seen = [];
+  notifyUsage((u) => seen.push(u), { promptTokenCount: 1 });
+  assert.deepEqual(seen, [{ promptTokenCount: 1 }]);
+});
+
+test('notifyUsage: no hook is fine; a throwing hook is swallowed', () => {
+  notifyUsage(undefined, {});
+  notifyUsage(() => { throw new Error('boom'); }, {});
 });

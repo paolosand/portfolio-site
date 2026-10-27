@@ -60,7 +60,25 @@ function parseBlocks(text) {
   return null;
 }
 
-export async function generate(query, history, { projectIds = [], workIds = [] } = {}) {
+// Gemini bills thinking tokens at the output rate but reports them separately from
+// candidatesTokenCount, so output must include them or cost is under-reported.
+export function usageDetailsFrom(usageMetadata) {
+  const u = usageMetadata ?? {};
+  const input = u.promptTokenCount ?? 0;
+  const output = (u.candidatesTokenCount ?? 0) + (u.thoughtsTokenCount ?? 0);
+  return { input, output, total: u.totalTokenCount ?? input + output };
+}
+
+// A buggy spend hook must never cost the visitor their reply.
+export function notifyUsage(onUsage, usageMetadata) {
+  try {
+    onUsage?.(usageMetadata);
+  } catch (err) {
+    console.error('[rag] onUsage hook failed', err);
+  }
+}
+
+export async function generate(query, history, { projectIds = [], workIds = [], onUsage } = {}) {
   const client = getClient();
   const contextBlock = await queryRelevant(query);
 
@@ -99,7 +117,8 @@ export async function generate(query, history, { projectIds = [], workIds = [] }
     throw err;
   }
 
-  const usage = response.usageMetadata ?? {};
+  // Before parsing: spend happened even if the output turns out unparseable.
+  notifyUsage(onUsage, response.usageMetadata);
   const blocks = parseBlocks(response.text);
 
   // Traced verbatim (pre-scrub): the LangfuseSpanProcessor mask() in tracing.js is the
@@ -109,11 +128,7 @@ export async function generate(query, history, { projectIds = [], workIds = [] }
   generation
     .update({
       output: blocks ?? response.text,
-      usageDetails: {
-        input: usage.promptTokenCount,
-        output: usage.candidatesTokenCount,
-        total: usage.totalTokenCount,
-      },
+      usageDetails: usageDetailsFrom(response.usageMetadata),
     })
     .end();
 
