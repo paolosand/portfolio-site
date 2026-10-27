@@ -75,11 +75,33 @@ export function useChat() {
   const [error, setError] = useState(null);
   const lastUserTextRef = useRef(null);
   const lastApiHistoryRef = useRef([]);
+  const [notice, setNotice] = useState(null);
+  const noticeTimerRef = useRef(null);
 
   const setLoading = useCallback((value) => {
     isLoadingRef.current = value;
     setIsLoading(value);
   }, []);
+
+  const clearNoticeTimer = useCallback(() => {
+    if (noticeTimerRef.current !== null) {
+      clearTimeout(noticeTimerRef.current);
+      noticeTimerRef.current = null;
+    }
+  }, []);
+
+  // Transient message (e.g. rate limited) that clears itself. A new notice replaces
+  // the old one, so its timer must not be cut short by the previous timer firing.
+  const showNotice = useCallback((message, seconds) => {
+    clearNoticeTimer();
+    setNotice(message);
+    noticeTimerRef.current = setTimeout(() => {
+      noticeTimerRef.current = null;
+      setNotice(null);
+    }, Math.max(0, Number(seconds) || 0) * 1000);
+  }, [clearNoticeTimer]);
+
+  useEffect(() => clearNoticeTimer, [clearNoticeTimer]);
 
   // Persist the conversation for this tab session. Skip while streaming so we don't
   // store half-finished assistant messages.
@@ -100,6 +122,7 @@ export function useChat() {
 
     let streamText = '';
     let streamEmbeds = [];
+    let streamLimit = null;
 
     await sendMessageStream(userText, apiHistory, {
       sessionId: sessionIdRef.current,
@@ -116,11 +139,16 @@ export function useChat() {
       onEmbeds: (blocks) => {
         streamEmbeds = blocks;
       },
+      onLimit: (limit) => {
+        streamLimit = limit;
+      },
       onDone: () => {
         const finalBlocks = [{ type: 'text', content: streamText }, ...streamEmbeds];
         const finalMsg = { ...emptyAssistant, blocks: finalBlocks };
+        // Lives on the message so sessionStorage persistence carries it across reloads.
+        if (streamLimit) finalMsg.limit = streamLimit;
         messagesRef.current = [...messagesRef.current.slice(0, -1), finalMsg];
-        if (streamEmbeds.length > 0) {
+        if (streamEmbeds.length > 0 || streamLimit) {
           setMessages(prev => {
             const msgs = [...prev];
             msgs[msgs.length - 1] = finalMsg;
@@ -135,8 +163,18 @@ export function useChat() {
         setError(msg || 'Chat is unavailable — try again in a moment');
         setLoading(false);
       },
+      onRateLimit: ({ message, retryAfterSeconds }) => {
+        // Drop the empty placeholder and the unanswered user message (if this turn
+        // added one) so history stays clean; the user can simply resend later.
+        let next = messagesRef.current.slice(0, -1);
+        if (next[next.length - 1]?.role === 'user') next = next.slice(0, -1);
+        messagesRef.current = next;
+        setMessages(next);
+        showNotice(message, retryAfterSeconds);
+        setLoading(false);
+      },
     });
-  }, [setLoading]);
+  }, [setLoading, showNotice]);
 
   const send = useCallback(async (userMessage) => {
     // Re-entrancy guard: without this, any caller wired to send() — chip buttons,
@@ -185,6 +223,8 @@ export function useChat() {
     messagesRef.current = [];
     setMessages([]);
     setError(null);
+    clearNoticeTimer();
+    setNotice(null);
     lastUserTextRef.current = null;
     lastApiHistoryRef.current = [];
     clearStored();
@@ -192,7 +232,7 @@ export function useChat() {
     // rather than lumping it into the one being abandoned.
     sessionIdRef.current = crypto.randomUUID();
     saveSessionId(sessionIdRef.current);
-  }, []);
+  }, [clearNoticeTimer]);
 
-  return { messages, isLoading, error, send, greet, retry, clearError, reset };
+  return { messages, isLoading, error, notice, send, greet, retry, clearError, reset };
 }
