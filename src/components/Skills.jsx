@@ -8,9 +8,7 @@ export default function Skills() {
   return (
     <section id="skills">
       <div className="section-head">
-        <span className="num">§ 02 / 04</span>
         <h2 className="title">stack & <span className="accent">toolkit</span></h2>
-        <span className="meta">updated mar 2026</span>
       </div>
       <div className="skills-block">
         {Object.entries(skills).map(([cat, list]) => (

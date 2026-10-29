@@ -1,36 +1,32 @@
 import portfolioData from '../data/portfolio.json';
-import { PROP_ART } from './shared/ascii.js';
+import { STACK_ICONS } from './shared/stackIcons.js';
 import AsciiPortrait from './AsciiPortrait.jsx';
 import { useTicker } from '../hooks/useTicker.js';
 import './Hero.css';
 
-const TAGLINE = "Trained as a computer scientist. Wired by music. Building the kind of machines that listen back.";
+const TAGLINE = "I build AI creative tools that keep the creator at the center.";
 
 export default function Hero({ onChatClick }) {
-  const { personal, valueProps } = portfolioData;
+  const { personal } = portfolioData;
   const { lines } = useTicker();
 
   return (
     <section className="hero reg-marks">
-      <div className="hero-tape"></div>
       <div className="hero-grid">
         <div className="hero-left">
-          <div className="eyebrow">
-            <span className="pulse"></span>
-            now · available for full-time ml + creative tech roles · los angeles, ca
-          </div>
           <h1 className="hero-title">
             paolo<span className="acc-pink">.</span><br />
             sande<span className="acc-blue">jas</span><span className="slash">/</span>
           </h1>
           <p className="hero-tagline">{TAGLINE}</p>
-          <dl className="hero-meta">
-            <dt>role</dt><dd>AI / ML engineer</dd>
-            <dt>trained</dt><dd>CalArts MFA '26 · UP Diliman CS '23</dd>
-            <dt>focus</dt><dd>audio · vision · generative</dd>
-            <dt>tools</dt><dd>PyTorch · Gemini · MediaPipe</dd>
-            <dt>building</dt><dd>responsible AI for creative work</dd>
-          </dl>
+          <p className="hero-status"><span className="nowrap">full-stack product engineer</span> · <span className="nowrap">open to full-time roles</span></p>
+          <ul className="hero-stack" aria-label="Main tools">
+            {STACK_ICONS.map((i) => (
+              <li key={i.name} title={i.name}>
+                <svg viewBox="0 0 24 24" role="img" aria-label={i.name}><path d={i.path} /></svg>
+              </li>
+            ))}
+          </ul>
           <div className="hero-cta">
             <button className="cta primary" onClick={onChatClick}>
               <span>▶</span> talk to pao-gpt
@@ -63,16 +59,6 @@ export default function Hero({ onChatClick }) {
         </div>
       </div>
 
-      <div className="props">
-        {valueProps.map((p, i) => (
-          <div className="prop" key={p.title}>
-            <span className="num">0{i + 1} / 03</span>
-            <pre className="ascii ascii-icon">{PROP_ART[i]}</pre>
-            <h3>{p.title}</h3>
-            <p>{p.description}</p>
-          </div>
-        ))}
-      </div>
     </section>
   );
 }

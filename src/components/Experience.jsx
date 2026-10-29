@@ -8,9 +8,7 @@ export default function Experience() {
     <>
       <section id="experience">
         <div className="section-head">
-          <span className="num">§ 03 / 04</span>
           <h2 className="title">work <span className="accent">history</span></h2>
-          <span className="meta">2+ yrs in production</span>
         </div>
         <div className="timeline">
           {experience.map((e) => (
@@ -32,9 +30,7 @@ export default function Experience() {
 
       <section id="education" style={{marginTop: 0}}>
         <div className="section-head" style={{margin: '48px 0 24px'}}>
-          <span className="num">§ 04 / 04</span>
           <h2 className="title">education<span className="accent">.</span></h2>
-          <span className="meta">caltech of the arts · u.p.</span>
         </div>
         <div className="timeline">
           {education.map((e) => (

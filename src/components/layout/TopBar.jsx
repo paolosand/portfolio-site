@@ -7,7 +7,6 @@ export default function TopBar({ view, setView, onMusicClick }) {
         <span className="glyph">P/</span>
         <div>
           <div className="name">paolo sandejas</div>
-          <div className="sub">ai · ml · creative tech</div>
         </div>
       </div>
       <nav className="tb-nav">
@@ -26,10 +25,6 @@ export default function TopBar({ view, setView, onMusicClick }) {
           <span className="tb-label-short">♪</span>
         </button>
       </nav>
-      <div className="tb-meta">
-        <div><b>v0.4.1</b> · march 2026</div>
-        <div>printed in los angeles, ca</div>
-      </div>
     </header>
   );
 }

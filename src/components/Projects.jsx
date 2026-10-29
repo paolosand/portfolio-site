@@ -50,12 +50,8 @@ function ProjectCard({ p, idx, onOpen }) {
           ))}
         </div>
         <div className="pc-links" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
-          {p.links.github
-            ? <a href={p.links.github} target="_blank" rel="noopener noreferrer">↗ github</a>
-            : <span className="disabled">— private —</span>}
-          {p.links.demo
-            ? <a href={p.links.demo} target="_blank" rel="noopener noreferrer">↗ live demo</a>
-            : <span className="disabled">— no demo —</span>}
+          {p.links.github && <a href={p.links.github} target="_blank" rel="noopener noreferrer">↗ github</a>}
+          {p.links.demo && <a href={p.links.demo} target="_blank" rel="noopener noreferrer">↗ live demo</a>}
           {p.links.paper && (
             <a href={p.links.paper} target="_blank" rel="noopener noreferrer">↗ paper</a>
           )}
@@ -87,9 +83,7 @@ export default function Projects() {
   return (
     <section id="projects">
       <div className="section-head">
-        <span className="num">§ 01 / 04</span>
         <h2 className="title">selected <span className="accent">works</span></h2>
-        <span className="meta">{projects.length} projects · 2023→</span>
       </div>
       <div className="projects-grid">
         {projects.map((p, i) => (

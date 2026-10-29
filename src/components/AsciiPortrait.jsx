@@ -265,7 +265,6 @@ export default function AsciiPortrait() {
         >
           {role}
         </span>
-        <span className="badge">v0.4.1</span>
       </div>
     </div>
   );

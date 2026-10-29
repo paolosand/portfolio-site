@@ -1,5 +1,4 @@
 import portfolioData from '../data/portfolio.json';
-import { POSTCARD_ASCII } from './shared/ascii.js';
 import './Contact.css';
 
 export default function Contact() {
@@ -8,29 +7,17 @@ export default function Contact() {
   return (
     <section id="contact">
       <div className="section-head">
-        <span className="num">∎ end</span>
         <h2 className="title">say <span className="accent">hello</span></h2>
-        <span className="meta">i answer fast</span>
       </div>
       <div className="postcard reg-marks">
         <div className="left">
-          <pre className="ascii ascii-bg">{POSTCARD_ASCII}</pre>
           <div className="pc-msg">
-            hey — i'm <b>paolo</b>. i build ml systems that pay attention to sound and shape,
-            and i like making weird, useful things with both. tell me what you're building.
+            thanks for stopping by. i'd love to hear what you're building, and where a creator fits in.
           </div>
-          <div className="signoff">— talk soon ♥</div>
+          <div className="signoff">talk soon, paolo</div>
         </div>
         <div className="right">
-          <div className="stamps">
-            <span className="stamp blue">par avion</span>
-            <span className="stamp">priority</span>
-          </div>
           <div>
-            <div className="addr">
-              <span className="lbl">addressed to</span>
-              <strong>anyone hiring an ml engineer<br />who also writes synths</strong>
-            </div>
             <div className="addr">
               <span className="lbl">e-mail</span>
               <a href={`mailto:${personal.email}`}>{personal.email}</a>
@@ -41,8 +28,8 @@ export default function Contact() {
               <a href={personal.linkedin} target="_blank" rel="noopener noreferrer">linkedin.com/in/paolosand</a>
             </div>
             <div className="addr last">
-              <span className="lbl">return address</span>
-              los angeles, california · 34.052°n
+              <span className="lbl">based in</span>
+              los angeles, california
             </div>
           </div>
         </div>
